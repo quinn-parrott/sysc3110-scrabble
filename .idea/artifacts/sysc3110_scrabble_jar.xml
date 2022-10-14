@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sysc3110-scrabble:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/sysc3110_scrabble_jar</output-path>
+    <root id="archive" name="sysc3110-scrabble.jar">
+      <element id="module-output" name="sysc3110-scrabble" />
+      <element id="module-source" name="sysc3110-scrabble" />
+    </root>
+  </artifact>
+</component>
