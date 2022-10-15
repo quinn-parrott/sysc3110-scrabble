@@ -20,6 +20,10 @@ public class Board {
         this.board.add(15 * x + y, tile);
     }
 
+    /**
+     * Prints the current board state to console
+     * @Author Colin Mandeville, 101140289
+     */
     public void printBoard() {
         for (int i = 0; i < 15; i++) {
             if (i < 9) {

@@ -6,6 +6,11 @@ public class TilePlacement {
     private ArrayList<TilePositioned> tiles;
     private int score;
 
+    /**
+     * Constructor for TilePlacement, Will handle placing word onto board in future
+     * @param tiles ArrayList of TilePositioned objects, which contain a Tile object, and a Position object
+     * @Author Colin Mandeville, 101140289
+     */
     public TilePlacement(ArrayList<TilePositioned> tiles) {
         this.tiles = tiles;
         for (TilePositioned tile : this.tiles) {

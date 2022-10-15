@@ -5,6 +5,13 @@ public class Position {
     private int y = -1;
     private boolean valid;
 
+    /**
+     * Constructor for Position Class. Verifies that input x is a letter (not case-sensitive) and y is a number which is
+     * (less than 16)
+     * @param x Input for the column, Should be a Letter (Not case-sensitive)
+     * @param y Input for the row, Should be a number less than 16
+     * @Author Colin Mandeville, 101140289
+     */
     public Position(String x, String y) {
         char c = x.toUpperCase().charAt(0);
         if (c >= 65 && c <= 79) {
@@ -36,10 +43,5 @@ public class Position {
 
     public int getY() {
         return y;
-    }
-
-    public static void main(String[] args) {
-        System.out.println("TEST");
-
     }
 }

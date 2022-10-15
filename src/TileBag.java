@@ -36,6 +36,12 @@ public class TileBag {
         private final int numInBag;
         private final Tile tile;
 
+        /**
+         * Constructor fpr BagLetterDist enum
+         * @param i Number of tile in starting bag
+         * @param tile Tile object to go in bag
+         * @Author Colin Mandeville, 101140289
+         */
         BagLetterDist(int i, Tile tile) {
             this.numInBag = i;
             this.tile = tile;
@@ -52,11 +58,20 @@ public class TileBag {
 
     private final ArrayList<Tile> tilesLeft;
 
+    /**
+     * Constructor for TileBag Class.
+     * @Author Colin Mandeville, 101140289
+     */
     public TileBag() {
         this.tilesLeft = new ArrayList<>();
         this.resetBag();
     }
 
+    /**
+     * resetBag method empties the bag of existing tiles, then adds the starting assortment of tiles to the tilesLeft
+     * ArrayList
+     * @Author Colin Mandeville, 101140289
+     */
     public void resetBag() {
         this.tilesLeft.clear();
         for (BagLetterDist letter : BagLetterDist.values()) {
@@ -67,6 +82,11 @@ public class TileBag {
         }
     }
 
+    /**
+     * drawTile method initializes a Random object, and removes a random tile from the ArrayList
+     * @return returns the Tile removed from the tilesLeft ArrayList
+     * @Author Colin Mandeville, 101140289
+     */
     public Tile drawTile() {
         Random rand = new Random();
         return this.tilesLeft.remove(rand.nextInt(this.tilesLeft.size()));
