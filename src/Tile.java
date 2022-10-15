@@ -1,7 +1,5 @@
-package ca.carleton.sysc3110.group13.scrabble;
-
 public class Tile {
-
+    // Written by Colin Mandeville, 101140289
     private char chr;
     private int pointValue;
 
