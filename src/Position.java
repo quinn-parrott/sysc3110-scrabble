@@ -24,13 +24,12 @@ public class Position {
         int column;
         int row = -1;
         column = x.toUpperCase().charAt(0) - 65;
-        if (y.length() <= 2) {
-            try{
-                row = Integer.parseInt(y) - 1;
-            } catch (IllegalArgumentException ignored) {}
+        try{
+            row = Integer.parseInt(y) - 1;
+        } catch (IllegalArgumentException _ignored) {
+            return Optional.empty();
         }
-
-        if (column >= 0 && column < 15 && row >= 0 && row < 15) {
+        if (column >= 0 && column < Board.getCOLUMN_NUMBER() && row >= 0 && row < Board.getROW_NUMBER()) {
             return Optional.of(new Position(column, row));
         }
         return Optional.empty();
