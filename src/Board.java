@@ -4,8 +4,8 @@ import java.util.ArrayList;
  * @author Colin Mandeville, 101140289
  */
 public class Board {
-    private final int COLUMN_NUMBER = 15;
-    private final int ROW_NUMBER = 15;
+    private static final int COLUMN_NUMBER = 15;
+    private static final int ROW_NUMBER = 15;
 
     private final ArrayList<Tile> board;
 
@@ -27,6 +27,14 @@ public class Board {
 
     public void setTile(Tile tile, int x, int y) {
         this.board.add(ROW_NUMBER * x + y, tile);
+    }
+
+    public static int getCOLUMN_NUMBER() {
+        return COLUMN_NUMBER;
+    }
+
+    public static int getROW_NUMBER() {
+        return ROW_NUMBER;
     }
 
     /**
