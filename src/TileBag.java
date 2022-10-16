@@ -10,7 +10,7 @@ public class TileBag {
 
     /**
      * Constructor for TileBag Class.
-     * @Author Colin Mandeville, 101140289
+     * @author Colin Mandeville, 101140289
      */
     public TileBag() {
         this.tilesLeft = new ArrayList<>();
@@ -20,7 +20,7 @@ public class TileBag {
     /**
      * resetBag method empties the bag of existing tiles, then adds the starting assortment of tiles to the tilesLeft
      * ArrayList
-     * @Author Colin Mandeville, 101140289
+     * @author Colin Mandeville, 101140289
      */
     public void resetBag() {
         this.tilesLeft.clear();
@@ -34,7 +34,7 @@ public class TileBag {
     /**
      * drawTile method initializes a Random object, and removes a random tile from the ArrayList
      * @return returns the Tile removed from the tilesLeft ArrayList
-     * @Author Colin Mandeville, 101140289
+     * @author Colin Mandeville, 101140289
      */
     public Tile drawTile() {
         Random rand = new Random();
