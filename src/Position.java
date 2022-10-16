@@ -13,7 +13,7 @@ public class Position {
      * y is a positive integer less than 16.
      * @param x Input for the column, Should be a Letter (Not case-sensitive)
      * @param y Input for the row, Should be a number less than 16
-     * @Author Colin Mandeville, 101140289
+     * @author Colin Mandeville, 101140289
      */
     private Position(int x, int y) {
         this.x = x;
