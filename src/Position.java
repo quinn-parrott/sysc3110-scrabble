@@ -1,40 +1,39 @@
+import java.util.Optional;
+
+/**
+ * @author Colin Mandeville, 101140289
+ */
 public class Position {
-    // Written by Colin Mandeville, 101140289
     // This will represent the placement on the board x is received as letter input, y as a number
-    private int x = -1;
-    private int y = -1;
-    private boolean valid;
+    private final int x;
+    private final int y;
 
     /**
-     * Constructor for Position Class. Verifies that input x is a letter (not case-sensitive) and y is a number which is
-     * (less than 16)
+     * Constructor for Position Class. Verifies that input x is a letter (not case-sensitive) and
+     * y is a positive integer less than 16.
      * @param x Input for the column, Should be a Letter (Not case-sensitive)
      * @param y Input for the row, Should be a number less than 16
      * @Author Colin Mandeville, 101140289
      */
-    public Position(String x, String y) {
-        char c = x.toUpperCase().charAt(0);
-        if (c >= 65 && c <= 79) {
-            this.x = c - 65;
+    private Position(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public static Optional<Position> FromStrings(String x, String y) {
+        int column;
+        int row = -1;
+        column = x.toUpperCase().charAt(0) - 65;
+        if (y.length() <= 2) {
+            try{
+                row = Integer.parseInt(y) - 1;
+            } catch (IllegalArgumentException ignored) {}
         }
-        if (y.length() == 1) {
-            c = y.charAt(0);
-            if (c >= 49 && c <= 57) {
-                this.y = c - 49;
-            }
-        } else if (y.length() == 2) {
-            c = y.charAt(0);
-            if (c >= 49 && c <= 57) {
-                this.y = (c - 48) * 10;
-            }
-            c = y.charAt(1);
-            if (c >= 49 && c <= 53) {
-                this.y += c - 49;
-            } else {
-                this.y = -1;
-            }
+
+        if (column >= 0 && column < 15 && row >= 0 && row < 15) {
+            return Optional.of(new Position(column, row));
         }
-        this.valid = (this.x != 0) && (this.y != 0);
+        return Optional.empty();
     }
 
     public int getX() {

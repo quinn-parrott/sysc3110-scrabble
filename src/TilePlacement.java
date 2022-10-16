@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 
+/**
+ * @author Colin Mandeville, 101140289
+ */
 public class TilePlacement {
-    // Written by Colin Mandeville, 101140289
-    // This represents a single player turn
-    private ArrayList<TilePositioned> tiles;
-    private int score;
+    // This class represents a single player turn
+    private final ArrayList<TilePositioned> tiles;
+    private int score = 0;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
@@ -17,7 +19,7 @@ public class TilePlacement {
 
             // TODO Implement putting words onto board, need to wait on CLI and Game being implemented
 
-            this.score += tile.getTile().getPointValue();
+            this.score += tile.tile().pointValue();
         }
     }
 }
