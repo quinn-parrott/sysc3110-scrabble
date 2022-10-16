@@ -40,4 +40,30 @@ public class TileBag {
         Random rand = new Random();
         return this.tilesLeft.remove(rand.nextInt(this.tilesLeft.size()));
     }
+
+    /**
+     * addTileToBag method adds a given tile back to the tile bag. It is used when exchanging tiles.
+     * @param tile
+     * @author Tao Lufula, 101164153
+     */
+    public void addTileToBag(Tile tile){
+        this.tilesLeft.add(tile);
+    }
+
+    /**
+     * This method is used to swap players' tiles with those in the bag
+     * @param tile
+     * @return new tile if there are more than 7 tiles in the tile bag, Otherwise returns the same tile.(to be improved later)
+     *
+     * @author Tao Lufula, 101164153
+     */
+    public Tile exchangeTile(Tile tile){
+        if(this.tilesLeft.size() >= 7){
+            Tile newTile = this.drawTile();
+            this.addTileToBag(tile);
+            return newTile;
+        }
+//      return same tile since there are less than 7 tiles left in the bag
+        return tile;
+    }
 }
