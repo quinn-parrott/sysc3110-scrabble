@@ -11,7 +11,7 @@ public class Player {
     private static final int TILEHANDSIZE = 7;
 
     /**
-     * Default constructor for player
+     * Default constructor for Player Class
      * @param name the name of the player
      * @author Tao Lufula, 101164153
      */
@@ -57,7 +57,7 @@ public class Player {
     /**
      * This method remove a tile from the player's tile hand.
      * @param tile
-     *  @author Tao Lufula, 101164153
+     * @author Tao Lufula, 101164153
      */
     public void removeTile(Tile tile){
         this.tileHand.remove(tile);

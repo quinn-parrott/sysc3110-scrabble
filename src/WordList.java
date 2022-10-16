@@ -36,6 +36,20 @@ public class WordList {
             }
         }
     }
+
+    /**
+     * Method isValidWord checks whether the given word exists in the set of accepted words
+     * @param word word to be checked
+     * @return true if word exists in the set, false otherwise
+     * @author Tao Lufula, 101164153
+     */
+    public boolean isValidWord(String word){
+        if(this.wordlist.contains(word)){
+            return true;
+        }
+        return false;
+    }
+
 }
 
 
