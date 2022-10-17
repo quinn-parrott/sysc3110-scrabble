@@ -109,4 +109,9 @@ public class Position {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%c%o", 'A' + this.getX(), this.getY() + 1);
+    }
 }
