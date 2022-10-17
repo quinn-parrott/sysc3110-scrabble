@@ -47,11 +47,12 @@ public class Player {
      * @param tile
      * @author Tao Lufula, 101164153
      */
-    public void addTile(Tile tile){
+    public boolean addTile(Tile tile){
         if(this.tileHand.size() < TILEHANDSIZE){
             this.tileHand.add(tile);
+            return true;
         }
-
+        return false;
     }
 
     /**
