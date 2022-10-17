@@ -7,6 +7,7 @@ import java.util.Random;
 public class TileBag {
 
     private final ArrayList<Tile> tilesLeft;
+    private static final int MIN_TILES_FOR_EXCHANGE = 7;
 
     /**
      * Constructor for TileBag Class.
@@ -46,7 +47,7 @@ public class TileBag {
      * @param tile
      * @author Tao Lufula, 101164153
      */
-    public void addTileToBag(Tile tile){
+    private void addTileToBag(Tile tile){
         this.tilesLeft.add(tile);
     }
 
@@ -58,7 +59,7 @@ public class TileBag {
      * @author Tao Lufula, 101164153
      */
     public Tile exchangeTile(Tile tile){
-        if(this.tilesLeft.size() >= 7){
+        if(this.tilesLeft.size() >= MIN_TILES_FOR_EXCHANGE){
             Tile newTile = this.drawTile();
             this.addTileToBag(tile);
             return newTile;

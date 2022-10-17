@@ -8,7 +8,7 @@ public class Player {
     private String name;
     private int points;
     private ArrayList<Tile> tileHand;
-    private static final int TILEHANDSIZE = 7;
+    private static final int TILE_HAND_SIZE = 7;
 
     /**
      * Default constructor for Player Class
@@ -48,7 +48,7 @@ public class Player {
      * @author Tao Lufula, 101164153
      */
     public boolean addTile(Tile tile){
-        if(this.tileHand.size() < TILEHANDSIZE){
+        if(this.tileHand.size() < TILE_HAND_SIZE){
             this.tileHand.add(tile);
             return true;
         }
