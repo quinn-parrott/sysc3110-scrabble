@@ -25,6 +25,17 @@ public class Position {
 
     /**
      * @author Colin Mandeville, 101140289
+     * @author Quinn Parrott, 101169535
+     */
+    public static Optional<Position> FromInts(int x, int y) {
+        if (x >= 0 && x < Board.getCOLUMN_NUMBER() && y >= 0 && y < Board.getROW_NUMBER()) {
+            return Optional.of(new Position(x, y));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * @author Colin Mandeville, 101140289
      */
     public static Optional<Position> FromStrings(String x, String y) {
         int column;
@@ -35,10 +46,7 @@ public class Position {
         } catch (IllegalArgumentException _ignored) {
             return Optional.empty();
         }
-        if (column >= 0 && column < Board.getCOLUMN_NUMBER() && row >= 0 && row < Board.getROW_NUMBER()) {
-            return Optional.of(new Position(column, row));
-        }
-        return Optional.empty();
+        return FromInts(column, row);
     }
 
     /**
