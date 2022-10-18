@@ -93,6 +93,7 @@ public class Board {
      * @author Colin Mandeville, 101140289
      */
     public void printBoard() {
+        // TODO: This print function seems to print the wrong coordinate system (x/y backwards)?
         // Print each row of the board and the Vertical Legend
         for (int i = 0; i < ROW_NUMBER; i++) {
             System.out.printf("%2s ", i + 1);

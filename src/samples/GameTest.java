@@ -38,6 +38,17 @@ public class GameTest {
     }
 
     @Test
+    void testBoardPrinting() throws PlacementException {
+        // This doesn't actually test anything, just here to help with visual debugging
+        var board = new Board();
+        var placement = TilePlacement.FromShorthand("A1:h;Lunch").get();
+        board.placeTiles(placement);
+
+        System.out.println(placement);
+        board.printBoard();
+    }
+
+    @Test
     void testGameDetached() {
     }
 
