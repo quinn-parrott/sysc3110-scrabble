@@ -26,7 +26,7 @@ public class Board {
     }
 
     public void setTile(Tile tile, int x, int y) {
-        this.board.add(ROW_NUMBER * x + y, tile);
+        this.board.set(ROW_NUMBER * x + y, tile);
     }
 
     public static int getCOLUMN_NUMBER() {
