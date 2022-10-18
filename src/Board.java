@@ -39,18 +39,22 @@ public class Board {
 
     /**
      * Prints the current board state to console
+     *
      * @author Colin Mandeville, 101140289
      */
     public void printBoard() {
         // Print each row of the board and the Vertical Legend
         for (int i = 0; i < ROW_NUMBER; i++) {
             System.out.printf("%2s ", i + 1);
+
             // Print each tile in row i
             for (int j = 0; j < COLUMN_NUMBER; j++) {
                 System.out.print(this.board.get(15 * i + j).chr() + "  ");
             }
+
             System.out.println();
         }
+
         // Print the Horizontal Legend
         System.out.print("   ");
         for (int i = 0; i < COLUMN_NUMBER; i++) {
@@ -58,5 +62,6 @@ public class Board {
             char c = (char) j;
             System.out.print(c + "  ");
         }
+        System.out.println();
     }
 }
