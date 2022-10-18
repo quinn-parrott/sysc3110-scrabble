@@ -132,6 +132,7 @@ public class TilePlacement {
         Position lastPosition = this.tiles.get(0).pos();
         for (var tile : this.tiles) {
             var pos = tile.pos();
+            // TODO: Use `Position.distance` instead
             var delta = Math.abs(pos.getX() - lastPosition.getX()) + Math.abs(pos.getY() - lastPosition.getY());
 
             if (delta > 1) {

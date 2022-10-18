@@ -24,6 +24,13 @@ public class Position {
     }
 
     /**
+     * @author Quinn Parrott, 101169535
+     */
+    public static Optional<Position> FromIndex(int index) {
+        return Position.FromInts(Integer.divideUnsigned(index, Board.getROW_NUMBER()), index % Board.getROW_NUMBER());
+    }
+
+    /**
      * @author Colin Mandeville, 101140289
      * @author Quinn Parrott, 101169535
      */
@@ -72,6 +79,14 @@ public class Position {
      */
     public int getY() {
         return y;
+    }
+
+    /**
+     * @author Quinn Parrott, 101169535
+     */
+    public int getIndex() {
+        return Board.getROW_NUMBER()* x + y;
+
     }
 
     /**
