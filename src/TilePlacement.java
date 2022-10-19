@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Colin Mandeville, 101140289
@@ -132,6 +131,7 @@ public class TilePlacement {
         Position lastPosition = this.tiles.get(0).pos();
         for (var tile : this.tiles) {
             var pos = tile.pos();
+            // TODO: Use `Position.distance` instead
             var delta = Math.abs(pos.getX() - lastPosition.getX()) + Math.abs(pos.getY() - lastPosition.getY());
 
             if (delta > 1) {
@@ -145,4 +145,19 @@ public class TilePlacement {
 
         return builder.toString();
     }
+
+    /**
+     * @author Quinn Parrott, 101169535
+     */
+    public double minTileDistance(Position pos) {
+        return this.tiles.stream().map(tile -> Position.Distance(tile.pos(), pos)).min(Double::compare).get();
+    }
+
+    /**
+     * @author Quinn Parrott, 101169535
+     */
+    public List<TilePositioned> getTiles() {
+        return this.tiles;
+    }
+
 }

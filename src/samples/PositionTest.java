@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class PositionTest {
 
@@ -142,5 +143,12 @@ public class PositionTest {
                         Position.FromString("C1").get()
                 }
         );
+    }
+
+    @Test
+    void testPositionIndex() {
+        for (var i = 0; i < Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER(); i++) {
+            Assertions.assertEquals(i, Position.FromIndex(i).get().getIndex());
+        }
     }
 }

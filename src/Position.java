@@ -24,6 +24,13 @@ public class Position {
     }
 
     /**
+     * @author Quinn Parrott, 101169535
+     */
+    public static Optional<Position> FromIndex(int index) {
+        return Position.FromInts(Integer.divideUnsigned(index, Board.getROW_NUMBER()), index % Board.getROW_NUMBER());
+    }
+
+    /**
      * @author Colin Mandeville, 101140289
      * @author Quinn Parrott, 101169535
      */
@@ -72,6 +79,22 @@ public class Position {
      */
     public int getY() {
         return y;
+    }
+
+    /**
+     * @author Quinn Parrott, 101169535
+     */
+    public int getIndex() {
+        return Board.getROW_NUMBER()* x + y;
+
+    }
+
+    /**
+     * @author Quinn Parrott, 101169535
+     */
+    public static double Distance(Position pos1, Position pos2) {
+        var e = Math.sqrt(Math.pow(pos1.getY() - pos2.getY(), 2) + Math.pow(pos1.getX() - pos2.getX(), 2));
+        return e;
     }
 
     /**
