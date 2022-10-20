@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,13 +30,15 @@ public class Board {
     public static int getCenterTilePos() {
         return Math.floorDiv(COLUMN_NUMBER * ROW_NUMBER, 2);
     }
-
+// TODO: CLEAN UP GETTERS AND SETTERS TO ALL USE POSITION
     public void setTile(Tile tile, Position pos) {
         setTile(tile, pos.getX(), pos.getY());
     }
 
     public void setTile(Tile tile, int x, int y) {
-        setTile(tile, Position.FromInts(x, y).get().getIndex());
+        if (Position.FromInts(x, y).isPresent()) {
+            setTile(tile, Position.FromInts(x, y).get().getIndex());
+        }
     }
 
     public void setTile(Tile tile, int index) {
@@ -49,11 +50,8 @@ public class Board {
     }
 
     public Optional<Tile> getTile(int x, int y) {
-        int i = Position.FromInts(x, y).get().getIndex();
-        if (i < this.board.size()) {
-            return Optional.of(this.board.get(i));
-        }
-        return Optional.empty();
+        Optional<Position> i = Position.FromInts(x, y);
+        return i.map(position -> this.board.get(position.getIndex()));
     }
 
     public static int getCOLUMN_NUMBER() {
