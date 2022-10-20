@@ -37,7 +37,7 @@ public class Board {
     }
 
     public void setTile(Tile tile, int x, int y) {
-        setTile(tile, ROW_NUMBER * y + x);
+        setTile(tile, Position.FromInts(x, y).get().getIndex());
     }
 
     public void setTile(Tile tile, int index) {
@@ -49,7 +49,7 @@ public class Board {
     }
 
     public Optional<Tile> getTile(int x, int y) {
-        int i = ROW_NUMBER * x + y;
+        int i = Position.FromInts(x, y).get().getIndex();
         if (i < this.board.size()) {
             return Optional.of(this.board.get(i));
         }

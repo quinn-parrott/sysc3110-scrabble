@@ -85,8 +85,7 @@ public class Position {
      * @author Quinn Parrott, 101169535
      */
     public int getIndex() {
-        return Board.getROW_NUMBER()* x + y;
-
+        return Board.getROW_NUMBER() * y + x;
     }
 
     /**
