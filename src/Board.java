@@ -37,7 +37,7 @@ public class Board {
     }
 
     public void setTile(Tile tile, int x, int y) {
-        setTile(tile, ROW_NUMBER * x + y);
+        setTile(tile, ROW_NUMBER * y + x);
     }
 
     public void setTile(Tile tile, int index) {
