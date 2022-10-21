@@ -160,4 +160,17 @@ public class TilePlacement {
         return this.tiles;
     }
 
+    public void printPlacementFull(){
+        var b = new Board();
+
+        try {
+            b.placeTiles(this);
+        } catch (PlacementException e) {
+            // Should never happen
+            throw new RuntimeException(e);
+        }
+
+        b.printBoard();
+    }
+
 }

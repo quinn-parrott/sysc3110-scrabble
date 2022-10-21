@@ -32,7 +32,7 @@ public class WordList {
         Path path = Paths.get(fileName);
         try (Scanner scanner =  new Scanner(path)){
             while (scanner.hasNextLine()){
-                this.wordlist.add(scanner.nextLine());
+                this.wordlist.add(scanner.nextLine().strip().toUpperCase());
             }
         }
     }
@@ -44,7 +44,7 @@ public class WordList {
      * @author Tao Lufula, 101164153
      */
     public boolean isValidWord(String word){
-        if(this.wordlist.contains(word)){
+        if(this.wordlist.contains(word.toUpperCase())){
             return true;
         }
         return false;

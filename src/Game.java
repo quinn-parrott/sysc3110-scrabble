@@ -7,15 +7,17 @@ import java.util.stream.Collectors;
 public class Game {
     private final Map<String, Player> players;
     private final List<TilePlacement> turns;
+    public final WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
      * @author Quinn Parrott, 101169535
      */
-    public Game(Collection<String> playerNames) {
+    public Game(Collection<String> playerNames, WordList wordList) {
         this.players = playerNames.stream().collect(Collectors.toMap(playerName -> playerName, Player::new));
         this.turns = new ArrayList<>();
         this.board = new Board();
+        this.wordList = wordList;
     }
 
     /**
@@ -39,7 +41,8 @@ public class Game {
 
             var minResult = MinResult.TooFar;
 
-            for (var tile : board.getTiles()) {
+            var tiles = board.getTiles();
+            for (var tile : tiles) {
                 int distance = (int) Math.round(placement.minTileDistance(tile.pos()));
 
                 if (distance == 0) {
@@ -57,13 +60,22 @@ public class Game {
         }
 
         // TODO: Do word checking
-        // - [ ] Check main word
+        // - [x] Check main word
         // - [x] Attached in straight line (tileplacement handles)
         // - [x] Is attached
-        // - [ ] Not invalid word
+        // - [x] Not invalid word
 
         nextBoard.placeTiles(placement);
 
+        for (var word : nextBoard.collectCharSequences()) {
+            if (word.length() > 1 && !this.wordList.isValidWord(word)) {
+                throw new PlacementException(String.format("'%s' is not a valid word", word), placement, Optional.of(this.board));
+            }
+        }
+
+        // TODO: Make it so that less things are set here.
+        this.board = nextBoard;
+        this.turns.add(placement);
         return nextBoard;
     }
 
