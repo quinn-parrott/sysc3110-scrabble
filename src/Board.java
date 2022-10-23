@@ -151,7 +151,7 @@ public class Board {
                 if (tile.isFilledWithLetter()) {
                     seq += tile.chr();
                 } else {
-                    if (seq.length() > 0) {
+                    if (seq.length() > 1) {
                         results.add(seq);
                         seq = "";
                     }
@@ -159,9 +159,8 @@ public class Board {
             }
 
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
-            if (seq.length() > 0) {
+            if (seq.length() > 1) {
                 results.add(seq);
-                seq = "";
             }
         }
 
@@ -174,7 +173,7 @@ public class Board {
                 if (tile.isFilledWithLetter()) {
                     seq += tile.chr();
                 } else {
-                    if (seq.length() > 0) {
+                    if (seq.length() > 1) {
                         results.add(seq);
                         seq = "";
                     }
@@ -182,11 +181,12 @@ public class Board {
             }
 
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
-            if (seq.length() > 0) {
+            if (seq.length() > 1) {
                 results.add(seq);
-                seq = "";
             }
         }
+
+
 
         return results;
     }

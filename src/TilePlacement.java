@@ -18,12 +18,6 @@ public class TilePlacement {
     public TilePlacement(ArrayList<TilePositioned> tiles) {
         // TODO: Validate that all characters are in order
         this.tiles = tiles;
-        for (TilePositioned tile : this.tiles) {
-
-            // TODO Implement putting words onto board, need to wait on CLI and Game being implemented
-
-            this.score += tile.tile().pointValue();
-        }
     }
 
     /**
