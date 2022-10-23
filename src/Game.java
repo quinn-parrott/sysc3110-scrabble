@@ -5,8 +5,8 @@ import java.util.*;
  */
 public class Game {
     private final ArrayList<Player> players;
-    private ArrayList<String> wordsPlayed;
-    private int turnTracker = 0;
+    private final ArrayList<String> wordsPlayed;
+    private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
     public WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
@@ -17,6 +17,7 @@ public class Game {
     public Game(Collection<Player> playerNames, WordList wordList) {
         this.players = new ArrayList<>(playerNames.stream().toList());
         this.wordsPlayed = new ArrayList<>();
+        this.newWords = new ArrayList<>();
         this.turns = new ArrayList<>();
         this.board = new Board();
         this.wordList = wordList;
@@ -27,6 +28,7 @@ public class Game {
      */
     public Board previewPlacement(TilePlacement placement) throws PlacementException {
         var nextBoard = this.board.clone();
+        newWords.clear();
 
         if (turns.size() == 0) {
             // First turn
@@ -66,12 +68,20 @@ public class Game {
 
         nextBoard.placeTiles(placement);
 
-        HashSet<String> newWords = new HashSet<>();
         for (String next : nextBoard.collectCharSequences()) {
             if (!this.wordsPlayed.contains(next)) {
                 newWords.add(next);
             }
         }
+        return nextBoard;
+    }
+
+    /**
+     * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
+     */
+    public void place(TilePlacement placement) throws PlacementException {
+        this.board = this.previewPlacement(placement);
+        this.turns.add(placement);
 
         HashMap<Character, TileBagDetails> tileDetails = TileBagSingleton.getBagDetails();
         int score = 0;
@@ -87,22 +97,7 @@ public class Game {
                 this.wordsPlayed.add(word);
             }
         }
-        this.players.get(this.turnTracker % this.players.size()).addPoints(score);
-        this.turnTracker++;
-
-
-        // TODO: Make it so that less things are set here.
-        this.board = nextBoard;
-        this.turns.add(placement);
-        return nextBoard;
-    }
-
-    /**
-     * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
-     */
-    public void place(TilePlacement placement) throws PlacementException {
-        this.board = this.previewPlacement(placement);
-        this.turns.add(placement);
+        this.players.get(this.turns.size() % this.players.size()).addPoints(score);
     }
 
     /**
@@ -116,12 +111,5 @@ public class Game {
         for (Player player : this.players) {
             System.out.println(player.getName() + " : " + player.getPoints());
         }
-    }
-
-    /**
-     * @author Quinn Parrott, 101169535
-     */
-    public Board getBoard() {
-        return board;
     }
 }
