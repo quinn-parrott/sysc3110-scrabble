@@ -7,7 +7,6 @@ public class TilePlacement {
     // This class represents a single player turn
 
     private final ArrayList<TilePositioned> tiles;
-    private int score = 0;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
@@ -153,18 +152,4 @@ public class TilePlacement {
     public List<TilePositioned> getTiles() {
         return this.tiles;
     }
-
-    public void printPlacementFull(){
-        var b = new Board();
-
-        try {
-            b.placeTiles(this);
-        } catch (PlacementException e) {
-            // Should never happen
-            throw new RuntimeException(e);
-        }
-
-        b.printBoard();
-    }
-
 }
