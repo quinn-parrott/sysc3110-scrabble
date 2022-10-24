@@ -9,11 +9,11 @@ import java.util.Scanner;
  */
 
 public class WordList {
-    private HashSet<String> wordlist;
+    private final HashSet<String> wordlist;
 
     /**
      * Default constructor for WordList class
-     * @throws IOException
+     * @throws IOException If file wordList.txt does not exist, an IOException is thrown
      * @author Tao Lufula, 101164153
      */
     public WordList() throws IOException {
@@ -24,7 +24,7 @@ public class WordList {
     /**
      * This method reads words from a text file and add them to the HashSet WordList
      * @param fileName the name of the txt file to be read
-     * @throws IOException
+     * @throws IOException If incorrect IO is entered, an IOException is thrown
      *
      * @author Tao Lufula, 101164153
      */
@@ -44,10 +44,7 @@ public class WordList {
      * @author Tao Lufula, 101164153
      */
     public boolean isValidWord(String word){
-        if(this.wordlist.contains(word.toUpperCase())){
-            return true;
-        }
-        return false;
+        return this.wordlist.contains(word.toUpperCase());
     }
 
 }

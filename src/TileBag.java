@@ -44,7 +44,8 @@ public class TileBag {
 
     /**
      * addTileToBag method adds a given tile back to the tile bag. It is used when exchanging tiles.
-     * @param tile
+     *
+     * @param tile tile being added to the bag
      * @author Tao Lufula, 101164153
      */
     private void addTileToBag(Tile tile){
@@ -53,7 +54,7 @@ public class TileBag {
 
     /**
      * This method is used to swap players' tiles with those in the bag
-     * @param tile
+     * @param tile tile being exchanged
      * @return new tile if there are more than 7 tiles in the tile bag, Otherwise returns the same tile.(to be improved later)
      *
      * @author Tao Lufula, 101164153
@@ -66,5 +67,9 @@ public class TileBag {
         }
 //      return same tile since there are less than 7 tiles left in the bag
         return tile;
+    }
+
+    public boolean isEmpty() {
+        return this.tilesLeft.size() == 0;
     }
 }
