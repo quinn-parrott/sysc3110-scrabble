@@ -14,8 +14,8 @@ public class Game {
     /**
      * @author Quinn Parrott, 101169535
      */
-    public Game(Collection<Player> playerNames, WordList wordList) {
-        this.players = new ArrayList<>(playerNames.stream().toList());
+    public Game(List<Player> players, WordList wordList) {
+        this.players = (ArrayList<Player>) players;
         this.wordsPlayed = new ArrayList<>();
         this.newWords = new ArrayList<>();
         this.turns = new ArrayList<>();
@@ -97,7 +97,7 @@ public class Game {
                 this.wordsPlayed.add(word);
             }
         }
-        this.players.get(this.turns.size() % this.players.size()).addPoints(score);
+        this.players.get(this.turns.size() % this.players.size() - 1).addPoints(score);
     }
 
     /**

@@ -22,6 +22,9 @@ public class CommandLineFrontend{
         return this.playersList.get(playerTurn % this.playersList.size());
     }
 
+    /**
+     * @author Colin Mandeville, Jawad Nasrallah
+     */
     public void play(){
         boolean validCommand = false;
         TileBag gameBag = new TileBag();
@@ -91,9 +94,9 @@ public class CommandLineFrontend{
             }
 
             //Iterate through gameBag, and print all tiles in the bag.
-            System.out.println(this.getPlayer().getName() + ": This is your hand of tiles");
+            System.out.println(this.getPlayer().getName() + ": This is your hand of tiles (Letter : Point Value)");
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                System.out.print(this.getPlayer().getTileHand().get(i) + " ");
+                System.out.print(this.getPlayer().getTileHand().get(i).chr() + ":" + this.getPlayer().getTileHand().get(i).pointValue() + " ");
             }
             System.out.println();
 
@@ -102,6 +105,7 @@ public class CommandLineFrontend{
             boolean turnInProcess = true;
 
             while (turnInProcess) {
+                turnInProcess = true;
                 System.out.println("Would you like to pass? (Yes or No)");
                 String input = sc.next();
 
@@ -123,6 +127,8 @@ public class CommandLineFrontend{
                     System.out.println();
                     try {
                         TilePlacement tp = TilePlacement.FromShorthand(tilePlacement + ";" + word).orElseThrow();
+                        //TODO Remove Used Tiles from Player Hand
+                        //TODO Make sure points tallied correctly
                         gameEngine.place(tp);
                         this.playerTurn++;
                         if (gameBag.isEmpty()) {
@@ -130,7 +136,7 @@ public class CommandLineFrontend{
                         }
                         turnInProcess = false;
                     } catch (Exception e) {
-                        System.out.println("That is not a valid move");
+                        System.out.println("That is not a valid move: " + e);
                     }
                 }
             }
