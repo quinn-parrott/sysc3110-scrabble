@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 /**
@@ -132,6 +133,62 @@ public class Board {
         }
 
         return result;
+    }
+
+    /**
+     * Get all vertical and horizontal sequences of characters on the board.
+     *
+     * @author Quinn Parrott, 101169535
+     */
+    public HashSet<String> collectCharSequences() {
+        var results = new HashSet<String>();
+
+        for (int x = 0; x < COLUMN_NUMBER; x++) {
+            var seq = "";
+            for (int y = 0; y < ROW_NUMBER; y++) {
+                var pos = Position.FromInts(x, y).get();
+                var tile = getTile(pos).get();
+                if (tile.isFilledWithLetter()) {
+                    seq += tile.chr();
+                } else {
+                    if (seq.length() > 1) {
+                        results.add(seq);
+                        seq = "";
+                    }
+                }
+            }
+
+            // TODO: Is there a way to get rid of this final check (dedup with inner loop)
+            if (seq.length() > 1) {
+                results.add(seq);
+            }
+        }
+
+        // TODO: Dedup with other loop
+        for (int y = 0; y < ROW_NUMBER; y++) {
+            var seq = "";
+            for (int x = 0; x < COLUMN_NUMBER; x++) {
+                var pos = Position.FromInts(x, y).get();
+                var tile = getTile(pos).get();
+                if (tile.isFilledWithLetter()) {
+                    seq += tile.chr();
+                } else {
+                    if (seq.length() > 1) {
+                        results.add(seq);
+                        seq = "";
+                    }
+                }
+            }
+
+            // TODO: Is there a way to get rid of this final check (dedup with inner loop)
+            if (seq.length() > 1) {
+                results.add(seq);
+            }
+        }
+
+
+
+        return results;
     }
 
     /**

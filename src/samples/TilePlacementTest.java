@@ -20,4 +20,10 @@ public class TilePlacementTest {
         Assertions.assertEquals("A1-A1;G", t4.get().toString());
     }
 
+    @Test
+    void testFromShorthandRegression1() {
+        var t5 = TilePlacement.FromShorthand("F10:h;br_ad");
+        Assertions.assertEquals("F10-J10;BR_AD", t5.get().toString());
+    }
+
 }

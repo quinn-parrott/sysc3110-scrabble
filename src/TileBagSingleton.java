@@ -5,7 +5,7 @@ import java.util.HashMap;
  */
 public class TileBagSingleton {
 
-    private static final HashMap<Character, TileBagDetails> bagDetails = new HashMap<>();;
+    private static final HashMap<Character, TileBagDetails> bagDetails = new HashMap<>();
 
     public static HashMap<Character, TileBagDetails> getBagDetails() {
         if (bagDetails.size() == 0) {

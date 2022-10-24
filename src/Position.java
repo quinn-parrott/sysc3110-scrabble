@@ -27,7 +27,7 @@ public class Position {
      * @author Quinn Parrott, 101169535
      */
     public static Optional<Position> FromIndex(int index) {
-        return Position.FromInts(index % Board.getROW_NUMBER() , Integer.divideUnsigned(index, Board.getROW_NUMBER()));
+        return Position.FromInts(index % Board.getROW_NUMBER(), Integer.divideUnsigned(index, Board.getROW_NUMBER()));
     }
 
     /**

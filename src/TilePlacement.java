@@ -7,7 +7,6 @@ public class TilePlacement {
     // This class represents a single player turn
 
     private final ArrayList<TilePositioned> tiles;
-    private int score = 0;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
@@ -18,12 +17,6 @@ public class TilePlacement {
     public TilePlacement(ArrayList<TilePositioned> tiles) {
         // TODO: Validate that all characters are in order
         this.tiles = tiles;
-        for (TilePositioned tile : this.tiles) {
-
-            // TODO Implement putting words onto board, need to wait on CLI and Game being implemented
-
-            this.score += tile.tile().pointValue();
-        }
     }
 
     /**
@@ -159,5 +152,4 @@ public class TilePlacement {
     public List<TilePositioned> getTiles() {
         return this.tiles;
     }
-
 }
