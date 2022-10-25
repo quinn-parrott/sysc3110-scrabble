@@ -32,6 +32,19 @@ public class Game {
         var nextBoard = this.board.clone();
         newWords.clear();
 
+        StringBuilder entry = new StringBuilder();
+        for (TilePositioned tile : placement.getTiles()) {
+            if (tile.tile().chr() > 64 && tile.tile().chr() < 91) {
+                entry.append(tile.tile().chr());
+            } else if (tile.tile().chr() == board.getTile(tile.pos()).get().chr()) {
+                entry.append(tile.tile().chr());
+            }
+        }
+        if (entry.length() > 1 && !this.wordList.isValidWord(entry.toString())) {
+            throw new PlacementException(String.format("'%s' is not a valid word", entry),
+                    placement, Optional.of(this.board));
+        }
+
         if (turns.size() == 0) {
             // First turn
             var p = Position.FromIndex(Board.getCenterTilePos()).orElseThrow();
@@ -83,7 +96,20 @@ public class Game {
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
+        if (!this.playerHasNeededTiles(placement.getTiles())) {
+            throw new PlacementException("You do not have all needed tiles",
+                    placement, Optional.of(board));
+        }
+
         this.board = this.previewPlacement(placement);
+
+        StringBuilder tilesUsed = new StringBuilder();
+
+        for (TilePositioned tile : placement.getTiles()) {
+            tilesUsed.append(tile.tile().chr());
+        }
+
+        this.removeTilesFromHand(tilesUsed.toString());
 
         HashMap<Character, TileBagDetails> tileDetails = TileBagSingleton.getBagDetails();
         int score = 0;
@@ -109,6 +135,46 @@ public class Game {
      */
     public void pass() {
         this.turns.add(new TilePlacement(new ArrayList<>()));
+    }
+
+    private boolean playerHasNeededTiles(List<TilePositioned> tiles) {
+        Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+
+        StringBuilder word = new StringBuilder();
+
+        for (TilePositioned tile : tiles) {
+            if (tile.tile().chr() > 64 && tile.tile().chr() < 91) {
+                word.append(tile.tile().chr());
+            }
+        }
+
+        Tile matchTile;
+
+        for (int i = 0; i < word.length(); i++) {
+            matchTile = null;
+            for (Tile tile : activePlayer.getTileHand()) {
+                if (tile.chr() == word.charAt(i) && matchTile == null) {
+                    matchTile = tile;
+                }
+            }
+            if (matchTile == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void removeTilesFromHand(String letters) {
+        Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+        for (char c : letters.toCharArray()) {
+            for (Tile tile: activePlayer.getTileHand()) {
+                if (tile.chr() == c) {
+                    activePlayer.getTileHand().remove(tile);
+                    break;
+                }
+            }
+
+        }
     }
 
     /**

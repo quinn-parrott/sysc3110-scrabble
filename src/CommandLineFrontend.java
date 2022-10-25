@@ -96,7 +96,8 @@ public class CommandLineFrontend{
             //Iterate through gameBag, and print all tiles in the bag.
             System.out.println(this.getPlayer().getName() + ": This is your hand of tiles (Letter : Point Value)");
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                System.out.print(this.getPlayer().getTileHand().get(i).chr() + ":" + this.getPlayer().getTileHand().get(i).pointValue() + " ");
+                System.out.print(this.getPlayer().getTileHand().get(i).chr() + ":" +
+                        this.getPlayer().getTileHand().get(i).pointValue() + " ");
             }
             System.out.println();
 
@@ -114,9 +115,7 @@ public class CommandLineFrontend{
                     turnInProcess = false;
                     this.numSequentialPasses += 1;
                 } else {
-                    System.out.println("What word would you like to play? Use an underscore to indicate crossover" +
-                            " with letters already on the board.\ne.g. To play BOARD if the R being used is already " +
-                            "on the board, write BOA_D.");
+                    System.out.println("What word would you like to play?");
                     sc.nextLine();
                     String word = sc.nextLine();
                     System.out.println();
@@ -129,8 +128,6 @@ public class CommandLineFrontend{
                     System.out.println();
                     try {
                         TilePlacement tp = TilePlacement.FromShorthand(tilePlacement + ";" + word).orElseThrow();
-                        //TODO Remove Used Tiles from Player Hand
-                        //TODO Make sure points tallied correctly
                         gameEngine.place(tp);
                         this.playerTurn++;
                         if (gameBag.isEmpty()) {
