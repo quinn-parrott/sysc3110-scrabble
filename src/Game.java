@@ -84,7 +84,6 @@ public class Game {
      */
     public void place(TilePlacement placement) throws PlacementException {
         this.board = this.previewPlacement(placement);
-        this.turns.add(placement);
 
         HashMap<Character, TileBagDetails> tileDetails = TileBagSingleton.getBagDetails();
         int score = 0;
@@ -100,7 +99,16 @@ public class Game {
                 this.wordsPlayed.add(word);
             }
         }
-        this.players.get(this.turns.size() % this.players.size() - 1).addPoints(score);
+        this.players.get(this.turns.size() % this.players.size()).addPoints(score);
+        this.turns.add(placement);
+    }
+
+    /**
+     * Allows a player to pass a turn without playing a word
+     * @author Colin Mandeville, 101140289
+     */
+    public void pass() {
+        this.turns.add(new TilePlacement(new ArrayList<>()));
     }
 
     /**

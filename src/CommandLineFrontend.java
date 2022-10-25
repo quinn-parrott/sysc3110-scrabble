@@ -105,11 +105,13 @@ public class CommandLineFrontend{
             boolean turnInProcess = true;
 
             while (turnInProcess) {
-                turnInProcess = true;
                 System.out.println("Would you like to pass? (Yes or No)");
                 String input = sc.next();
 
                 if (input.equalsIgnoreCase("yes")) {
+                    gameEngine.pass();
+                    this.playerTurn++;
+                    turnInProcess = false;
                     this.numSequentialPasses += 1;
                 } else {
                     System.out.println("What word would you like to play? Use an underscore to indicate crossover" +
