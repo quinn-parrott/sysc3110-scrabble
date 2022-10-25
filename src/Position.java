@@ -24,6 +24,9 @@ public class Position {
     }
 
     /**
+     * Defines a Position object using an index value in the Board object using the bounds on its row and column limits
+     * @param index index referring to a position on the Board object
+     * @return Returns the created Position object
      * @author Quinn Parrott, 101169535
      */
     public static Optional<Position> FromIndex(int index) {
@@ -31,6 +34,10 @@ public class Position {
     }
 
     /**
+     * Defines a Position object using a set of int x and y coordinates
+     * @param x x integer referring to the column number on the board
+     * @param y y integer referring to the row number on the board
+     * @return Returns the created Position object
      * @author Colin Mandeville, 101140289
      * @author Quinn Parrott, 101169535
      */
@@ -42,6 +49,8 @@ public class Position {
     }
 
     /**
+     * Defines a Position object using a set of String x and y coordinates
+     * @return Returns the created Position object
      * @author Colin Mandeville, 101140289
      */
     public static Optional<Position> FromStrings(String x, String y) {
@@ -57,6 +66,8 @@ public class Position {
     }
 
     /**
+     * Defines a Position object using a String position using
+     * @return Returns the created Position object
      * @author Quinn Parrott, 101169535
      */
     public static Optional<Position> FromString(String pos) {
@@ -68,6 +79,8 @@ public class Position {
     }
 
     /**
+     * Getter method for the x coordinate
+     * @return Returns the x coordinate of the Position
      * @author Colin Mandeville, 101140289
      */
     public int getX() {
@@ -75,6 +88,8 @@ public class Position {
     }
 
     /**
+     * Getter method for the y coordinate
+     * @return Returns the y coordinate of the Position
      * @author Colin Mandeville, 101140289
      */
     public int getY() {
@@ -82,6 +97,8 @@ public class Position {
     }
 
     /**
+     * Getter method for the index of Board equivalent to the Position x and y coordinates
+     * @return Returns the index equivalent to the Position
      * @author Quinn Parrott, 101169535
      */
     public int getIndex() {
@@ -89,6 +106,8 @@ public class Position {
     }
 
     /**
+     * Calculates the pythagorean distance between 2 Position objects
+     * @return Returns the difference between 2 Position objects
      * @author Quinn Parrott, 101169535
      */
     public static double Distance(Position pos1, Position pos2) {
@@ -97,6 +116,8 @@ public class Position {
     }
 
     /**
+     * Defines an inclusive list of Positions between two positions on the same axis
+     * @return Returns the inclusive List of positions between two Positions on the same axis
      * @author Quinn Parrott, 101169535
      */
     public static Optional<List<Position>> Interpolate(Position pos1, Position pos2) {

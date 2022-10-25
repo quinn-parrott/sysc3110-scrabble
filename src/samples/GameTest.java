@@ -2,33 +2,33 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameTest {
 
     @Test
     void testGameFirstCentered() throws PlacementException, IOException {
-        Player[] playerArray = new Player[2];
-        playerArray[0] = new Player("P1");
-        playerArray[1] = new Player("P2");
-        var players = Arrays.stream(playerArray).toList();
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(new Player("P1"));
+        players.add(new Player("P2"));
         // TODO: Use custom wordlist here so test doesn't fail if word not present
         var g1 = new Game(players, new WordList());
 
         Assertions.assertThrows(PlacementException.class, () -> g1.previewPlacement(TilePlacement.FromShorthand("A1-A5;BEADS").get()));
 
-        g1.previewPlacement(TilePlacement.FromShorthand("H8:v;Bread").get());
+        g1.place(TilePlacement.FromShorthand("H8:v;Bread").get());
         var p = TilePlacement.FromShorthand("F10:h;br_ad").get();
-        g1.previewPlacement(p);
+        g1.place(p);
         g1.printBoardState();
     }
 
     @Test
     void testGameSecondTurnAttached() throws PlacementException, IOException {
-        Player[] playerArray = new Player[2];
-        playerArray[0] = new Player("P1");
-        playerArray[1] = new Player("P2");
-        var players = Arrays.stream(playerArray).toList();
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(new Player("P1"));
+        players.add(new Player("P2"));
+        // TODO: Use custom wordlist here so test doesn't fail if word not present
         var g1 = new Game(players, new WordList());
 
         g1.place(TilePlacement.FromShorthand("H8:h;BREAD").get());
