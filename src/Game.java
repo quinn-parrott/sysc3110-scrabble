@@ -62,12 +62,18 @@ public class Game {
             var minResult = MinResult.TooFar;
 
             var tiles = board.getTiles();
+
+            boolean firstOverlap = true;
             for (var tile : tiles) {
                 int distance = (int) Math.round(placement.minTileDistance(tile.pos()));
 
                 if (distance == 0) {
-                    throw new PlacementException(String.format("Can't place tile at %s since there is already a tile" +
-                                    " there", tile.pos()), placement, Optional.of(this.board));
+                    if (tile.tile().chr() != board.getTile(tile.pos()).get().chr() || !firstOverlap) {
+                        throw new PlacementException(String.format("Can't place tile at %s since there is already a " +
+                                "tile there", tile.pos()), placement, Optional.of(this.board));
+                    } else {
+                        firstOverlap = false;
+                    }
                 }
 
                 if (distance == 1) {
@@ -96,6 +102,12 @@ public class Game {
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
+        for (TilePositioned tile : placement.getTiles()) {
+            if (board.getTile(tile.pos()).get().chr() == tile.tile().chr()) {
+                this.players.get(this.turns.size() % this.players.size()).getTileHand().add(TileBagSingleton.getBagDetails().get(tile.tile().chr()).tile());
+            }
+        }
+
         if (!this.playerHasNeededTiles(placement.getTiles())) {
             throw new PlacementException("You do not have all needed tiles",
                     placement, Optional.of(board));

@@ -113,20 +113,23 @@ public class Board {
      * @author Quinn Parrott, 101169535
      */
     public void placeTiles(TilePlacement tilePlacement) throws PlacementException {
+        int i = 0;
         // Check that all tiles are placeable
         for (var tile : tilePlacement.getTiles()) {
             var tileOpt = getTile(tile.pos());
             if (tileOpt.isEmpty()) {
                 throw new PlacementException(String.format("'%s' is outside the board", tile.pos()), tilePlacement, Optional.of(this));
-            }
-            if (tileOpt.get().isFilledWithLetter()) {
-                throw new PlacementException(String.format("'%s' already has a letter", tile.pos()), tilePlacement, Optional.of(this));
+            } else if (tileOpt.get().isFilledWithLetter()) {
+                if (tileOpt.get().chr() != tilePlacement.getTiles().get(i).tile().chr()) {
+                    throw new PlacementException(String.format("'%s' already has a letter", tile.pos()), tilePlacement, Optional.of(this));
+                }
             }
             // TODO Make sure words don't wrap to other rows
 //            int x = tile.pos().getX();
 //            if (Math.floorDiv(x, ROW_NUMBER) != Math.floorDiv(x + tilePlacement.getTiles().size(), ROW_NUMBER)) {
 //                throw new PlacementException(String.format("'%s' is outside the board", tile.pos()), tilePlacement, Optional.of(this));
 //            }
+            i++;
         }
 
         // Place the tiles
