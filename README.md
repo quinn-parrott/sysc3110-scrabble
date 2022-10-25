@@ -20,16 +20,17 @@ points than your opposition. This Scrabble-software was implemented in Java, usi
 
 
 
-Upcoming Deliverables:
+Other Deliverables:
 --------------------------------------------------------------------------------------------------------
 
-Milestone 2: GUI-based version of the Scrabble game.
+Project Documentation: Summarizes project design and explains why specific decisions were made in the design.
+Also includes javadocs for all classes and user manual.
+
+UML Diagram: A single UML diagram connecting individual UML's for each class in the project, showing how all 
+classes interact with one-another.
 
 
-Milestone 3: incorprating an AI bot to the Scrabble game.
-
-
-Milestone 4: Final modification of the scrabble game.
+Code: The programs Java code.
 
 
 
