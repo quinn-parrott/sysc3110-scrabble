@@ -21,14 +21,29 @@ public class Player {
         this.tileHand = new ArrayList<>();
     }
 
+    /**
+     * Getter method for the Player name attribute
+     * @return Returns Player name attribute
+     * @author Tao Lufula, 101164153
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter method for the Player points attribute
+     * @return Returns Player points attribute
+     * @author Tao Lufula, 101164153
+     */
     public int getPoints() {
         return points;
     }
 
+    /**
+     * Getter method for the Player tileHand attribute
+     * @return Returns Player tileHand attribute
+     * @author Tao Lufula, 101164153
+     */
     public ArrayList<Tile> getTileHand() {
         return tileHand;
     }

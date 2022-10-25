@@ -18,6 +18,11 @@ public class CommandLineFrontend{
         sc = new Scanner(System.in);
     }
 
+    /**
+     * Based on the number of turns taken, and number of players playing, and returns the active player
+     * @return Returns the next player to make a move
+     * @author Jawad Nasrallah
+     */
     public Player getPlayer(){
         return this.playersList.get(playerTurn % this.playersList.size());
     }
