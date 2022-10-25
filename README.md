@@ -13,9 +13,9 @@ wins. This program was made with Java.
 
 The implementation and excecution of this text-based game of scrabble has been designed to allow
 two players to play against one-another. The game is played through the command line interface, following
-the traditional rules of Scrabble. Each player takes a turn to place letters on the board, from the bag of 
-letters he is dealt. The ulimate goal is to build words using the letters given to you, and end up with more 
-points than your opposition. This Scrabble-software was implemented in Java, using IntelliJ.
+the traditional rules of Scrabble. Each player takes a turn to place a word on the board, formed from the hand 
+of tiles they are dealt. The ulimate goal is to build words using the letters given to you, and end up with 
+more points than your opposition. This Scrabble-software was implemented in Java, using IntelliJ.
 
 
 
