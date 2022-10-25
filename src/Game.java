@@ -149,6 +149,12 @@ public class Game {
         this.turns.add(new TilePlacement(new ArrayList<>()));
     }
 
+    /**
+     * Checks if the active Player has the required tiles to make their move.
+     * @param tiles tiles being used to create the word
+     * @return Returns a boolean representing if the player has all required tiles to make their word
+     * @author Colin Mandeville, 101140289
+     */
     private boolean playerHasNeededTiles(List<TilePositioned> tiles) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
 
@@ -176,6 +182,11 @@ public class Game {
         return true;
     }
 
+    /**
+     * Removes all used tiles from the players hand of tiles
+     * @param letters The string of letters being used by the player
+     * @author Colin Mandeville, 101140289
+     */
     private void removeTilesFromHand(String letters) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
         for (char c : letters.toCharArray()) {
@@ -185,7 +196,6 @@ public class Game {
                     break;
                 }
             }
-
         }
     }
 

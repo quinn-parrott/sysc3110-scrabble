@@ -23,6 +23,7 @@ public class CommandLineFrontend{
     }
 
     /**
+     * Runs the Scrabble game through a command line user interface by scanning user entry.
      * @author Colin Mandeville, Jawad Nasrallah
      */
     public void play(){
