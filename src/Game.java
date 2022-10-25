@@ -12,6 +12,7 @@ public class Game {
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
+     * Constructor for the Game class
      * @author Quinn Parrott, 101169535
      */
     public Game(List<Player> players, WordList wordList) {
@@ -24,6 +25,7 @@ public class Game {
     }
 
     /**
+     * Verifies if the TilePlacement object can be placed on the board
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public Board previewPlacement(TilePlacement placement) throws PlacementException {
@@ -77,6 +79,7 @@ public class Game {
     }
 
     /**
+     * Places a TilePlacement object on the board
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
@@ -102,7 +105,6 @@ public class Game {
 
     /**
      * Prints the current board and scoreboard
-     *
      * @author Colin Mandeville, 101140289
      */
     public void printBoardState() {
