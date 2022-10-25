@@ -21,6 +21,7 @@ public class TilePlacement {
     /**
      * Construct a TilePlacement from a shorthand string format
      * @param shorthand ex: "a1-a5;river", "a1:h;wh_ever"
+     * @return Returns an Optional of a TilePLacement object constructed from shorthand
      * @author Quinn Parrott, 101169535
      */
     public static Optional<TilePlacement> FromShorthand(String shorthand) {
@@ -108,6 +109,8 @@ public class TilePlacement {
     }
 
     /**
+     * Overridden String representation of the TilePLacement class
+     * @return Returns a String representation of the TilePlacement class
      * @author Quinn Parrott, 101169535
      */
     @Override

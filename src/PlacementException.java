@@ -9,6 +9,7 @@ public class PlacementException extends Exception {
     private final Optional<Board> previewBoard;
 
     /**
+     * Constructor for the PlacementException class
      * @author Quinn Parrott, 101169535
      */
     public PlacementException(String message, TilePlacement placement){
@@ -16,6 +17,7 @@ public class PlacementException extends Exception {
     }
 
     /**
+     * Constructor for the PlacementException class
      * @author Quinn Parrott, 101169535
      */
     public PlacementException(String message, TilePlacement placement, Optional<Board> previousBoard) {
@@ -25,6 +27,8 @@ public class PlacementException extends Exception {
     }
 
     /**
+     * Getter method for the previewBoard class attribute
+     * @return returns an Optional of the previewBoard attribute
      * @author Quinn Parrott, 101169535
      */
     public Optional<Board> getPreviewBoard() {
@@ -32,6 +36,8 @@ public class PlacementException extends Exception {
     }
 
     /**
+     * Getter method for the placement class attribute
+     * @return returns an Optional of the placement attribute
      * @author Quinn Parrott, 101169535
      */
     public TilePlacement getPlacement() {

@@ -13,6 +13,8 @@ public class Game {
 
     /**
      * Constructor for the Game class
+     * @param players players playing the game
+     * @param wordList wordList of legal words for the game
      * @author Quinn Parrott, 101169535
      */
     public Game(List<Player> players, WordList wordList) {
@@ -26,6 +28,8 @@ public class Game {
 
     /**
      * Verifies if the TilePlacement object can be placed on the board
+     * @param placement placement which will be applied to the current board state
+     * @return Returns a Board object with the TilePlacement parameter placed on it
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public Board previewPlacement(TilePlacement placement) throws PlacementException {
@@ -99,6 +103,7 @@ public class Game {
 
     /**
      * Places a TilePlacement object on the board
+     * @param placement placement object to be applied to the current board
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
