@@ -1,5 +1,5 @@
 Game of Scrabble, Milestone 1.0, 10/25/2022
-
+@author Jawad Nasrallah
 
 
 
