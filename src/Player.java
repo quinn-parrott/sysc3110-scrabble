@@ -50,7 +50,7 @@ public class Player {
 
     /**
      * This method adds the given points to the player's points
-     * @param points
+     * @param points points to be added to the PLayer instance's score
      * @author Tao Lufula, 101164153
      */
     public void addPoints(int points){
@@ -59,7 +59,7 @@ public class Player {
 
     /**
      * This method add a tile to the players tileHand if the player's hand has less than 7 tiles.
-     * @param tile
+     * @param tile tile to be added to the Player instance's tileHand
      * @author Tao Lufula, 101164153
      */
     public boolean addTile(Tile tile){
@@ -72,7 +72,7 @@ public class Player {
 
     /**
      * This method remove a tile from the player's tile hand.
-     * @param tile
+     * @param tile tile to be removed from the Player instance's tileHand
      * @author Tao Lufula, 101164153
      */
     public void removeTile(Tile tile){

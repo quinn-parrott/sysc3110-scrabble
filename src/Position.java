@@ -13,7 +13,6 @@ public class Position {
     /**
      * Constructor for Position Class. Verifies that input x is a letter (not case-sensitive) and
      * y is a positive integer less than 16.
-     *
      * @param x Input for the column, Should be a Letter (Not case-sensitive)
      * @param y Input for the row, Should be a number less than 16
      * @author Colin Mandeville, 101140289
@@ -50,6 +49,8 @@ public class Position {
 
     /**
      * Defines a Position object using a set of String x and y coordinates
+     * @param x x refers to the String of the x coordinate on the board as a Letter
+     * @param y y refers to the String of the y coordinate on the board as a Number
      * @return Returns the created Position object
      * @author Colin Mandeville, 101140289
      */
@@ -67,6 +68,7 @@ public class Position {
 
     /**
      * Defines a Position object using a String position using
+     * @param pos pos is a String to be parsed to get Position values
      * @return Returns the created Position object
      * @author Quinn Parrott, 101169535
      */
@@ -107,6 +109,8 @@ public class Position {
 
     /**
      * Calculates the pythagorean distance between 2 Position objects
+     * @param pos1 The first point to compare
+     * @param pos2 The point to be compared to pos1
      * @return Returns the difference between 2 Position objects
      * @author Quinn Parrott, 101169535
      */
@@ -117,6 +121,8 @@ public class Position {
 
     /**
      * Defines an inclusive list of Positions between two positions on the same axis
+     * @param pos1 The first point to compare
+     * @param pos2 The point to be compared to pos1
      * @return Returns the inclusive List of positions between two Positions on the same axis
      * @author Quinn Parrott, 101169535
      */

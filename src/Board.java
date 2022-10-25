@@ -14,7 +14,6 @@ public class Board {
     /**
      * Board Constructor, defines ArrayList to contain Board and sets each square to an arbitrary _ on each tile,
      * with * marking the center square
-     *
      * @author Colin Mandeville, 101140289
      */
     public Board() {
@@ -110,6 +109,7 @@ public class Board {
 
     /**
      * Place a TilePlacement on the board
+     * @param tilePlacement tilePlacement to be placed on the board
      * @author Quinn Parrott, 101169535
      */
     public void placeTiles(TilePlacement tilePlacement) throws PlacementException {
@@ -168,6 +168,7 @@ public class Board {
 
     /**
      * Get positioned tiles
+     * @return Returns an ArrayList<TilePositioned> of all tiles on the board
      * @author Quinn Parrott, 101169535
      */
     public ArrayList<TilePositioned> getTiles() {
@@ -187,6 +188,7 @@ public class Board {
 
     /**
      * Get all vertical and horizontal sequences of characters on the board.
+     * @return Returns a HashSet<String> of all words on the board
      * @author Quinn Parrott, 101169535
      */
     public HashSet<String> collectCharSequences() {
@@ -242,6 +244,7 @@ public class Board {
 
     /**
      * Clone the board instance
+     * @return Returns a duplicate Board instance of the object on which this method is called
      * @author Quinn Parrott, 101169535
      */
     public Board clone() {
