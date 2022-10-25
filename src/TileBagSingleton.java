@@ -7,6 +7,10 @@ public class TileBagSingleton {
 
     private static final HashMap<Character, TileBagDetails> bagDetails = new HashMap<>();
 
+    /**
+     * Declares a HashMap with the standard set of Scrabble tiles in a tileBag
+     * @return Returns a reference to the same HashMap declared on first call
+     */
     public static HashMap<Character, TileBagDetails> getBagDetails() {
         if (bagDetails.size() == 0) {
             bagDetails.put('A', new TileBagDetails(new Tile('A', 1), 9));

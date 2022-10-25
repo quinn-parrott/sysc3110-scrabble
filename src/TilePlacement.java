@@ -10,7 +10,6 @@ public class TilePlacement {
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
-     *
      * @param tiles ArrayList of TilePositioned objects, which contain a Tile object, and a Position object
      * @author Colin Mandeville, 101140289
      */
@@ -21,7 +20,6 @@ public class TilePlacement {
 
     /**
      * Construct a TilePlacement from a shorthand string format
-     *
      * @param shorthand ex: "a1-a5;river", "a1:h;wh_ever"
      * @author Quinn Parrott, 101169535
      */
@@ -140,6 +138,9 @@ public class TilePlacement {
     }
 
     /**
+     * Calculates the minimum distance between the tiles in the TilePlacement object and a provided Position pos
+     * @param pos pos which is compared to the Tile objects contained in this object
+     * @return Returns double referring to the minimum distance between the positions of the tile to the Position object pos
      * @author Quinn Parrott, 101169535
      */
     public double minTileDistance(Position pos) {
@@ -147,6 +148,7 @@ public class TilePlacement {
     }
 
     /**
+     * Getter method for the tiles attribute of the TilePlacement object
      * @author Quinn Parrott, 101169535
      */
     public List<TilePositioned> getTiles() {
