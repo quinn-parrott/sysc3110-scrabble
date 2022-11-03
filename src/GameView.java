@@ -59,6 +59,11 @@ public class GameView extends JFrame {
      * To be implented
      */
     private void createScoreBoard() {
+        JPanel grid = new JPanel(new GridLayout(1, 1));
+        JButton button = new JButton("Score Board will be here!");
+        button.setPreferredSize(new Dimension(200, 100));
+        grid.add(button);
+        pane.add(grid, BorderLayout.EAST);
     }
 
 
@@ -67,15 +72,24 @@ public class GameView extends JFrame {
      * To be implented
      */
     private void createTileHand() {
+        JPanel grid = new JPanel(new GridLayout(1, 1));
+        JButton button = new JButton("Tile Hand and Play Buttons will be here!.  Jlabel to tell whose turn it is will also be here.");
+        button.setPreferredSize(new Dimension(100, 200));
+        grid.add(button);
+        pane.add(grid, BorderLayout.SOUTH);
     }
 
 
 
     /**
-     * To be implented
+     * To be implented just
      */
     private void createBoard() {
-
+        JPanel grid = new JPanel(new GridLayout(1, 1));
+        JButton button = new JButton("Game Board will be here!");
+        button.setPreferredSize(new Dimension(1000, 100));
+        grid.add(button);
+        pane.add(grid, BorderLayout.WEST);
     }
 
 
