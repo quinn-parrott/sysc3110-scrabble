@@ -93,11 +93,77 @@ public class GameView extends JFrame {
         pane.add(grid, BorderLayout.WEST);
     }
 
-
     /**
-     * To be implented
+     * Method to get the number of players that will be playing the game.
+     * Player must be between 2 and 4.
+     *
+     *  @author Tao Lufula, 101164153
      */
     private void getPlayers() {
+        boolean gotPlayers = false;
+
+        while(!gotPlayers) {
+
+            int numberOfPlayers = 0;
+
+            JPanel playerPanel = new JPanel();
+            JTextField enterNumOfPlayers = new JTextField("Enter number of players (2 to 4) :  ");
+            enterNumOfPlayers.setEditable(false);
+            playerPanel.add(enterNumOfPlayers);
+
+            JTextField PlayersNumber = new JTextField(10);
+            playerPanel.add(PlayersNumber);
+            JOptionPane.showOptionDialog(this, playerPanel, "Players' Setup" + "                    " + "SCRABBLE ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+            try {
+                numberOfPlayers = Integer.parseInt(PlayersNumber.getText());
+            }catch(NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid entry! Enter number between 2 to 4");
+                continue;
+            }
+
+            if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+                JOptionPane.showMessageDialog(this, "Invalid entry!  Number of players must be between 2 to 4");
+            } else {
+                getPlayersNames(numberOfPlayers);
+                gotPlayers = true;
+            }
+        }
+
+    }
+
+    /**
+     * Method to get all the players' names
+     * @param numberOfPlayers specified by the user in  getPlayers
+     *
+     *  @author Tao Lufula, 101164153
+     */
+    private void getPlayersNames(int numberOfPlayers){
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+
+            Boolean validName = false;
+
+            while (!validName) {
+
+                JPanel addNamePanel = new JPanel();
+                JTextField enterName = new JTextField("Enter name of player " + (i + 1));
+                enterName.setEditable(false);
+                addNamePanel.add(enterName);
+
+                JTextField getName = new JTextField(10);
+                addNamePanel.add(getName);
+                JOptionPane.showOptionDialog(this, addNamePanel, "Players Names", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+                if (getName.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Invalid entry! Name cannot be empty");
+                }
+                else {
+                    playersList.add(new Player(getName.getText()));
+                    validName = true;
+                }
+
+            }
+        }
     }
 
 
