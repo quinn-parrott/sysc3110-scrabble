@@ -37,6 +37,7 @@ public class GameView extends JFrame {
         this.getPlayers();
 
         game = new Game(playersList, wordList);
+        game.addGameView(this);
         playerTurnLabel = new JLabel();
 
 

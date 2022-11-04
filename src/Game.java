@@ -8,6 +8,7 @@ public class Game {
     private final ArrayList<String> wordsPlayed;
     private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
+    private GameView view;
     public WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
@@ -24,6 +25,15 @@ public class Game {
         this.turns = new ArrayList<>();
         this.board = new Board();
         this.wordList = wordList;
+    }
+
+    /**
+     * Setting the view for model
+     *
+     * @param gv GameView
+     */
+    public void addGameView(GameView gv){
+        view = gv;
     }
 
     /**
