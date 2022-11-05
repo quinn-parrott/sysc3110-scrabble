@@ -18,7 +18,7 @@ public class WordList {
      */
     public WordList() throws IOException {
         this.wordlist = new HashSet<>();
-        this.readWordListFile("wordList.txt");
+        this.readWordListFile("src/wordList.txt");
     }
 
     /**
