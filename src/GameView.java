@@ -15,6 +15,10 @@ public class GameView extends JFrame {
     private final WordList wordList = new WordList();
     private final List<Player> playersList = new ArrayList<>();
     private final JLabel playerTurnLabel;
+    private final JButton playButton;
+    private final JButton passTurn;
+
+
 
 
     /**
@@ -30,15 +34,22 @@ public class GameView extends JFrame {
         pane = this.getContentPane();
         pane.setLayout(new BorderLayout());
 
+        playerTurnLabel = new JLabel();
+        playButton = new JButton();
+        passTurn = new JButton();
+
+
+        // A layout manager for these components is still pending
+
+        this.getPlayers();
         this.createBoard();
         this.createTileHand();
         this.createScoreBoard();
         this.createPlayButtons();
-        this.getPlayers();
 
         game = new Game(playersList, wordList);
         game.addGameView(this);
-        playerTurnLabel = new JLabel();
+
 
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,11 +58,39 @@ public class GameView extends JFrame {
     }
 
 
-
     /**
-     * To be implented
+     * Method to create the play and pass turn buttons
+     *
+     * @author Tao Lufula, 101164153
      */
     private void createPlayButtons() {
+        //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
+        this.switchPlayButtonText("PLAY");
+        playButton.setSize(50,50);
+        playButton.setEnabled(false);
+
+        //Pass players turn when they press this button
+        passTurn.setText("PLAY");
+        passTurn.setSize(50,50);
+        passTurn.setEnabled(true);
+
+        //will add action listeners for this buttons
+
+        pane.add(playButton);
+        pane.add(passTurn);
+
+    }
+
+    /**
+     * Changes the play button text depending on the game circumstance
+     * @param text
+     *
+     * @author Tao Lufula, 101164153
+     */
+    public void switchPlayButtonText(String text){
+        // PLAY
+        // RESET
+        playButton.setText(text);
     }
 
 
