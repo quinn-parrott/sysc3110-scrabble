@@ -4,7 +4,7 @@ import java.util.*;
  * @author Quinn Parrott, 101169535
  */
 public class Game {
-    private final ArrayList<Player> players;
+    private final List<Player> players;
     private final ArrayList<String> wordsPlayed;
     private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
@@ -19,7 +19,7 @@ public class Game {
      * @author Quinn Parrott, 101169535
      */
     public Game(List<Player> players, WordList wordList) {
-        this.players = (ArrayList<Player>) players;
+        this.players = players;
         this.wordsPlayed = new ArrayList<>();
         this.newWords = new ArrayList<>();
         this.turns = new ArrayList<>();
