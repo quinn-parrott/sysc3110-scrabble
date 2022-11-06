@@ -58,11 +58,7 @@ public class CommandLineFrontend{
             System.exit(0); //exit if user enters a character that is not "x"
         }
 
-        try {
-            gameEngine = new Game(this.playersList, new WordList());
-        } catch (IOException io) {
-            System.exit(1);
-        }
+        gameEngine = new Game(this.playersList, new WordList());
 
         int PLAYER_HAND_SIZE = 7;
         for (Player player : this.playersList) {
