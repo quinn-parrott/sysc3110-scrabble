@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -9,28 +10,32 @@ import java.util.Scanner;
  */
 
 public class WordList {
+    private static final String resourcePath = "wordList.resources";
+
     private final HashSet<String> wordlist;
 
     /**
      * Default constructor for WordList class
-     * @throws IOException If file wordList.txt does not exist, an IOException is thrown
      * @author Tao Lufula, 101164153
      */
-    public WordList() throws IOException {
+    public WordList() {
         this.wordlist = new HashSet<>();
-        this.readWordListFile("wordList.txt");
+        this.readWordListFile(resourcePath);
     }
 
     /**
      * This method reads words from a text file and add them to the HashSet WordList
-     * @param fileName the name of the txt file to be read
-     * @throws IOException If incorrect IO is entered, an IOException is thrown
+     * @param resourcePath the name of the txt file to be read
      *
      * @author Tao Lufula, 101164153
      */
-    public void readWordListFile(String fileName) throws IOException {
-        Path path = Paths.get(fileName);
-        try (Scanner scanner =  new Scanner(path)){
+    public void readWordListFile(String resourcePath) {
+        var stream = Optional.ofNullable(this.getClass().getResourceAsStream(resourcePath));
+        if (stream.isEmpty()) {
+            throw new RuntimeException(String.format("Resource '%s' doesn't exist", resourcePath));
+        }
+
+        try (Scanner scanner =  new Scanner(stream.get())){
             while (scanner.hasNextLine()){
                 this.wordlist.add(scanner.nextLine().strip().toUpperCase());
             }
