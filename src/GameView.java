@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -22,11 +21,9 @@ public class GameView extends JFrame {
     /**
      * Default Constructor that will initialize the GUI and set up all the JFrame components
      *
-     * @throws IOException //This will be removed once word list is fixed.
-     *
      * @author Tao Lufula, 101164153, .....
      */
-    public GameView() throws IOException {
+    public GameView() {
         super("SCRABBLE");
 
         pane = this.getContentPane();
@@ -140,14 +137,7 @@ public class GameView extends JFrame {
 
 
     public static void main(String[] args) {
-
-        EventQueue.invokeLater(() -> {
-            try {
-                new GameView();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        EventQueue.invokeLater(GameView::new);
     }
 
 }
