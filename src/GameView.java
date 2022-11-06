@@ -43,9 +43,9 @@ public class GameView extends JFrame {
         // A layout manager for these components is still pending
 
         this.getPlayers();
-        this.createBoard();
-        this.createTileHand();
-        this.createScoreBoard();
+        pane.add(this.createBoard(), BorderLayout.WEST);
+        pane.add(this.createTileHand() , BorderLayout.SOUTH);
+        pane.add(this.createScoreBoard(), BorderLayout.EAST);
         this.createPlayButtons();
 
         game = new Game(playersList, wordList);
@@ -101,9 +101,8 @@ public class GameView extends JFrame {
      * @author Jawad Nasrallah, 101201038
      *
      */
-    private void createScoreBoard() {
+    private Component createScoreBoard() {
         JPanel grid = new JPanel(new GridLayout(1, 1));
-        pane.add(grid, BorderLayout.EAST);
         JPanel score = new JPanel(new GridLayout(playersList.size(),playersList.size()));
         score.setBackground(Color.green);
         grid.add(score);
@@ -113,34 +112,33 @@ public class GameView extends JFrame {
             score.add(x);
             score.add(y);
         } //USE THIS AS UPDATE METHOD. (CREATE/UPDATE SCORE BOARD)
+        return grid;
     }
-
-
 
 
     /**
      * To be implented
      */
-    private void createTileHand() {
+    private Component createTileHand() {
+        // TODO: Implement this
         JPanel grid = new JPanel(new GridLayout(1, 1));
         JButton button = new JButton("Tile Hand and Play Buttons will be here!.  Jlabel to tell whose turn it is will also be here.");
         button.setPreferredSize(new Dimension(100, 200));
         grid.add(button);
-        pane.add(grid, BorderLayout.SOUTH);
-
+        return grid;
     }
 
 
 
     /**
-     * To be implented just
+     * To be implemented just
      */
-    private void createBoard() {
+    private Component createBoard() {
         JPanel grid = new JPanel(new GridLayout(1, 1));
         JButton button = new JButton("Game Board will be here!");
         button.setPreferredSize(new Dimension(1000, 100));
         grid.add(button);
-        pane.add(grid, BorderLayout.WEST);
+        return button;
     }
 
     /**
