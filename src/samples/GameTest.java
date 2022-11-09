@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class GameTest {
 
     @Test
-    void testGameFirstCentered() {
+    void testFirstWordCrossesCenterSquare() {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         players.add(p1);
@@ -25,7 +25,7 @@ public class GameTest {
     }
 
     @Test
-    void testGameSecondTurnAttached() {
+    void testSecondWordAttachedToExistingWord() {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -47,7 +47,7 @@ public class GameTest {
     }
 
     @Test
-    void testGameSecondTurnDetached() {
+    void testSecondTurnDetachedFromExistingWord() {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -83,7 +83,7 @@ public class GameTest {
     }
 
     @Test
-    void testGameInvalidWordSecond() {
+    void testInvalidWordPlayed() {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -107,7 +107,7 @@ public class GameTest {
     }
 
     @Test
-    void testGameInvalidWordCross() {
+    void testInvalidWordOverlap() {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
