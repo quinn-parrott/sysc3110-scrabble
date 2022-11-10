@@ -39,6 +39,7 @@ public class GameView extends JFrame {
         passTurn = new JButton();
 
 
+
         // A layout manager for these components is still pending
 
         this.getPlayers();
@@ -53,7 +54,7 @@ public class GameView extends JFrame {
 
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1000, 1000);
+        this.setSize(1130, 1130);
         this.setVisible(true);
     }
 
@@ -96,15 +97,24 @@ public class GameView extends JFrame {
 
 
     /**
-     * To be implented
+     * Creates and updates the score of each player as the game goes on
+     * @author Jawad Nasrallah, 101201038
+     *
      */
     private void createScoreBoard() {
         JPanel grid = new JPanel(new GridLayout(1, 1));
-        JButton button = new JButton("Score Board will be here!");
-        button.setPreferredSize(new Dimension(200, 100));
-        grid.add(button);
         pane.add(grid, BorderLayout.EAST);
+        JPanel score = new JPanel(new GridLayout(playersList.size(),playersList.size()));
+        score.setBackground(Color.green);
+        grid.add(score);
+        for(Player p : playersList){
+            JLabel x = new JLabel(p.getName() + "'s score:  ");
+            JLabel y = new JLabel("  "+ p.getPoints());
+            score.add(x);
+            score.add(y);
+        } //USE THIS AS UPDATE METHOD. (CREATE/UPDATE SCORE BOARD)
     }
+
 
 
 
@@ -117,6 +127,7 @@ public class GameView extends JFrame {
         button.setPreferredSize(new Dimension(100, 200));
         grid.add(button);
         pane.add(grid, BorderLayout.SOUTH);
+
     }
 
 
