@@ -154,6 +154,36 @@ public class Position {
         return Optional.empty();
     }
 
+    /**
+     * Returns a list of positions that are in bounds and adjacent to the current position.
+     * @return List of adjacent positions to the current tile.
+     * @author Quinn Parrott, 101169535
+     */
+    public List<Position> adjacentPositions() {
+        int x = this.getX();
+        int y = this.getY();
+
+        var pos = new ArrayList<Position>(4);
+
+        if (0 <= (x - 1)) {
+            pos.add(new Position(x - 1, y));
+        }
+
+        if ((x + 1) <= (Board.getCOLUMN_NUMBER() - 1)) {
+            pos.add(new Position(x + 1, y));
+        }
+
+        if (0 <= (y - 1)) {
+            pos.add(new Position(x, y - 1));
+        }
+
+        if ((y + 1) <= (Board.getROW_NUMBER()) - 1) {
+            pos.add(new Position(x, y + 1));
+        }
+
+        return pos;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
