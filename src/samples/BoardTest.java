@@ -39,15 +39,13 @@ class BoardTest {
         var board = new Board();
         var tiles = new ArrayList<Tile>();
         String word1 = "Lunch";
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow();
         board.placeTiles(placement);
         for (char c : word1.toUpperCase().toCharArray()) {
             tiles.add(new Tile(c, 0));
         }
         String word2 = "Outer";
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow());
+        placement = TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow();
         board.placeTiles(placement);
         for (char c : word2.toUpperCase().toCharArray()) {
             if(c != 'U') {
@@ -66,18 +64,15 @@ class BoardTest {
         var board = new Board();
         var words = new ArrayList<String>();
         String word1 = "Lunch";
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow();
         board.placeTiles(placement);
         words.add(word1.toUpperCase());
         String word2 = "Outer";
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow());
+        placement = TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow();
         board.placeTiles(placement);
         words.add(word2.toUpperCase());
         String word3 = "Law";
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:v;" + word3).orElseThrow());
+        placement = TilePlacement.FromShorthand("A2:v;" + word3).orElseThrow();
         board.placeTiles(placement);
         words.add(word3.toUpperCase());
         words.add("AT");
@@ -92,11 +87,9 @@ class BoardTest {
     @Test
     void testClone() throws PlacementException {
         var board = new Board();
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;Lunch").orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;Lunch").orElseThrow();
         board.placeTiles(placement);
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("B1:v;OUTER").orElseThrow());
+        placement = TilePlacement.FromShorthand("B1:v;OUTER").orElseThrow();
         board.placeTiles(placement);
         var clone = board.clone();
         for (int i = 0; i < Board.getROW_NUMBER(); i++) {
@@ -109,10 +102,9 @@ class BoardTest {
     @Test
     void testBoardPrinting() throws PlacementException {
         var board = new Board();
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;Lunch").orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;Lunch").orElseThrow();
         board.placeTiles(placement);
-        Assertions.assertDoesNotThrow(() -> board.placeTiles(TilePlacement.FromShorthand("B1:v;OUCHRQ").orElseThrow()));
+        board.placeTiles(TilePlacement.FromShorthand("B1:v;OUCHRQ").orElseThrow());
 
         System.out.println(placement);
         board.printBoard();
@@ -129,27 +121,23 @@ class BoardTest {
         var board = new Board();
         var words = new ArrayList<String>();
         String word1 = "Lunch";
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow();
         board.placeTiles(placement);
         words.add(word1.toUpperCase());
         String word2 = "Outer";
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow());
+        placement = TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow();
         TilePlacement finalPlacement = placement;
-        Assertions.assertDoesNotThrow(() -> board.placeTiles(finalPlacement));
+        board.placeTiles(finalPlacement);
     }
 
     @Test
     void testPlaceTilesWithInvalidOverlap() throws PlacementException {
         var board = new Board();
         String word1 = "Lunch";
-        var placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow());
+        var placement = TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow();
         board.placeTiles(placement);
         String word2 = "Inner";
-        placement = Assertions.assertDoesNotThrow(() ->
-                TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow());
+        placement = TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow();
         TilePlacement finalPlacement = placement;
         Assertions.assertThrows(PlacementException.class, () -> board.placeTiles(finalPlacement));
     }
