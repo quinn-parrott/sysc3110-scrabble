@@ -225,4 +225,12 @@ public class Game {
             System.out.println(player.getName() + " : " + player.getPoints());
         }
     }
+
+    public int getNumTurns() {
+        return this.turns.size();
+    }
+
+    public Player getPlayer() {
+        return this.players.get(this.turns.size() % this.players.size());
+    }
 }
