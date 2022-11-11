@@ -3,6 +3,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Game View
@@ -18,6 +19,9 @@ public class GameView extends JFrame {
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
+    private List<TilePositioned> placedTiles; // TODO: Might not be necessary
+    private Optional<Tile> selectedTile = Optional.empty();
+    private Component boardComponent;
 
 
 
@@ -52,7 +56,9 @@ public class GameView extends JFrame {
         game = new Game(playersList, new WordList());
 
 
-        pane.add(this.createBoard(game.getBoard()), BorderLayout.WEST);
+        this.placedTiles = new ArrayList<>();
+        this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
+        pane.add(this.boardComponent, BorderLayout.WEST);
         pane.add(this.createTileHand(playersList.get(0)) , BorderLayout.SOUTH);
         pane.add(this.createScoreBoard(), BorderLayout.EAST);
         this.createPlayButtons();
@@ -136,12 +142,15 @@ public class GameView extends JFrame {
             button.addActionListener(event -> {
                 var but = (JButton) event.getSource();
 
-                var isSelected = but.getBackground() == colorSelected;
+                var isSelected = but.getBackground().equals(colorSelected);
 
                 // Reset all the buttons
                 for (JButton b : buttons) {
                     b.setBackground(colorUnselected);
                 }
+
+
+                selectedTile = isSelected ? Optional.empty() : Optional.of(tile);
 
                 but.setBackground(
                         isSelected ? colorUnselected : colorSelected
@@ -156,32 +165,58 @@ public class GameView extends JFrame {
     }
 
 
+    private void boardViewRemoveTile(TilePositioned tile) {
+        // TODO: Return to hand
+    }
 
-    private Component createBoard(Board board) {
+    private void boardViewAddTile(Position pos) {
+        if (selectedTile.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No tile selected to place");
+            return;
+        }
+
+        var tile = selectedTile.get();
+        this.placedTiles.add(new TilePositioned(tile, pos));
+        pane.remove(this.boardComponent);
+        this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
+        pane.add(this.boardComponent, BorderLayout.WEST);
+        // TODO: Remove from hand
+    }
+
+    private Component createBoard(Board board, List<TilePositioned> placedTiles) {
         JPanel grid = new JPanel(new GridLayout(Board.getROW_NUMBER(), Board.getCOLUMN_NUMBER()));
         grid.setPreferredSize(new Dimension(1000, 100));
 
-        for (int i =0; i< (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
+        for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            var tile = board.getTile(pos).get();
-            JButton button = new JButton(String.format("%c", tile.chr()));
+            var boardTile = board.getTile(pos).get();
+
+            var placedTile = placedTiles.stream().filter(t -> t.pos().equals(pos)).findFirst();
+
+            JButton button = new JButton(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
 
             var isTilePlaceable = false;
-            if (!tile.isFilledWithLetter()) { // Can't place on filled tile
-                if (Board.getCenterTilePos() == pos.getIndex()) {
-                    // Center tile is a special case since it's possible to place
-                    // the tile here when there are no other tiles.
-                    isTilePlaceable = true;
-                } else {
-                    // Only make the tile placeable if there is a tile adjacent that has a letter
-                    for (var adjacentPos : pos.adjacentPositions()) {
-                        var adjacentTile = board.getTile(adjacentPos).get();
-                        if (adjacentTile.isFilledWithLetter()) {
-                            isTilePlaceable = true;
-                            break;
+            if (placedTile.isPresent()) {
+                isTilePlaceable = true;
+                button.addActionListener(e -> this.boardViewRemoveTile(placedTile.get()));
+            } else {
+                if (!boardTile.isFilledWithLetter()) { // Can't place on filled tile
+                    if (Board.getCenterTilePos() == pos.getIndex()) {
+                        // Center tile is a special case since it's possible to place
+                        // the tile here when there are no other tiles.
+                        isTilePlaceable = true;
+                    } else {
+                        // Only make the tile placeable if there is a tile adjacent that has a letter
+                        for (var adjacentPos : pos.adjacentPositions()) {
+                            var adjacentTile = board.getTile(adjacentPos).get();
+                            if (adjacentTile.isFilledWithLetter()) {
+                                isTilePlaceable = true;
+                                break;
+                            }
                         }
                     }
                 }
+                button.addActionListener(e -> this.boardViewAddTile(pos));
             }
             button.setEnabled(isTilePlaceable);
 
