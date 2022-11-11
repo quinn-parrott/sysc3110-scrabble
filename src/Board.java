@@ -109,6 +109,7 @@ public class Board {
 
     /**
      * Place a TilePlacement on the board
+     *
      * @param tilePlacement tilePlacement to be placed on the board
      * @author Quinn Parrott, 101169535
      */
