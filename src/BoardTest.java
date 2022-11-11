@@ -62,7 +62,7 @@ class BoardTest {
     }
 
     @Test
-    void collectCharSequences() throws PlacementException {
+    void testCollectCharSequences() throws PlacementException {
         var board = new Board();
         var words = new ArrayList<String>();
         String word1 = "Lunch";
