@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class GameTest {
 
     @Test
-    void testFirstWordCrossesCenterSquare() {
+    void testFirstWordCrossesCenterSquare() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         players.add(p1);
@@ -21,11 +21,11 @@ public class GameTest {
         p1.addTile(new Tile('E', 0));
         p1.addTile(new Tile('A', 0));
         p1.addTile(new Tile('D', 0));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:v;Bread").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:v;Bread").orElseThrow());
     }
 
     @Test
-    void testSecondWordAttachedToExistingWord() {
+    void testSecondWordAttachedToExistingWord() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -42,12 +42,12 @@ public class GameTest {
         p2.addTile(new Tile('O', 0));
         p2.addTile(new Tile('K', 0));
         p2.addTile(new Tile('E', 0));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;Bread").orElseThrow()));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:v;Broke").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;Bread").orElseThrow());
+        g1.place(TilePlacement.FromShorthand("H8:v;Broke").orElseThrow());
     }
 
     @Test
-    void testSecondTurnDetachedFromExistingWord() {
+    void testSecondTurnDetachedFromExistingWord() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -65,7 +65,7 @@ public class GameTest {
         p2.addTile(new Tile('O', 0));
         p2.addTile(new Tile('K', 0));
         p2.addTile(new Tile('E', 0));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
         Assertions.assertThrows(PlacementException.class,
                 () -> g1.place(TilePlacement.FromShorthand("A1:h;B").orElseThrow()));
     }
@@ -83,7 +83,7 @@ public class GameTest {
     }
 
     @Test
-    void testInvalidWordPlayed() {
+    void testInvalidWordPlayed() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -101,13 +101,13 @@ public class GameTest {
         p2.addTile(new Tile('Q', 0));
         p2.addTile(new Tile('X', 0));
         p2.addTile(new Tile('J', 0));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
         Assertions.assertThrows(PlacementException.class,
                 () -> g1.place(TilePlacement.FromShorthand("H8:h;Bzqxj").orElseThrow()));
     }
 
     @Test
-    void testInvalidWordOverlap() {
+    void testInvalidWordOverlap() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         Player p2 = new Player("P2");
@@ -125,13 +125,13 @@ public class GameTest {
         p2.addTile(new Tile('A', 0));
         p2.addTile(new Tile('R', 0));
         p2.addTile(new Tile('K', 0));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
         Assertions.assertThrows(PlacementException.class,
                 () -> g1.place(TilePlacement.FromShorthand("A1:h;SPARK").orElseThrow()));
     }
 
     @Test
-    void testPointsGivenCorrectly() {
+    void testPointsGivenCorrectly() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         players.add(p1);
@@ -142,12 +142,12 @@ public class GameTest {
         p1.addTile(new Tile('E', 1));
         p1.addTile(new Tile('A', 1));
         p1.addTile(new Tile('D', 2));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
         Assertions.assertEquals(8, g1.getPlayer().getPoints());
     }
 
     @Test
-    void testSecondWordPointsGivenCorrectly() {
+    void testSecondWordPointsGivenCorrectly() throws PlacementException {
         ArrayList<Player> players = new ArrayList<>();
         Player p1 = new Player("P1");
         players.add(p1);
@@ -158,13 +158,13 @@ public class GameTest {
         p1.addTile(new Tile('E', 1));
         p1.addTile(new Tile('A', 1));
         p1.addTile(new Tile('D', 2));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
 
         p1.addTile(new Tile('R', 1));
         p1.addTile(new Tile('O', 1));
         p1.addTile(new Tile('K', 5));
         p1.addTile(new Tile('E', 1));
-        Assertions.assertDoesNotThrow(() -> g1.place(TilePlacement.FromShorthand("H8:v;BROKE").orElseThrow()));
+        g1.place(TilePlacement.FromShorthand("H8:v;BROKE").orElseThrow());
         Assertions.assertEquals(19, g1.getPlayer().getPoints());
     }
 }
