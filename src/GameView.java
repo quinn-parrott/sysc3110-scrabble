@@ -10,7 +10,6 @@ import java.util.List;
 public class GameView extends JFrame {
     private final Container pane;
     private final Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
-    private final WordList wordList = new WordList();
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
@@ -38,7 +37,7 @@ public class GameView extends JFrame {
         // A layout manager for these components is still pending
 
         List<Player> playersList = (new PlayerAdderView(this)).getPlayers();
-        game = new Game(playersList, wordList);
+        game = new Game(playersList, new WordList());
 
         pane.add(this.createBoard(), BorderLayout.WEST);
         pane.add(this.createTileHand() , BorderLayout.SOUTH);
@@ -96,8 +95,9 @@ public class GameView extends JFrame {
      *
      */
     private Component createScoreBoard() {
+        List<Player> playersList = game.getPlayers();
         JPanel grid = new JPanel(new GridLayout(1, 1));
-        JPanel score = new JPanel(new GridLayout(playersList.size(),playersList.size()));
+        JPanel score = new JPanel(new GridLayout(playersList.size(), playersList.size()));
         score.setBackground(Color.green);
         grid.add(score);
         for(Player p : playersList){
@@ -111,7 +111,7 @@ public class GameView extends JFrame {
 
 
     /**
-     * To be implented
+     * To be implemented
      */
     private Component createTileHand() {
         // TODO: Implement this
