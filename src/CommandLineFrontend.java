@@ -63,7 +63,7 @@ public class CommandLineFrontend{
         int PLAYER_HAND_SIZE = 7;
         for (Player player : this.playersList) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(gameBag.drawTile());
+                player.getTileHand().add(gameBag.drawTile().get());
             }
         }
 
@@ -92,7 +92,7 @@ public class CommandLineFrontend{
 
             System.out.println(this.getPlayer().getName() + ", it is your turn");
             while (this.getPlayer().getTileHand().size() < PLAYER_HAND_SIZE) {
-                this.getPlayer().getTileHand().add(gameBag.drawTile());
+                this.getPlayer().getTileHand().add(gameBag.drawTile().get());
             }
 
             //Iterate through gameBag, and print all tiles in the bag.
