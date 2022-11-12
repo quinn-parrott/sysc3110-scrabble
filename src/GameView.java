@@ -10,7 +10,7 @@ import java.util.Optional;
  * GUI of the game. This class will handle all the JFrame Components for the scrabble game
  *
  */
-public class GameView extends JFrame {
+public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemover{
     private static final Color colorUnselected = new Color(240, 240, 240);
     private static final Color colorSelected = new Color(200, 200, 200);
 
@@ -19,9 +19,10 @@ public class GameView extends JFrame {
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
-    private List<TilePositioned> placedTiles; // TODO: Might not be necessary
+    private List<TilePositioned> placedTiles;
     private Optional<Tile> selectedTile = Optional.empty();
     private Component boardComponent;
+    private BoardView boardView;
 
 
 
@@ -165,11 +166,18 @@ public class GameView extends JFrame {
     }
 
 
-    private void boardViewRemoveTile(TilePositioned tile) {
-        // TODO: Return to hand
+    public void handleBoardTileRemover(TilePositioned tile) {
+        for (var i = 0; i < this.placedTiles.size(); i++) {
+            var temp = this.placedTiles.get(i);
+            if (temp.pos() == tile.pos()) {
+                this.placedTiles.remove(i);
+                break;
+            }
+        }
+        this.boardView.update();
     }
 
-    private void boardViewAddTile(Position pos) {
+    public void handleBoardTileAdder(Position pos) {
         if (selectedTile.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No tile selected to place");
             return;
@@ -177,59 +185,21 @@ public class GameView extends JFrame {
 
         var tile = selectedTile.get();
         this.placedTiles.add(new TilePositioned(tile, pos));
-        pane.remove(this.boardComponent);
-        this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
-        pane.add(this.boardComponent, BorderLayout.WEST);
+        this.boardView.update();
         // TODO: Remove from hand
     }
 
     private Component createBoard(Board board, List<TilePositioned> placedTiles) {
-        JPanel grid = new JPanel(new GridLayout(Board.getROW_NUMBER(), Board.getCOLUMN_NUMBER()));
-        grid.setPreferredSize(new Dimension(1000, 100));
-
-        for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
-            var pos = Position.FromIndex(i).get();
-            var boardTile = board.getTile(pos).get();
-
-            var placedTile = placedTiles.stream().filter(t -> t.pos().equals(pos)).findFirst();
-
-            JButton button = new JButton(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
-
-            var isTilePlaceable = false;
-            if (placedTile.isPresent()) {
-                isTilePlaceable = true;
-                button.addActionListener(e -> this.boardViewRemoveTile(placedTile.get()));
-            } else {
-                if (!boardTile.isFilledWithLetter()) { // Can't place on filled tile
-                    if (Board.getCenterTilePos() == pos.getIndex()) {
-                        // Center tile is a special case since it's possible to place
-                        // the tile here when there are no other tiles.
-                        isTilePlaceable = true;
-                    } else {
-                        // Only make the tile placeable if there is a tile adjacent that has a letter
-                        for (var adjacentPos : pos.adjacentPositions()) {
-                            var adjacentTile = board.getTile(adjacentPos).get();
-                            if (adjacentTile.isFilledWithLetter()) {
-                                isTilePlaceable = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                button.addActionListener(e -> this.boardViewAddTile(pos));
-            }
-            button.setEnabled(isTilePlaceable);
-
-            button.setBackground(colorUnselected);
-            grid.add(button);
-        }
-
-        return grid;
+        var boardView = new BoardView(new BoardViewModel(this.game.getBoard(), this.placedTiles));
+        boardView.addBoardTileAdder(this);
+        boardView.addBoardTileRemover(this);
+        this.boardView = boardView;
+        return boardView;
     }
 
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(GameView::new);
+        new GameView();
     }
 
 }
