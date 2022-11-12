@@ -1,9 +1,6 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-import java.util.stream.IntStream;
-
 public class PositionTest {
 
     @Test
@@ -41,42 +38,38 @@ public class PositionTest {
     @Test
     void testPositionInvalidLetter() {
         System.out.println("Testing Invalid Letter Input");
-        Assertions.assertEquals(true, Position.FromStrings("P", "1").isEmpty(),
-                "Invalid Letter Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("P", "1").isEmpty(), "Invalid Letter Input Not Handled Properly");
         System.out.println("Invalid Letter Input Handled Successfully");
     }
 
     @Test
     void testPositionInvalidNumber() {
         System.out.println("Testing Invalid Number Input");
-        Assertions.assertEquals(true, Position.FromStrings("D", "16").isEmpty(),
-                "Invalid Number Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("D", "16").isEmpty(), "Invalid Number Input Not Handled Properly");
         System.out.println("Invalid Number Input Handled Successfully");
     }
 
     @Test
     void testPositionNonLetterX() {
         System.out.println("Testing Non-Letter Input");
-        Assertions.assertEquals(true, Position.FromStrings("9", "E").isEmpty(),
-                "Non-Letter Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("9", "E").isEmpty(), "Non-Letter Input Not Handled Properly");
         System.out.println("Non-Letter Input Handled Successfully");
     }
 
     @Test
     void testPositionNonNumberY() {
         System.out.println("Testing Non-Number Input");
-        Assertions.assertEquals(true, Position.FromStrings("9", "E").isEmpty(),
-                "Non-Number Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("9", "E").isEmpty(), "Non-Number Input Not Handled Properly");
         System.out.println("Non-Number Input Handled Successfully");
     }
 
     @Test
     void testPositionFromString() {
-        var pos1 = Position.FromString("A1").get();
+        var pos1 = Position.FromString("A1").orElseThrow();
         Assertions.assertEquals(0, pos1.getX());
         Assertions.assertEquals(0, pos1.getY());
 
-        var pos2 = Position.FromString("c10").get();
+        var pos2 = Position.FromString("c10").orElseThrow();
         Assertions.assertEquals(2, pos2.getX());
         Assertions.assertEquals(9, pos2.getY());
     }
@@ -93,54 +86,54 @@ public class PositionTest {
     void testPositionInterpolateAbsolute() {
         Assertions.assertArrayEquals(
                 Position.Interpolate(
-                        Position.FromString("C4").get(),
-                        Position.FromString("C7").get()
-                ).get().toArray(),
+                        Position.FromString("C4").orElseThrow(),
+                        Position.FromString("C7").orElseThrow()
+                ).orElseThrow().toArray(),
                 new Position[]{
-                        Position.FromString("C4").get(),
-                        Position.FromString("C5").get(),
-                        Position.FromString("C6").get(),
-                        Position.FromString("C7").get(),
+                        Position.FromString("C4").orElseThrow(),
+                        Position.FromString("C5").orElseThrow(),
+                        Position.FromString("C6").orElseThrow(),
+                        Position.FromString("C7").orElseThrow(),
                 }
         );
 
         Assertions.assertArrayEquals(
                 Position.Interpolate(
-                        Position.FromString("A7").get(),
-                        Position.FromString("A4").get()
-                ).get().toArray(),
+                        Position.FromString("A7").orElseThrow(),
+                        Position.FromString("A4").orElseThrow()
+                ).orElseThrow().toArray(),
                 new Position[]{
-                        Position.FromString("a4").get(),
-                        Position.FromString("a5").get(),
-                        Position.FromString("a6").get(),
-                        Position.FromString("a7").get(),
+                        Position.FromString("a4").orElseThrow(),
+                        Position.FromString("a5").orElseThrow(),
+                        Position.FromString("a6").orElseThrow(),
+                        Position.FromString("a7").orElseThrow(),
                 }
         );
 
         Assertions.assertArrayEquals(
                 Position.Interpolate(
-                        Position.FromString("E4").get(),
-                        Position.FromString("K4").get()
-                ).get().toArray(),
+                        Position.FromString("E4").orElseThrow(),
+                        Position.FromString("K4").orElseThrow()
+                ).orElseThrow().toArray(),
                 new Position[]{
-                        Position.FromString("E4").get(),
-                        Position.FromString("F4").get(),
-                        Position.FromString("G4").get(),
-                        Position.FromString("H4").get(),
-                        Position.FromString("I4").get(),
-                        Position.FromString("J4").get(),
-                        Position.FromString("K4").get()
+                        Position.FromString("E4").orElseThrow(),
+                        Position.FromString("F4").orElseThrow(),
+                        Position.FromString("G4").orElseThrow(),
+                        Position.FromString("H4").orElseThrow(),
+                        Position.FromString("I4").orElseThrow(),
+                        Position.FromString("J4").orElseThrow(),
+                        Position.FromString("K4").orElseThrow()
                 }
         );
 
         Assertions.assertArrayEquals(
                 Position.Interpolate(
-                        Position.FromString("C1").get(),
-                        Position.FromString("B1").get()
-                ).get().toArray(),
+                        Position.FromString("C1").orElseThrow(),
+                        Position.FromString("B1").orElseThrow()
+                ).orElseThrow().toArray(),
                 new Position[]{
-                        Position.FromString("B1").get(),
-                        Position.FromString("C1").get()
+                        Position.FromString("B1").orElseThrow(),
+                        Position.FromString("C1").orElseThrow()
                 }
         );
     }
@@ -148,7 +141,35 @@ public class PositionTest {
     @Test
     void testPositionIndex() {
         for (var i = 0; i < Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER(); i++) {
-            Assertions.assertEquals(i, Position.FromIndex(i).get().getIndex());
+            Assertions.assertEquals(i, Position.FromIndex(i).orElseThrow().getIndex());
         }
+    }
+
+    @Test
+    void testPositionDistance() {
+        var pos1 = Position.FromString("C3");
+        var pos2 = Position.FromString("C4");
+        Assertions.assertTrue(Math.abs(Position.Distance(pos1.orElseThrow(), pos2.orElseThrow()) - 1) < 0.01);
+        pos1 = Position.FromString("A7");
+        pos2 = Position.FromString("C5");
+        Assertions.assertTrue(Math.abs(Position.Distance(pos1.orElseThrow(), pos2.orElseThrow()) - 2.828427) < 0.01);
+    }
+
+    @Test
+    void testEquals() {
+        var pos1 = Position.FromString("C5").orElseThrow();
+        var pos2 = Position.FromString("C6").orElseThrow();
+        var pos3 = Position.FromString("C6").orElseThrow();
+        var pos4 = Position.FromString("D5").orElseThrow();
+        Assertions.assertNotEquals(pos1, pos2);
+        Assertions.assertEquals(pos2, pos3);
+        Assertions.assertNotEquals(pos3, pos4);
+        Assertions.assertNotEquals(pos1, pos4);
+    }
+
+    @Test
+    void testToString() {
+        var pos = Position.FromInts(6, 11).orElseThrow();
+        Assertions.assertEquals("G12", pos.toString());
     }
 }
