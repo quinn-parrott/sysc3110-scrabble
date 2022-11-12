@@ -1,6 +1,3 @@
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Scanner;
@@ -10,7 +7,7 @@ import java.util.Scanner;
  */
 
 public class WordList {
-    private static final String resourcePath = "wordList.resources";
+    public static final String resourcePath = "wordList.resources";
 
     private final HashSet<String> wordlist;
 
