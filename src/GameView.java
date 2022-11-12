@@ -50,7 +50,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         int PLAYER_HAND_SIZE = 7;
         for (Player player : playersList) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(gameBag.drawTile());
+                player.getTileHand().add(gameBag.drawTile().get());
             }
         }
 
