@@ -38,32 +38,28 @@ public class PositionTest {
     @Test
     void testPositionInvalidLetter() {
         System.out.println("Testing Invalid Letter Input");
-        Assertions.assertEquals(true, Position.FromStrings("P", "1").isEmpty(),
-                "Invalid Letter Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("P", "1").isEmpty(), "Invalid Letter Input Not Handled Properly");
         System.out.println("Invalid Letter Input Handled Successfully");
     }
 
     @Test
     void testPositionInvalidNumber() {
         System.out.println("Testing Invalid Number Input");
-        Assertions.assertEquals(true, Position.FromStrings("D", "16").isEmpty(),
-                "Invalid Number Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("D", "16").isEmpty(), "Invalid Number Input Not Handled Properly");
         System.out.println("Invalid Number Input Handled Successfully");
     }
 
     @Test
     void testPositionNonLetterX() {
         System.out.println("Testing Non-Letter Input");
-        Assertions.assertEquals(true, Position.FromStrings("9", "E").isEmpty(),
-                "Non-Letter Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("9", "E").isEmpty(), "Non-Letter Input Not Handled Properly");
         System.out.println("Non-Letter Input Handled Successfully");
     }
 
     @Test
     void testPositionNonNumberY() {
         System.out.println("Testing Non-Number Input");
-        Assertions.assertEquals(true, Position.FromStrings("9", "E").isEmpty(),
-                "Non-Number Input Not Handled Properly");
+        Assertions.assertTrue(Position.FromStrings("9", "E").isEmpty(), "Non-Number Input Not Handled Properly");
         System.out.println("Non-Number Input Handled Successfully");
     }
 
