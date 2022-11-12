@@ -233,4 +233,8 @@ public class Game {
     public Player getPlayer() {
         return this.players.get(this.turns.size() % this.players.size());
     }
+
+    public List<Player> getPlayers() {
+        return this.players;
+    }
 }
