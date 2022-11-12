@@ -144,4 +144,32 @@ public class PositionTest {
             Assertions.assertEquals(i, Position.FromIndex(i).orElseThrow().getIndex());
         }
     }
+
+    @Test
+    void testPositionDistance() {
+        var pos1 = Position.FromString("C3");
+        var pos2 = Position.FromString("C4");
+        Assertions.assertTrue(Math.abs(Position.Distance(pos1.orElseThrow(), pos2.orElseThrow()) - 1) < 0.01);
+        pos1 = Position.FromString("A7");
+        pos2 = Position.FromString("C5");
+        Assertions.assertTrue(Math.abs(Position.Distance(pos1.orElseThrow(), pos2.orElseThrow()) - 2.828427) < 0.01);
+    }
+
+    @Test
+    void testEquals() {
+        var pos1 = Position.FromString("C5").orElseThrow();
+        var pos2 = Position.FromString("C6").orElseThrow();
+        var pos3 = Position.FromString("C6").orElseThrow();
+        var pos4 = Position.FromString("D5").orElseThrow();
+        Assertions.assertNotEquals(pos1, pos2);
+        Assertions.assertEquals(pos2, pos3);
+        Assertions.assertNotEquals(pos3, pos4);
+        Assertions.assertNotEquals(pos1, pos4);
+    }
+
+    @Test
+    void testToString() {
+        var pos = Position.FromInts(6, 11).orElseThrow();
+        Assertions.assertEquals("G12", pos.toString());
+    }
 }
