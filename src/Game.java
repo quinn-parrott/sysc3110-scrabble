@@ -237,4 +237,8 @@ public class Game {
     public List<Player> getPlayers() {
         return this.players;
     }
+
+    public Board getBoard() {
+        return this.board;
+    }
 }
