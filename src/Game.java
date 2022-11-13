@@ -60,7 +60,7 @@ public class Game {
                     placement, Optional.of(this.board));
         }
 
-        if (wordsPlayed.size() == 0) {
+        if (this.board.getTile(Position.FromIndex(Math.floorDiv(Board.getROW_NUMBER()*Board.getCOLUMN_NUMBER(), 2)).get()).get().chr() == '*') {
             // First turn
             var p = Position.FromIndex(Board.getCenterTilePos()).orElseThrow();
             var distanceFromCenter = (int) placement.minTileDistance(p);
