@@ -48,7 +48,7 @@ public class TileTrayView extends JPanel {
         }
     }
 
-    private void update() {
+    public void update() {
         int i = 0;
         for (TileTrayModel.TileTrayEntry entry : model.getEntries()) {
             var button = this.buttons.get(i);
