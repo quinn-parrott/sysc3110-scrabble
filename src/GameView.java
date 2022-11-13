@@ -23,9 +23,10 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private Component boardComponent;
     private BoardView boardView;
     private BoardViewModel boardViewModel;
+    private Component tileTrayView;
     private TileTrayModel tileTrayModel;
 
-
+    private Component scoreboard;
 
 
     /**
@@ -61,8 +62,10 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
         pane.add(this.boardComponent, BorderLayout.WEST);
-        pane.add(this.createTileHand(playersList.get(0)) , BorderLayout.SOUTH);
-        pane.add(this.createScoreBoard(), BorderLayout.EAST);
+        this.createTileHand(this.game.getPlayer());
+        pane.add(tileTrayView , BorderLayout.SOUTH);
+        this.createScoreBoard();
+        pane.add(this.scoreboard, BorderLayout.EAST);
         this.createPlayButtons();
 
         game.addGameView(this);
@@ -96,7 +99,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                     this.game.place(tp.get());
                     this.placedTiles.removeIf(_all -> true);
                     boardViewModel.setBoard(this.game.getBoard());
-                    boardView.update();
+                    this.update();
             } catch (PlacementException pe) {
                     JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
                 }
@@ -108,6 +111,16 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         pane.add(playButton);
         pane.add(passTurn);
 
+    }
+
+    private void update() {
+        this.pane.remove(this.scoreboard);
+        this.createScoreBoard();
+        pane.add(this.scoreboard, BorderLayout.EAST);
+        this.pane.remove(this.tileTrayView);
+        this.createTileHand(this.game.getPlayer());
+        this.pane.add(this.tileTrayView, BorderLayout.SOUTH);
+        this.boardView.update();
     }
 
     /**
@@ -129,7 +142,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      * @author Jawad Nasrallah, 101201038
      *
      */
-    private Component createScoreBoard() {
+    private void createScoreBoard() {
         List<Player> playersList = game.getPlayers();
         JPanel grid = new JPanel(new GridLayout(1, 1));
         JPanel score = new JPanel(new GridLayout(playersList.size(), playersList.size()));
@@ -141,11 +154,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             score.add(x);
             score.add(y);
         } //USE THIS AS UPDATE METHOD. (CREATE/UPDATE SCORE BOARD)
-        return grid;
+        this.scoreboard = grid;
     }
 
 
-    private Component createTileHand(Player player) {
+    private void createTileHand(Player player) {
         // TODO: Inline this function?
         var tiles = player.getTileHand();
         var model = new TileTrayModel(
@@ -156,7 +169,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                 Optional.empty()
         );
         tileTrayModel = model;
-        return new TileTrayView(model);
+        this.tileTrayView = new TileTrayView(model);
     }
 
 
