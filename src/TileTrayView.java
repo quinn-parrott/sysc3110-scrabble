@@ -54,24 +54,6 @@ public class TileTrayView extends JPanel {
             var button = this.buttons.get(i);
             button.setText(String.format("%c tile", entry.tile().chr()));
             button.setBackground(colorUnselected);
-            int finalI = i;
-            button.addActionListener(event -> {
-                var but = (JButton) event.getSource();
-
-                var isSelected = but.getBackground().equals(colorSelected);
-
-                // Reset all the buttons
-                for (JButton b : buttons) {
-                    b.setBackground(colorUnselected);
-                }
-
-
-                model.setSelected(isSelected ? Optional.empty() : Optional.of(finalI));
-
-                but.setBackground(
-                        isSelected ? colorUnselected : colorSelected
-                );
-            });
             i++;
         }
     }
