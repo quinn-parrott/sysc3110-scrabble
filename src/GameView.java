@@ -25,8 +25,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private BoardViewModel boardViewModel;
     private TileTrayModel tileTrayModel;
     private TileTrayView tileTrayView;
-
-    private Component scoreboard;
+    private ScoreboardView scoreboard;
 
 
     /**
@@ -77,8 +76,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         JPanel scoreBoardAndButtonPanel = new JPanel();
         scoreBoardAndButtonPanel.setLayout(new BorderLayout());
-        this.createScoreBoard();
-        scoreBoardAndButtonPanel.add(this.scoreboard, BorderLayout.NORTH);
+        this.scoreboard = new ScoreboardView(game);
+        scoreBoardAndButtonPanel.add(this.scoreboard.getView(), BorderLayout.NORTH);
         scoreBoardAndButtonPanel.add(this.createPlayButtons(), BorderLayout.SOUTH);
 
         pane.add(boardAndTileHandPanel, BorderLayout.WEST);
@@ -144,9 +143,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
     public void update() {
-        this.pane.remove(this.scoreboard);
-        this.createScoreBoard();
-        pane.add(this.scoreboard, BorderLayout.EAST);
+        this.scoreboard.update();
         var model = this.createTileHand(this.game.getPlayer());
         this.tileTrayModel.setSelected(model.getSelected());
         this.tileTrayModel.setEntries(model.getEntries());
@@ -164,27 +161,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         // PLAY
         // RESET
         playButton.setText(text);
-    }
-
-    /**
-     * Creates and updates the score of each player as the game goes on
-     * @author Jawad Nasrallah, 101201038
-     *
-     */
-    private void createScoreBoard() {
-        List<Player> playersList = game.getPlayers();
-        JPanel grid = new JPanel(new GridLayout(1, 1));
-        JPanel score = new JPanel(new GridLayout(playersList.size(), playersList.size()));
-        score.setBackground(Color.green);
-        grid.add(score);
-        for(Player p : playersList){
-            JLabel x = new JLabel(p.getName() + "'s score:  ");
-            JLabel y = new JLabel("  "+ p.getPoints());
-            score.add(x);
-            score.add(y);
-        } //USE THIS AS UPDATE METHOD. (CREATE/UPDATE SCORE BOARD)
-        grid.setPreferredSize(new Dimension(300,500));
-        this.scoreboard = grid;
     }
 
 
