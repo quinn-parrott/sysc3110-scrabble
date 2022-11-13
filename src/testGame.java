@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-public class GameTest {
+public class testGame {
 
     @Test
     void testFirstWordCrossesCenterSquare() throws PlacementException {

@@ -3,13 +3,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-class BoardTest {
+class testBoard {
 
     @Test
     void testSetTilePositionArgument() {
         var board = new Board();
         var tile = new Tile('A', 0);
-        var pos = Position.FromStrings("a", "1").get();
+        var pos = Position.FromStrings("a", "1").orElseThrow();
         board.setTile(tile, pos);
         Assertions.assertEquals(tile, board.getTile(pos).orElseThrow());
     }
@@ -119,11 +119,9 @@ class BoardTest {
     @Test
     void testPlaceTilesWithValidOverlap() throws PlacementException {
         var board = new Board();
-        var words = new ArrayList<String>();
         String word1 = "Lunch";
         var placement = TilePlacement.FromShorthand("A2:h;" + word1).orElseThrow();
         board.placeTiles(placement);
-        words.add(word1.toUpperCase());
         String word2 = "Outer";
         placement = TilePlacement.FromShorthand("B1:v;" + word2).orElseThrow();
         TilePlacement finalPlacement = placement;
