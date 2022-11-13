@@ -59,15 +59,30 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
-        pane.add(this.boardComponent, BorderLayout.WEST);
-        pane.add(this.createTileHand(playersList.get(0)) , BorderLayout.SOUTH);
-        pane.add(this.createScoreBoard(), BorderLayout.EAST);
-        this.createPlayButtons();
+        this.boardComponent.setPreferredSize(new Dimension(1100,700));
+
+        JPanel boardAndTileHandPanel = new JPanel();
+        boardAndTileHandPanel.setLayout(new BorderLayout());
+
+        JPanel tileHandPanel = new JPanel();
+        tileHandPanel.add(this.createTileHand(playersList.get(0)), new GridBagConstraints());
+        tileHandPanel.setPreferredSize(new Dimension(1100,50));
+
+        boardAndTileHandPanel.add(this.boardComponent, BorderLayout.NORTH);
+        boardAndTileHandPanel.add(tileHandPanel, BorderLayout.SOUTH);
+
+        JPanel scoreBoardAndButtonPanel = new JPanel();
+        scoreBoardAndButtonPanel.setLayout(new BorderLayout());
+        scoreBoardAndButtonPanel.add(this.createScoreBoard(), BorderLayout.NORTH);
+        scoreBoardAndButtonPanel.add(this.createPlayButtons(), BorderLayout.SOUTH);
+
+        pane.add(boardAndTileHandPanel, BorderLayout.WEST);
+        pane.add(scoreBoardAndButtonPanel, BorderLayout.EAST);
 
         game.addGameView(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1130, 1130);
+        this.setSize(1000, 1000);
         this.setVisible(true);
     }
 
@@ -77,21 +92,27 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      *
      * @author Tao Lufula, 101164153
      */
-    private void createPlayButtons() {
+    private Component createPlayButtons() {
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
         this.switchPlayButtonText("PLAY");
-        playButton.setSize(50,50);
+        playButton.setPreferredSize(new Dimension(150,50));
         playButton.setEnabled(false);
 
         //Pass players turn when they press this button
-        passTurn.setText("PLAY");
-        passTurn.setSize(50,50);
-        passTurn.setEnabled(true);
+        passTurn.setText("PASS");
+        passTurn.setPreferredSize(new Dimension(150,50));
 
-        //will add action listeners for this buttons
 
-        pane.add(playButton);
-        pane.add(passTurn);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BorderLayout());
+
+        buttonsPanel.add(playButton, BorderLayout.EAST);
+        buttonsPanel.add(passTurn, BorderLayout.WEST);
+
+        playerTurnLabel.setPreferredSize(new Dimension(150,150));
+        buttonsPanel.add(playerTurnLabel, BorderLayout.NORTH);
+
+        return buttonsPanel;
 
     }
 
@@ -126,6 +147,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             score.add(x);
             score.add(y);
         } //USE THIS AS UPDATE METHOD. (CREATE/UPDATE SCORE BOARD)
+        grid.setPreferredSize(new Dimension(300,500));
         return grid;
     }
 
