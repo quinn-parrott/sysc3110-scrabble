@@ -122,12 +122,14 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             } else {
                 JOptionPane.showMessageDialog(this, "No Word Played");
             }
+            this.update();
         });
 
         passTurn.addActionListener((e) -> {
             this.game.pass();
             this.placedTiles.removeIf(_all -> true);
             boardViewModel.setBoard(this.game.getBoard());
+            this.update();
         });
 
         JPanel buttonsPanel = new JPanel();
