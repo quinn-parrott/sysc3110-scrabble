@@ -67,7 +67,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         game.addGameView(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1130, 1130);
+        this.setSize(1300, 1130);
         this.setVisible(true);
     }
 
@@ -88,7 +88,16 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setSize(50,50);
         passTurn.setEnabled(true);
 
-        //will add action listeners for this buttons
+        passTurn.addActionListener((e) -> {
+            Optional<TilePlacement> tp = this.boardView.buildPlacement();
+            try {
+                if (tp.isPresent()) {
+                    this.game.place(tp.get());
+                }
+            } catch (PlacementException pe) {
+                //TODO Error Handling
+            }
+        });
 
         pane.add(playButton);
         pane.add(passTurn);
