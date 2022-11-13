@@ -2,12 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BoardView extends JPanel {
     private static final Color colorUnselected = new Color(240, 240, 240);
     private static final Color colorSelected = new Color(200, 200, 200);
 
     private List<JButton> buttons;
+
     static enum CallbackType {
         None,
         AddTile,
@@ -114,5 +116,57 @@ public class BoardView extends JPanel {
         for (var adder: this.boardTileAdder) {
             adder.handleBoardTileAdder(pos);
         }
+    }
+
+    public Optional<TilePlacement> buildPlacement() {
+        StringBuilder word = new StringBuilder();
+        StringBuilder shorthand = new StringBuilder();
+        char direction = ' ';
+        boolean isValid = true;
+        Optional<TilePlacement> tp;
+        if(this.model.placedTiles().size() > 1) {
+            Position p = this.model.placedTiles().get(0).pos();
+            BoardViewModel copy = this.model;
+            copy.placedTiles().remove(0);
+            for (TilePositioned tile : copy.placedTiles()) {
+                if (direction == ' ') {
+                    if (tile.pos().getX() == p.getX() && tile.pos().getY() != p.getY()) {
+                        direction = 'h';
+                    } else if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
+                        direction = 'v';
+                    } else {
+                        isValid = false;
+                        break;
+                    }
+                } else {
+                    if (direction == 'h') {
+                        if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
+                            isValid = false;
+                            break;
+                        }
+                    } else {
+                        if (tile.pos().getX() == p.getX() && tile.pos().getY() != p.getY()) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            shorthand.append(p);
+        } else if (this.model.placedTiles().size() == 1) {
+            shorthand.append(this.model.placedTiles().get(0).pos()).append(";h");
+        } else {
+            isValid = false;
+        }
+        if(isValid) {
+            for (TilePositioned tile : this.model.placedTiles()) {
+                word.append(tile.tile().chr());
+            }
+            shorthand.append(word);
+            tp = TilePlacement.FromShorthand(String.valueOf(shorthand));
+        } else {
+            tp = Optional.empty();
+        }
+        return tp;
     }
 }
