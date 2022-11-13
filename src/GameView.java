@@ -101,26 +101,34 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
         this.switchPlayButtonText("PLAY");
         playButton.setPreferredSize(new Dimension(150,50));
-        playButton.setEnabled(false);
 
         //Pass players turn when they press this button
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(150,50));
 
-        passTurn.addActionListener((e) -> {
-            Optional<TilePlacement> tp = this.boardView.buildPlacement();
+        playButton.addActionListener((e) -> {
+            if (this.boardViewModel.placedTiles.size() != 0) {
+                Optional<TilePlacement> tp = this.boardView.buildPlacement();
                 if (tp.isPresent()) {
-                try {
-                    this.game.place(tp.get());
-                    this.placedTiles.removeIf(_all -> true);
-                    boardViewModel.setBoard(this.game.getBoard());
-                    this.update();
-            } catch (PlacementException pe) {
-                    JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
+                    try {
+                        this.game.place(tp.get());
+                        this.placedTiles.removeIf(_all -> true);
+                        boardViewModel.setBoard(this.game.getBoard());
+                    } catch (PlacementException pe) {
+                        JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid tile");
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid tile");
+                JOptionPane.showMessageDialog(this, "No Word Played");
             }
+        });
+
+        passTurn.addActionListener((e) -> {
+            this.game.pass();
+            this.placedTiles.removeIf(_all -> true);
+            boardViewModel.setBoard(this.game.getBoard());
         });
 
         JPanel buttonsPanel = new JPanel();
@@ -133,10 +141,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         buttonsPanel.add(playerTurnLabel, BorderLayout.NORTH);
 
         return buttonsPanel;
-
     }
 
-    private void update() {
+    public void update() {
         this.pane.remove(this.scoreboard);
         this.createScoreBoard();
         pane.add(this.scoreboard, BorderLayout.EAST);
@@ -158,8 +165,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         // RESET
         playButton.setText(text);
     }
-
-
 
     /**
      * Creates and updates the score of each player as the game goes on

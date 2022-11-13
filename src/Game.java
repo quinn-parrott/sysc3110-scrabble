@@ -8,7 +8,7 @@ public class Game {
     private final ArrayList<String> wordsPlayed;
     private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
-    private GameView view;
+    private ArrayList<GameView> views;
     public WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
@@ -25,6 +25,7 @@ public class Game {
         this.turns = new ArrayList<>();
         this.board = new Board();
         this.wordList = wordList;
+        this.views = new ArrayList<>();
     }
 
     /**
@@ -33,7 +34,7 @@ public class Game {
      * @param gv GameView
      */
     public void addGameView(GameView gv){
-        view = gv;
+        views.add(gv);
     }
 
     /**
@@ -59,7 +60,7 @@ public class Game {
                     placement, Optional.of(this.board));
         }
 
-        if (turns.size() == 0) {
+        if (wordsPlayed.size() == 0) {
             // First turn
             var p = Position.FromIndex(Board.getCenterTilePos()).orElseThrow();
             var distanceFromCenter = (int) placement.minTileDistance(p);
@@ -154,6 +155,9 @@ public class Game {
         }
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
         this.turns.add(placement);
+        for (GameView view : this.views) {
+            view.update();
+        }
     }
 
     /**
@@ -162,6 +166,9 @@ public class Game {
      */
     public void pass() {
         this.turns.add(new TilePlacement(new ArrayList<>()));
+        for (GameView view : this.views) {
+            view.update();
+        }
     }
 
     /**
