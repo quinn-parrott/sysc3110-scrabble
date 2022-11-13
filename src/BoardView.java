@@ -124,16 +124,16 @@ public class BoardView extends JPanel {
             for (TilePositioned tile : placedTiles.subList(1, placedTiles.size() - 1)) {
                 if (direction == ' ') {
                     if (tile.pos().getX() == p.getX() && tile.pos().getY() != p.getY()) {
-                        direction = 'h';
-                    } else if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
                         direction = 'v';
+                    } else if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
+                        direction = 'h';
                     } else {
                         isValid = false;
                         break;
                     }
 
                 } else {
-                    if (direction == 'h') {
+                    if (direction == 'v') {
                         if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
                             isValid = false;
                             break;
