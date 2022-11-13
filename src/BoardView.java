@@ -156,9 +156,7 @@ public class BoardView extends JPanel {
             var tile = placedTiles.get(0);
             shorthand
                     .append(tile.pos())
-                    .append(":h;")
-                    .append(tile.tile().chr());
-
+                    .append(":h;");
         } else {
             isValid = false;
         }
