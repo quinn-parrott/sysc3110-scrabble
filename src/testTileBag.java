@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-class TileBagTest {
+class testTileBag {
 
     @Test
     void testTileBagInit() {

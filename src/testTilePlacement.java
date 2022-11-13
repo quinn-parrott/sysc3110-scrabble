@@ -1,9 +1,7 @@
-
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TilePlacementTest {
+public class testTilePlacement {
 
     @Test
     void testFromShorthandSimple() {
