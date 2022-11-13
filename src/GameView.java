@@ -20,9 +20,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final JButton playButton;
     private final JButton passTurn;
     private List<TilePositioned> placedTiles;
-    private Optional<Tile> selectedTile = Optional.empty();
     private Component boardComponent;
     private BoardView boardView;
+    private TileTrayModel tileTrayModel;
 
 
 
@@ -50,7 +50,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         int PLAYER_HAND_SIZE = 7;
         for (Player player : playersList) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(gameBag.drawTile());
+                player.getTileHand().add(gameBag.drawTile().get());
             }
         }
 
@@ -131,38 +131,17 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
 
     private Component createTileHand(Player player) {
+        // TODO: Inline this function?
         var tiles = player.getTileHand();
-        JPanel gridPanel = new JPanel(new GridLayout(1, tiles.size()));
-        gridPanel.setPreferredSize(new Dimension(100, 200));
-
-        var buttons = new ArrayList<JButton>();
-
-        for (Tile tile : tiles) {
-            JButton button = new JButton(String.format("%c tile", tile.chr()));
-            button.setBackground(colorUnselected);
-            button.addActionListener(event -> {
-                var but = (JButton) event.getSource();
-
-                var isSelected = but.getBackground().equals(colorSelected);
-
-                // Reset all the buttons
-                for (JButton b : buttons) {
-                    b.setBackground(colorUnselected);
-                }
-
-
-                selectedTile = isSelected ? Optional.empty() : Optional.of(tile);
-
-                but.setBackground(
-                        isSelected ? colorUnselected : colorSelected
-                );
-            });
-            buttons.add(button);
-
-            gridPanel.add(button);
-        }
-
-        return gridPanel;
+        var model = new TileTrayModel(
+                tiles
+                        .stream()
+                        .map(t -> new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, t))
+                        .toList(),
+                Optional.empty()
+        );
+        tileTrayModel = model;
+        return new TileTrayView(model);
     }
 
 
@@ -178,13 +157,13 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
     public void handleBoardTileAdder(Position pos) {
-        if (selectedTile.isEmpty()) {
+        if (tileTrayModel.getSelected().isEmpty()) {
             JOptionPane.showMessageDialog(this, "No tile selected to place");
             return;
         }
 
-        var tile = selectedTile.get();
-        this.placedTiles.add(new TilePositioned(tile, pos));
+        var tile_i = tileTrayModel.getSelected().get();
+        this.placedTiles.add(new TilePositioned(tileTrayModel.getEntries().get(tile_i).tile(), pos));
         this.boardView.update();
         // TODO: Remove from hand
     }

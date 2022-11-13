@@ -61,30 +61,12 @@ public class BoardView extends JPanel {
             this.callbackDispatch.set(i, CallbackType.None);
             button.setText(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
 
-            var isTilePlaceable = false;
             if (placedTile.isPresent()) {
-                isTilePlaceable = true;
                 this.callbackDispatch.set(i, CallbackType.RemoveTile);
             } else {
-                if (!boardTile.isFilledWithLetter()) { // Can't place on filled tile
-                    if (Board.getCenterTilePos() == pos.getIndex()) {
-                        // Center tile is a special case since it's possible to place
-                        // the tile here when there are no other tiles.
-                        isTilePlaceable = true;
-                    } else {
-                        // Only make the tile placeable if there is a tile adjacent that has a letter
-                        for (var adjacentPos : pos.adjacentPositions()) {
-                            var adjacentTile = model.board().getTile(adjacentPos).get();
-                            if (adjacentTile.isFilledWithLetter()) {
-                                isTilePlaceable = true;
-                                break;
-                            }
-                        }
-                    }
-                }
                 this.callbackDispatch.set(i, CallbackType.AddTile);
             }
-            button.setEnabled(isTilePlaceable);
+            button.setEnabled(true);
 
             button.setBackground(colorUnselected);
         }
