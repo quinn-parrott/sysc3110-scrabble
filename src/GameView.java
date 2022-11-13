@@ -61,7 +61,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
-        this.boardComponent.setPreferredSize(new Dimension(1100,700));
+        this.boardComponent.setPreferredSize(new Dimension(500, 600));
 
         JPanel boardAndTileHandPanel = new JPanel();
         boardAndTileHandPanel.setLayout(new BorderLayout());
@@ -86,7 +86,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         game.addGameView(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1000, 1000);
+        this.setSize(1400, 1000);
         this.setVisible(true);
     }
 
