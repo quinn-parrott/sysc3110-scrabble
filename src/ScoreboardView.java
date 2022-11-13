@@ -25,9 +25,9 @@ public class ScoreboardView {
         score.setBackground(Color.green);
         grid.add(score);
         for(Player p : playersList){
-            JLabel x = new JLabel(p.getName() + "'s score:  ");
+            JLabel x = new JLabel();
             x.setHorizontalAlignment(SwingConstants.RIGHT);
-            JLabel y = new JLabel("  "+ p.getPoints());
+            JLabel y = new JLabel();
 
             nameLabels.add(x);
             pointsLabels.add(y);
@@ -35,16 +35,23 @@ public class ScoreboardView {
             score.add(y);
         }
         grid.setPreferredSize(new Dimension(300,500));
+        update();
 
         this.view = grid;
     }
 
     public void update() {
         var players = game.getPlayers();
+        var currentPlayer = game.getPlayer();
         for(int i = 0; i < players.size(); i++){
             JLabel x = nameLabels.get(i);
             JLabel y = pointsLabels.get(i);
             var player = players.get(i);
+            if (player == currentPlayer) {
+                x.setBorder(new LineBorder(Color.red));
+            } else {
+                x.setBorder(new LineBorder(Color.green));
+            }
 
             x.setText(player.getName() + "'s score:  ");
             y.setText("  "+ player.getPoints());
