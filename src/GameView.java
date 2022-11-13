@@ -59,8 +59,20 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
-        pane.add(this.boardComponent, BorderLayout.WEST);
-        pane.add(this.createTileHand(playersList.get(0)) , BorderLayout.SOUTH);
+        this.boardComponent.setPreferredSize(new Dimension(1100,700));
+
+        JPanel boardAndTileHandPanel = new JPanel();
+        boardAndTileHandPanel.setLayout(new BorderLayout());
+
+        JPanel tileHandPanel = new JPanel();
+        tileHandPanel.add(this.createTileHand(playersList.get(0)), new GridBagConstraints());
+        tileHandPanel.setPreferredSize(new Dimension(1100,50));
+
+        boardAndTileHandPanel.add(this.boardComponent, BorderLayout.NORTH);
+        boardAndTileHandPanel.add(tileHandPanel, BorderLayout.SOUTH);
+
+
+        pane.add(boardAndTileHandPanel, BorderLayout.WEST);
         pane.add(this.createScoreBoard(), BorderLayout.EAST);
         this.createPlayButtons();
 

@@ -15,7 +15,7 @@ public class TileTrayView extends JPanel {
     public TileTrayView(TileTrayModel model) {
         super(new GridLayout(1, model.getEntries().size()));
         this.model = model;
-        this.setPreferredSize(new Dimension(100, 200));
+        this.setPreferredSize(new Dimension(500, 50));
 
         this.buttons = new ArrayList<>();
 
