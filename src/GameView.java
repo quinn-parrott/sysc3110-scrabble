@@ -102,6 +102,16 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(150,50));
 
+        passTurn.addActionListener((e) -> {
+            Optional<TilePlacement> tp = this.boardView.buildPlacement();
+            try {
+                if (tp.isPresent()) {
+                    this.game.place(tp.get());
+                }
+            } catch (PlacementException pe) {
+                //TODO Error Handling
+            }
+        });
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BorderLayout());
