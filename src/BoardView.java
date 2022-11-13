@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,16 +34,16 @@ public class BoardView extends JPanel {
 
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            var boardTile = model.board().getTile(pos).get();
+            var boardTile = model.getBoard().getTile(pos).get();
 
-            var placedTile = model.placedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
+            var placedTile = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
 
             JButton button = new JButton(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
             buttons.add(button);
             callbackDispatch.add(CallbackType.None);
             button.addActionListener(source -> {
-                var placedTileInner = model.placedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
-                var boardTileInner = model.board().getTile(pos).get();
+                var placedTileInner = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
+                var boardTileInner = model.getBoard().getTile(pos).get();
                 var tileInner = placedTileInner.map(TilePositioned::tile).orElse(boardTileInner);
                 callbackDispatch(new TilePositioned(tileInner, pos));
             });
@@ -55,9 +56,9 @@ public class BoardView extends JPanel {
     public void update() {
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            var boardTile = model.board().getTile(pos).get();
+            var boardTile = model.getBoard().getTile(pos).get();
 
-            var placedTile = model.placedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
+            var placedTile = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
 
             JButton button = this.buttons.get(i);
             this.callbackDispatch.set(i, CallbackType.None);
@@ -68,7 +69,7 @@ public class BoardView extends JPanel {
             } else {
                 this.callbackDispatch.set(i, CallbackType.AddTile);
             }
-            button.setEnabled(true);
+            button.setEnabled(!boardTile.isFilledWithLetter());
 
             button.setBackground(colorUnselected);
         }
@@ -101,16 +102,26 @@ public class BoardView extends JPanel {
     }
 
     public Optional<TilePlacement> buildPlacement() {
+        // Sorting tiles make sure the letters are in order when the word is built
+        var placedTiles =
+                this.model.getPlacedTiles()
+                        .stream()
+                        .sorted(
+                                Comparator.comparingInt(o -> o.pos().getIndex())
+                                )
+                        .toList();
+
         StringBuilder word = new StringBuilder();
         StringBuilder shorthand = new StringBuilder();
-        char direction = ' ';
+
         boolean isValid = true;
-        Optional<TilePlacement> tp;
-        if(this.model.placedTiles().size() > 1) {
-            Position p = this.model.placedTiles().get(0).pos();
-            BoardViewModel copy = this.model;
-            copy.placedTiles().remove(0);
-            for (TilePositioned tile : copy.placedTiles()) {
+        Optional<TilePlacement> tp = Optional.empty();
+        char direction = ' ';
+
+        if(placedTiles.size() > 1) {
+            Position p = placedTiles.get(0).pos();
+
+            for (TilePositioned tile : placedTiles.subList(1, placedTiles.size() - 1)) {
                 if (direction == ' ') {
                     if (tile.pos().getX() == p.getX() && tile.pos().getY() != p.getY()) {
                         direction = 'h';
@@ -120,6 +131,7 @@ public class BoardView extends JPanel {
                         isValid = false;
                         break;
                     }
+
                 } else {
                     if (direction == 'h') {
                         if (tile.pos().getX() != p.getX() && tile.pos().getY() == p.getY()) {
@@ -134,21 +146,31 @@ public class BoardView extends JPanel {
                     }
                 }
             }
-            shorthand.append(p);
-        } else if (this.model.placedTiles().size() == 1) {
-            shorthand.append(this.model.placedTiles().get(0).pos()).append(";h");
+
+            shorthand
+                    .append(p)
+                    .append(':')
+                    .append(direction)
+                    .append(';');
+        } else if (placedTiles.size() == 1) {
+            var tile = placedTiles.get(0);
+            shorthand
+                    .append(tile.pos())
+                    .append(":h;")
+                    .append(tile.tile().chr());
+
         } else {
             isValid = false;
         }
+
         if(isValid) {
-            for (TilePositioned tile : this.model.placedTiles()) {
+            for (TilePositioned tile : placedTiles) {
                 word.append(tile.tile().chr());
             }
             shorthand.append(word);
             tp = TilePlacement.FromShorthand(String.valueOf(shorthand));
-        } else {
-            tp = Optional.empty();
         }
+
         return tp;
     }
 }

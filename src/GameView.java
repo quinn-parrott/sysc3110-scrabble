@@ -22,6 +22,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private List<TilePositioned> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
+    private BoardViewModel boardViewModel;
     private TileTrayModel tileTrayModel;
 
 
@@ -104,12 +105,17 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         passTurn.addActionListener((e) -> {
             Optional<TilePlacement> tp = this.boardView.buildPlacement();
-            try {
                 if (tp.isPresent()) {
+                try {
                     this.game.place(tp.get());
-                }
+                    this.placedTiles.removeIf(_all -> true);
+                    boardViewModel.setBoard(this.game.getBoard());
+                    boardView.update();
             } catch (PlacementException pe) {
-                //TODO Error Handling
+                    JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid tile");
             }
         });
 
@@ -201,7 +207,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
     private Component createBoard(Board board, List<TilePositioned> placedTiles) {
-        var boardView = new BoardView(new BoardViewModel(this.game.getBoard(), this.placedTiles));
+        this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
+        var boardView = new BoardView(this.boardViewModel);
         boardView.addBoardTileAdder(this);
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
