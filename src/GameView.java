@@ -23,8 +23,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private Component boardComponent;
     private BoardView boardView;
     private BoardViewModel boardViewModel;
-    private Component tileTrayView;
     private TileTrayModel tileTrayModel;
+    private TileTrayView tileTrayView;
 
     private Component scoreboard;
 
@@ -67,8 +67,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         boardAndTileHandPanel.setLayout(new BorderLayout());
 
         JPanel tileHandPanel = new JPanel();
-        this.createTileHand(this.game.getPlayer());
-        tileHandPanel.add(tileTrayView, new GridBagConstraints());
+        this.tileTrayModel = this.createTileHand(this.game.getPlayer());
+        this.tileTrayView = new TileTrayView(this.tileTrayModel);
+        tileHandPanel.add(this.tileTrayView, new GridBagConstraints());
         tileHandPanel.setPreferredSize(new Dimension(1100,50));
 
         boardAndTileHandPanel.add(this.boardComponent, BorderLayout.NORTH);
@@ -139,9 +140,10 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.pane.remove(this.scoreboard);
         this.createScoreBoard();
         pane.add(this.scoreboard, BorderLayout.EAST);
-        this.pane.remove(this.tileTrayView);
-        this.createTileHand(this.game.getPlayer());
-        this.pane.add(this.tileTrayView, BorderLayout.SOUTH);
+        var model = this.createTileHand(this.game.getPlayer());
+        this.tileTrayModel.setSelected(model.getSelected());
+        this.tileTrayModel.setEntries(model.getEntries());
+        this.tileTrayView.update();
         this.boardView.update();
     }
 
@@ -181,8 +183,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
 
-    private void createTileHand(Player player) {
-        // TODO: Inline this function?
+    private TileTrayModel createTileHand(Player player) {
         var tiles = player.getTileHand();
         var model = new TileTrayModel(
                 tiles
@@ -191,8 +192,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                         .toList(),
                 Optional.empty()
         );
-        tileTrayModel = model;
-        this.tileTrayView = new TileTrayView(model);
+        return model;
     }
 
 

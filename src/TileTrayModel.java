@@ -14,6 +14,10 @@ public class TileTrayModel {
         return entries;
     }
 
+    public void setEntries(List<TileTrayEntry> entries) {
+        this.entries = entries;
+    }
+
     public Optional<Integer> getSelected() {
         return selected;
     }
