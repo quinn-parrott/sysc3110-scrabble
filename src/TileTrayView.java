@@ -13,15 +13,23 @@ public class TileTrayView extends JPanel {
     public List<JButton> buttons;
 
     public TileTrayView(TileTrayModel model) {
-        super(new GridLayout(1, model.getEntries().size()));
+        super(new GridLayout(1, Player.getTileHandSize()));
         this.model = model;
         this.setPreferredSize(new Dimension(500, 50));
 
         this.buttons = new ArrayList<>();
 
-        int i = 0;
-        for (TileTrayModel.TileTrayEntry entry : model.getEntries()) {
-            JButton button = new JButton(String.format("%c tile", entry.tile().chr()));
+        for (int i = 0; i < Player.getTileHandSize(); i++) {
+            JButton button = new JButton();
+            if (i < model.getEntries().size()) {
+                var entry = model.getEntries().get(i);
+                button.setText(String.format("%c tile", entry.tile().chr()));
+                button.setEnabled(true);
+            } else {
+                button.setText("-");
+                button.setEnabled(false);
+            }
+
             button.setBackground(colorUnselected);
             int finalI = i;
             button.addActionListener(event -> {
@@ -42,20 +50,25 @@ public class TileTrayView extends JPanel {
                 );
             });
             buttons.add(button);
-
             this.add(button);
-            i++;
         }
     }
 
     public void update() {
-        int i = 0;
-        for (TileTrayModel.TileTrayEntry entry : model.getEntries()) {
+        var entries = this.model.getEntries();
+        for (int i = 0; i < buttons.size(); i++) {
             var button = this.buttons.get(i);
-            button.setText(String.format("%c tile", entry.tile().chr()));
+            if (i < entries.size()) { // TODO: Remove this check since it should never fail
+                button.setText(String.format("%c tile", entries.get(i).tile().chr()));
             button.setBackground(colorUnselected);
-            i++;
+                button.setEnabled(true);
+            } else {
+                button.setText("-");
+                button.setEnabled(false);
         }
+        }
+
+        this.model.setSelected(Optional.empty());
     }
 
 }
