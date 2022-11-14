@@ -1,5 +1,6 @@
 Game of Scrabble, Milestone 1.0, 10/25/2022
-
+SYSC3110 Group 13
+Colin Mandeville, Jawad Nasrallah, Quinn Parrott, Tao Lufula
 
 
 
