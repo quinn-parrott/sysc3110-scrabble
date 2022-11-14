@@ -5,8 +5,8 @@ import java.util.Collection;
 
 public class Main {
     public static void main(String[] args) throws PlacementException, IOException {
-        CommandLineFrontend cli = new CommandLineFrontend();
-        cli.play();
-        // GuiFrontend <- milestone 2
+//        CommandLineFrontend cli = new CommandLineFrontend();
+//        cli.play();
+        new GameView();
     }
 }

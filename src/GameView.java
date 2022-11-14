@@ -211,9 +211,4 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         return boardView;
     }
 
-
-    public static void main(String[] args) {
-        new GameView();
-    }
-
 }
