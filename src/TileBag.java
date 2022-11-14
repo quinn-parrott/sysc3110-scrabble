@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Random;
 
 /**
+ * The bag of tiles that are currently not being used (not in player hands or on board)
  * @author Colin Mandeville, 101140289
  */
 public class TileBag {

@@ -1,6 +1,8 @@
 import java.util.*;
 
 /**
+ * A list of tiles that can be placed on to the board
+ *
  * @author Colin Mandeville, 101140289
  */
 public class TilePlacement {

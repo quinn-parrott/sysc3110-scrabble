@@ -3,6 +3,8 @@ import java.util.HashSet;
 import java.util.Optional;
 
 /**
+ * Class representing a scrabble board with tiles on it
+ *
  * @author Colin Mandeville, 101140289
  */
 public class Board {

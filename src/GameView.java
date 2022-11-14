@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +97,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setPreferredSize(new Dimension(150,50));
 
         playButton.addActionListener((e) -> {
-            if (this.boardViewModel.placedTiles.size() != 0) {
+            if (this.boardViewModel.getPlacedTiles().size() != 0) {
                 Optional<TilePlacement> tp = TilePlacement.FromTiles(this.boardViewModel.getPlacedTiles());
                 if (tp.isPresent()) {
                     try {

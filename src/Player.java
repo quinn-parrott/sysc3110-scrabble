@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
 /**
+ * Class representing a player's state
+ *
  * @author Tao Lufula, 101164153
  */
 public class Player {

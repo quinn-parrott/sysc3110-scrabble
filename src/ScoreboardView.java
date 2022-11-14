@@ -4,15 +4,21 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GUI component that displays player scores
+ *
+ * @author Quinn, 101169535
+ */
 public class ScoreboardView {
-    Game game;
-    JPanel view;
+    private Game game;
+    private JPanel view;
 
-    List<JLabel> nameLabels;
-    List<JLabel> pointsLabels;
+    private List<JLabel> nameLabels;
+    private List<JLabel> pointsLabels;
 
     /**
      * Creates and updates the score of each player as the game goes on
+     *
      * @author Jawad Nasrallah, 101201038
      */
     public ScoreboardView(Game game) {
@@ -41,6 +47,9 @@ public class ScoreboardView {
         this.view = grid;
     }
 
+    /**
+     * Update the current view
+     */
     public void update() {
         var players = game.getPlayers();
         var currentPlayer = game.getPlayer();

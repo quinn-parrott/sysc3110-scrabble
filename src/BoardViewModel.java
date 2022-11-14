@@ -1,8 +1,13 @@
 import java.util.List;
 
+/**
+ * Class store state related to BoardViewModel
+ *
+ * @author Quinn Parrott, 101169535
+ */
 public class BoardViewModel {
-    Board board;
-    List<TilePositioned> placedTiles;
+    private Board board;
+    private List<TilePositioned> placedTiles;
 
     public BoardViewModel(
         Board board,

@@ -1,8 +1,8 @@
 import java.io.IOException;
-import java.sql.Array;
-import java.util.Arrays;
-import java.util.Collection;
 
+/**
+ * Entrypoint
+ */
 public class Main {
     public static void main(String[] args) throws PlacementException, IOException {
 //        CommandLineFrontend cli = new CommandLineFrontend();

@@ -3,6 +3,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+
+/**
+ * GUI view that implements player name collection
+ *
+ * @author Quinn, 101169535
+ */
 public class PlayerAdderView {
 
     private final Component parent;

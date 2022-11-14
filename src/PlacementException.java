@@ -1,6 +1,8 @@
 import java.util.Optional;
 
 /**
+ * Exception throw by the game engine when tiles can't be placed on the board.
+ *
  * @author Quinn Parrott, 101169535
  */
 public class PlacementException extends Exception {

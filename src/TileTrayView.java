@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Component that implements the tile tray GUI element
+ *
+ * @author Quinn Parrott, 101169535
+ */
 public class TileTrayView extends JPanel {
     // TODO: Dedup this
     private static final Color colorUnselected = new Color(240, 240, 240);
