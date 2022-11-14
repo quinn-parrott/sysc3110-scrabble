@@ -21,7 +21,7 @@ public class testGame {
         p1.addTile(new Tile('E', 0));
         p1.addTile(new Tile('A', 0));
         p1.addTile(new Tile('D', 0));
-        g1.place(TilePlacement.FromShorthand("H8:v;Bread").orElseThrow());
+        g1.place(TilePlacement.FromShorthand("H8:v;BREAD").orElseThrow());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class testGame {
         p2.addTile(new Tile('K', 0));
         p2.addTile(new Tile('E', 0));
         g1.place(TilePlacement.FromShorthand("H8:h;Bread").orElseThrow());
-        g1.place(TilePlacement.FromShorthand("H8:v;Broke").orElseThrow());
+        g1.place(TilePlacement.FromShorthand("H9:v;roke").orElseThrow());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class testGame {
         p1.addTile(new Tile('O', 1));
         p1.addTile(new Tile('K', 5));
         p1.addTile(new Tile('E', 1));
-        g1.place(TilePlacement.FromShorthand("H8:v;BROKE").orElseThrow());
+        g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
         Assertions.assertEquals(19, g1.getPlayer().getPoints());
     }
 }

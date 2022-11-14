@@ -71,23 +71,6 @@ public class TileBag {
     }
 
     /**
-     * This method is used to swap players' tiles with those in the bag
-     * @param tile tile being exchanged
-     * @return new tile if there are more than 7 tiles in the tile bag, Otherwise returns the same tile.(to be improved later)
-     * @author Tao Lufula, 101164153
-     */
-    public Tile exchangeTile(Tile tile){
-        if(this.getNumTilesLeft() >= MIN_TILES_FOR_EXCHANGE){
-            Tile newTile = this.drawTile().get();
-            this.addTileToBag(tile);
-
-            return newTile;
-        }
-//      return same tile since there are less than 7 tiles left in the bag
-        return tile;
-    }
-
-    /**
      * Checks if the tilesLeft attribute contains at least one Tile
      * @return Returns the Boolean of if the tilesLeft attribute contains a value
      */
