@@ -47,14 +47,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         List<Player> playersList = (new PlayerAdderView(this)).getPlayers();
 
-        TileBag gameBag = new TileBag();
-        int PLAYER_HAND_SIZE = 7;
-        for (Player player : playersList) {
-            for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(gameBag.drawTile().get());
-            }
-        }
-
         game = new Game(playersList, new WordList());
 
 
