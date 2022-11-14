@@ -55,7 +55,7 @@ public class Game {
                 entry.append(tile.tile().chr());
             }
         }
-        if (entry.length() > 1 && !this.wordList.isValidWord(entry.toString())) {
+        if (entry.length() > 1) {
             throw new PlacementException(String.format("'%s' is not a valid word", entry),
                     placement, Optional.of(this.board));
         }
@@ -109,6 +109,19 @@ public class Game {
                 newWords.add(next);
             }
         }
+
+        if (!this.playerHasNeededTiles(placement.getTiles())) {
+            throw new PlacementException("You do not have all needed tiles",
+                    placement, Optional.of(board));
+        }
+
+        for (String word : this.board.collectCharSequences()) {
+            if (word.length() > 1 && !this.wordList.isValidWord(word)) {
+                throw new PlacementException(String.format("'%s' is not a valid word", word),
+                        placement, Optional.of(this.board));
+            }
+        }
+
         return nextBoard;
     }
 
@@ -118,17 +131,6 @@ public class Game {
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
-        for (TilePositioned tile : placement.getTiles()) {
-            if (board.getTile(tile.pos()).get().chr() == tile.tile().chr()) {
-                this.players.get(this.turns.size() % this.players.size()).getTileHand().add(TileBagSingleton.getBagDetails().get(tile.tile().chr()).tile());
-            }
-        }
-
-        if (!this.playerHasNeededTiles(placement.getTiles())) {
-            throw new PlacementException("You do not have all needed tiles",
-                    placement, Optional.of(board));
-        }
-
         this.board = this.previewPlacement(placement);
 
         StringBuilder tilesUsed = new StringBuilder();
@@ -143,15 +145,10 @@ public class Game {
         int score = 0;
 
         for (String word : newWords) {
-            if (word.length() > 1 && !this.wordList.isValidWord(word)) {
-                throw new PlacementException(String.format("'%s' is not a valid word", word),
-                        placement, Optional.of(this.board));
-            } else {
-                for (int i = 0; i < word.length(); i++) {
-                    score += tileDetails.get(word.charAt(i)).tile().pointValue();
-                }
-                this.wordsPlayed.add(word);
+            for (int i = 0; i < word.length(); i++) {
+                score += tileDetails.get(word.charAt(i)).tile().pointValue();
             }
+            this.wordsPlayed.add(word);
         }
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
         this.turns.add(placement);
