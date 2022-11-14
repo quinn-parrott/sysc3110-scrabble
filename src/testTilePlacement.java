@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 public class testTilePlacement {
 
     @Test
@@ -85,5 +87,21 @@ public class testTilePlacement {
 
         var t3 = TilePlacement.FromShorthand("g7:h;bread");
         Assertions.assertNotEquals(2, (int)(t3.orElseThrow().minTileDistance(p)));
+    }
+
+    @Test
+    void testFromTiles() {
+        var al = new ArrayList<TilePositioned>();
+        al.add(new TilePositioned(new Tile('B', 0), Position.FromInts(7,7).orElseThrow()));
+        al.add(new TilePositioned(new Tile('R', 0), Position.FromInts(7,8).orElseThrow()));
+        al.add(new TilePositioned(new Tile('E', 0), Position.FromInts(7,9).orElseThrow()));
+        al.add(new TilePositioned(new Tile('A', 0), Position.FromInts(7,10).orElseThrow()));
+        al.add(new TilePositioned(new Tile('D', 0), Position.FromInts(7,11).orElseThrow()));
+        var p = TilePlacement.FromTiles(al);
+        Assertions.assertFalse(p.isEmpty());
+        TilePlacement expected = TilePlacement.FromShorthand("h8:v;bread").get();
+        for (int i = 0; i < p.get().getTiles().size(); i++) {
+            Assertions.assertEquals(expected.getTiles().get(i), p.get().getTiles().get(i));
+        }
     }
 }
