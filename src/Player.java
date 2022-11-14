@@ -10,6 +10,10 @@ public class Player {
     private ArrayList<Tile> tileHand;
     private static final int TILE_HAND_SIZE = 7;
 
+    public static int getTileHandSize() {
+        return TILE_HAND_SIZE;
+    }
+
     /**
      * Default constructor for Player Class
      * @param name the name of the player
