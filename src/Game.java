@@ -55,19 +55,6 @@ public class Game {
         var nextBoard = this.board.clone();
         newWords.clear();
 
-        StringBuilder entry = new StringBuilder();
-        for (TilePositioned tile : placement.getTiles()) {
-            if (tile.tile().chr() > 64 && tile.tile().chr() < 91) {
-                entry.append(tile.tile().chr());
-            } else if (tile.tile().chr() == board.getTile(tile.pos()).get().chr()) {
-                entry.append(tile.tile().chr());
-            }
-        }
-        if (entry.length() > 1) {
-            throw new PlacementException(String.format("'%s' is not a valid word", entry),
-                    placement, Optional.of(this.board));
-        }
-
         if (wordsPlayed.size() == 0) {
             // First turn
             var p = Position.FromIndex(Board.getCenterTilePos()).orElseThrow();
@@ -112,22 +99,19 @@ public class Game {
 
         nextBoard.placeTiles(placement);
 
-        for (String next : nextBoard.collectCharSequences()) {
-            if (!this.wordsPlayed.contains(next)) {
-                newWords.add(next);
+        for (String word : nextBoard.collectCharSequences()) {
+            if (!this.wordsPlayed.contains(word)) {
+                newWords.add(word);
+            }
+            if (word.length() > 1 && !this.wordList.isValidWord(word)) {
+                throw new PlacementException(String.format("'%s' is not a valid word", word),
+                        placement, Optional.of(this.board));
             }
         }
 
         if (!this.playerHasNeededTiles(placement.getTiles())) {
             throw new PlacementException("You do not have all needed tiles",
                     placement, Optional.of(board));
-        }
-
-        for (String word : this.board.collectCharSequences()) {
-            if (word.length() > 1 && !this.wordList.isValidWord(word)) {
-                throw new PlacementException(String.format("'%s' is not a valid word", word),
-                        placement, Optional.of(this.board));
-            }
         }
 
         return nextBoard;
