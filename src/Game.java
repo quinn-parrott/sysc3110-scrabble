@@ -1,6 +1,8 @@
 import java.util.*;
 
 /**
+ * Core game engine. This implements all game state.
+ *
  * @author Quinn Parrott, 101169535
  */
 public class Game {

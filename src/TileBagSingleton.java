@@ -1,6 +1,8 @@
 import java.util.HashMap;
 
 /**
+ * The default tile bag data
+ *
  * @author Colin Mandeville 101140289
  */
 public class TileBagSingleton {

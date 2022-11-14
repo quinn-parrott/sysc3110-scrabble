@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Class that displays a Board
+ *
+ * @author Quinn Parrott, 101169535
+ */
 public class BoardView extends JPanel {
     private static final Color colorUnselected = new Color(240, 240, 240);
     private static final Color colorSelected = new Color(200, 200, 200);

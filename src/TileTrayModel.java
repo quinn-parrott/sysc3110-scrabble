@@ -1,6 +1,11 @@
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The model representing the current internal state of the TileTrayView
+ *
+ * @author Quinn Parrott, 101169535
+ */
 public class TileTrayModel {
     private List<TileTrayEntry> entries;
     private Optional<Integer> selected;
