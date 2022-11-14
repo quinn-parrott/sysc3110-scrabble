@@ -187,7 +187,7 @@ public class Game {
         for (int i = 0; i < word.length(); i++) {
             matchTile = null;
             for (Tile tile : activePlayer.getTileHand()) {
-                if (tile.chr() == word.charAt(i) && matchTile == null) {
+                if (matchTile == null && tile.chr() == word.charAt(i)) {
                     matchTile = tile;
                 }
             }

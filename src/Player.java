@@ -62,16 +62,12 @@ public class Player {
     }
 
     /**
-     * This method add a tile to the players tileHand if the player's hand has less than 7 tiles.
+     * This method add a tile to the players tileHand.
      * @param tile tile to be added to the Player instance's tileHand
      * @author Tao Lufula, 101164153
      */
-    public boolean addTile(Tile tile){
-        if(this.tileHand.size() < TILE_HAND_SIZE){
-            this.tileHand.add(tile);
-            return true;
-        }
-        return false;
+    public void addTile(Tile tile){
+        this.tileHand.add(tile);
     }
 
     /**

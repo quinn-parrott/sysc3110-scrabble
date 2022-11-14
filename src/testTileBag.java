@@ -24,16 +24,6 @@ class testTileBag {
     }
 
     @Test
-    void testExchangeTile() {
-        TileBag tb = new TileBag();
-        Tile tile = tb.drawTile().orElseThrow();
-        Assertions.assertEquals(97, tb.getNumTilesLeft());
-        Tile newTile = tb.exchangeTile(tile);
-        Assertions.assertEquals(97, tb.getNumTilesLeft());
-        Assertions.assertNotSame(newTile, tile);
-    }
-
-    @Test
     void testIsEmpty() {
         TileBag tb = new TileBag();
         Assertions.assertFalse(tb.isEmpty());
