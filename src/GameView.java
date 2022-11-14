@@ -107,7 +107,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         playButton.addActionListener((e) -> {
             if (this.boardViewModel.placedTiles.size() != 0) {
-                Optional<TilePlacement> tp = this.boardView.buildPlacement();
+                Optional<TilePlacement> tp = TilePlacement.FromTiles(this.boardViewModel.getPlacedTiles());
                 if (tp.isPresent()) {
                     try {
                         this.game.place(tp.get());

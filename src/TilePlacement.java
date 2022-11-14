@@ -6,14 +6,14 @@ import java.util.*;
 public class TilePlacement {
     // This class represents a single player turn
 
-    private final ArrayList<TilePositioned> tiles;
+    private final List<TilePositioned> tiles;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
      * @param tiles ArrayList of TilePositioned objects, which contain a Tile object, and a Position object
      * @author Colin Mandeville, 101140289
      */
-    public TilePlacement(ArrayList<TilePositioned> tiles) {
+    public TilePlacement(List<TilePositioned> tiles) {
         // TODO: Validate that all characters are in order
         this.tiles = tiles;
     }
@@ -160,6 +160,37 @@ public class TilePlacement {
      */
     public List<TilePositioned> getTiles() {
         return this.tiles;
+    }
+
+    public static Optional<TilePlacement> FromTiles(List<TilePositioned> tiles) {
+        // Sorting tiles make sure the letters are in order when the word is built
+        var placedTiles =
+                tiles
+                        .stream()
+                        .sorted(
+                                Comparator.comparingInt(o -> o.pos().getIndex())
+                        )
+                        .toList();
+
+        if (placedTiles.size() == 0) {
+            return Optional.empty();
+        }
+
+        if (placedTiles.size() == 1) {
+            return Optional.of(new TilePlacement(placedTiles));
+        }
+
+        var first = placedTiles.get(0);
+        var slice = placedTiles.subList(1, placedTiles.size());
+
+        var isHorizontal = slice.stream().allMatch(obj -> obj.pos().getX() == first.pos().getX());
+        var isVertical = slice.stream().allMatch(obj -> obj.pos().getY() == first.pos().getY());
+
+        if (isHorizontal || isVertical) {
+            return Optional.of(new TilePlacement(placedTiles));
+        }
+
+        return Optional.empty();
     }
 }
 
