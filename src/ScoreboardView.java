@@ -10,11 +10,11 @@ import java.util.List;
  * @author Quinn, 101169535
  */
 public class ScoreboardView {
-    Game game;
-    JPanel view;
+    private Game game;
+    private JPanel view;
 
-    List<JLabel> nameLabels;
-    List<JLabel> pointsLabels;
+    private List<JLabel> nameLabels;
+    private List<JLabel> pointsLabels;
 
     /**
      * Creates and updates the score of each player as the game goes on
