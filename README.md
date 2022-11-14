@@ -19,6 +19,16 @@ to build words using the letters given to you, and end up with more points than 
 Scrabble-software was implemented using IntelliJ.
 
 
+Instructions to Run:
+--------------------------------------------------------------------------------------------------------
+
+1. Navigate to the folder containing the jar file in your terminal instance
+2. Enter the following command. 
+Important Note: Replace the above file path with the path to your java.exe file in openjdk
+C:\Users\quinn\.jdks\openjdk-18.0.2.1\bin\java.exe -jar .\sysc3110-scrabble.jar
+
+
+
 Other Deliverables:
 --------------------------------------------------------------------------------------------------------
 
