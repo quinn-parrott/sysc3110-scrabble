@@ -9,6 +9,7 @@ public class Game {
     private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
     private ArrayList<GameView> views;
+    private TileBag gameBag;
     public WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
@@ -26,6 +27,13 @@ public class Game {
         this.board = new Board();
         this.wordList = wordList;
         this.views = new ArrayList<>();
+        this.gameBag = new TileBag();
+        int PLAYER_HAND_SIZE = 7;
+        for (Player player : this.players) {
+            for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
+                player.getTileHand().add(gameBag.drawTile().get());
+            }
+        }
     }
 
     /**
@@ -154,6 +162,11 @@ public class Game {
         this.turns.add(placement);
         for (GameView view : this.views) {
             view.update();
+        }
+        int PLAYER_HAND_SIZE = 7;
+        for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
+            Optional<Tile> t = gameBag.drawTile();
+            t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
         }
     }
 
