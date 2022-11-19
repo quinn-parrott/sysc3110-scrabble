@@ -52,47 +52,53 @@ public class AIPlayer extends Player {
         return possibleWords;
     }
 
-    private boolean checkHorizontal(Board board, String word) {
-        return true;
+    private Optional<Integer> checkHorizontal(Board board, String word) {
+        ArrayList<TilePositioned> currBoard = board.getTiles();
+        for (int j = 0; j < currBoard.size(); j++) {
+            if (j % Board.getROW_NUMBER() > Board.getROW_NUMBER() - word.length()) {
+                j += word.length();
+                continue;
+            }
+            Optional<TilePlacement> tp = TilePlacement.FromShorthand(Position.FromIndex(j).get() + ";h:" + word);
+            if (tp.isPresent()) {
+                return Optional.of(j);
+            }
+        }
+        return Optional.empty();
     }
 
-    private boolean checkVertical(Board board, String word) {
-        return true;
+    private Optional<Integer> checkVertical(Board board, String word) {
+        ArrayList<TilePositioned> currBoard = board.getTiles();
+        for (int j = 0; j < currBoard.size() - (Board.getCOLUMN_NUMBER() * word.length()); j++) {
+            Optional<TilePlacement> tp = TilePlacement.FromShorthand(Position.FromIndex(j).get() + ";v:" + word);
+            if (tp.isPresent()) {
+                return Optional.of(j);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<TilePlacement> boardPlacement(Board board, String word) {
-        ArrayList<TilePositioned> currBoard = board.getTiles();
+        int multiplier = 1;
         for (int i = 0; i < word.length(); i++) {
-            char c = word.toUpperCase().toCharArray()[i];
-            for (int j = 0; j < currBoard.size(); j++) {
-                TilePositioned tp = currBoard.get(j);
-                if (tp.tile().chr() == c) {
-                    int hIndex = j - (word.length());
-                    int vIndex = j - (word.length() * 15);
-                    if (hIndex < 0 || vIndex < 0) {continue;}
-                    boolean hValid = true;
-                    boolean vValid = true;
-                    for (int k = 0; k < word.length(); k++) {
-                        if (currBoard.get(hIndex + k).tile().isFilledWithLetter() && currBoard.get(hIndex + k).tile().chr() != word.charAt(k)) {
-                            hValid = false;
-                            break;
-                        }
-                    }
-                    if (hValid) {
-                        return TilePlacement.FromShorthand(Position.FromIndex(hIndex) + ":h;" + word);
-                    }
-                    for (int k = 0; k < word.length(); k++) {
-                        if (currBoard.get(vIndex + k * 15).tile().isFilledWithLetter() && currBoard.get(vIndex + k).tile().chr() != word.charAt(k)) {
-                            vValid = false;
-                            break;
-                        }
-                    }
-                    if (vValid) {
-                        break;
-                    }
+            Optional<Integer> pos = checkHorizontal(board, word);
+            if (pos.isEmpty()) {
+                pos = checkVertical(board, word);
+                multiplier = 15;
+            }
+            if (pos.isPresent()) {
+                ArrayList<TilePositioned> tiles = new ArrayList<>();
+                HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+                for (int j = 0; j < word.length(); j++) {
+                    char c = word.toCharArray()[j];
+                    System.out.println(c);
+                    Optional<Position> cPos = Position.FromIndex(pos.get() + j * multiplier);
+                    cPos.ifPresent(position -> tiles.add(new TilePositioned(tbs.get(c).tile(), position)));
                 }
+                return TilePlacement.FromTiles(tiles);
             }
         }
+        return Optional.empty();
     }
 
     public Optional<TilePlacement> AITurn(Board board) {
@@ -107,7 +113,7 @@ public class AIPlayer extends Player {
         return Optional.empty();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PlacementException {
         AIPlayer p = new AIPlayer("AI");
         p.addTile(new Tile('E', 0));
         p.addTile(new Tile('T', 0));
@@ -116,9 +122,14 @@ public class AIPlayer extends Player {
         p.addTile(new Tile('Y', 0));
         p.addTile(new Tile('F', 0));
         p.addTile(new Tile('L', 0));
-        for (Object validWord : p.AITurn().orElseThrow()) {
-            System.out.println(validWord);
+        Board board =  new Board();
+        Optional<TilePlacement> tp = TilePlacement.FromShorthand("h8:h;place");
+        if (tp.isPresent()) {
+            board.placeTiles(tp.get());
         }
+        tp = p.AITurn(board);
+        board.placeTiles(tp.orElseThrow());
+        board.printBoard();
     }
 
     public class LengthComparator implements java.util.Comparator<String> {
