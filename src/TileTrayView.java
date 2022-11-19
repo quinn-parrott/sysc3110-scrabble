@@ -64,16 +64,16 @@ public class TileTrayView extends JPanel {
         for (int i = 0; i < buttons.size(); i++) {
             var button = this.buttons.get(i);
             if (i < entries.size()) {
-                button.setText(String.format("%c tile", entries.get(i).tile().chr()));
-            button.setBackground(colorUnselected);
-                button.setEnabled(true);
+                var entry = entries.get(i);
+                button.setText(String.format("%c tile", entry.tile().chr()));
+                button.setBackground(i == model.getSelected().orElse(-1) ? colorSelected : colorUnselected);
+                button.setEnabled(entry.status().equals(TileTrayModel.TileStatus.Unplayed));
             } else {
                 button.setText("-");
+                button.setBackground(colorUnselected);
                 button.setEnabled(false);
+            }
         }
-        }
-
-        this.model.setSelected(Optional.empty());
     }
 
 }

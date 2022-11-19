@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,12 @@ public class TileTrayModel {
 
     public void setEntries(List<TileTrayEntry> entries) {
         this.entries = entries;
+    }
+
+    public void setEntry(int i, TileTrayEntry entry) {
+        var temp = new ArrayList<>(getEntries());
+        temp.set(i, entry);
+        setEntries(temp);
     }
 
     public Optional<Integer> getSelected() {
