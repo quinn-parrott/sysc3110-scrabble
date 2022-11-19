@@ -52,9 +52,9 @@ class testBoard {
                 tiles.add(new Tile(c, 0));
             }
         }
-        for (TilePositioned t : board.getTiles()) {
-            Assertions.assertTrue(tiles.contains(t.tile()));
-            tiles.remove(t.tile());
+        for (Positioned<Tile> t : board.getTiles()) {
+            Assertions.assertTrue(tiles.contains(t.value()));
+            tiles.remove(t.value());
         }
         Assertions.assertTrue(tiles.isEmpty());
     }

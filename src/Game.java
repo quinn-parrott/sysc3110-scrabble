@@ -129,8 +129,8 @@ public class Game {
 
         StringBuilder tilesUsed = new StringBuilder();
 
-        for (TilePositioned tile : placement.getTiles()) {
-            tilesUsed.append(tile.tile().chr());
+        for (Positioned<Tile> tile : placement.getTiles()) {
+            tilesUsed.append(tile.value().chr());
         }
 
         this.removeTilesFromHand(tilesUsed.toString());
@@ -173,14 +173,15 @@ public class Game {
      * @return Returns a boolean representing if the player has all required tiles to make their word
      * @author Colin Mandeville, 101140289
      */
-    private boolean playerHasNeededTiles(List<TilePositioned> tiles) {
+    private boolean playerHasNeededTiles(List<Positioned<Tile>> tiles) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
 
         StringBuilder word = new StringBuilder();
 
-        for (TilePositioned tile : tiles) {
-            if (tile.tile().chr() > 64 && tile.tile().chr() < 91) {
-                word.append(tile.tile().chr());
+        for (Positioned<Tile> tilePositioned : tiles) {
+            var chr = tilePositioned.value().chr();
+            if (chr > 64 && chr < 91) {
+                word.append(chr);
             }
         }
 

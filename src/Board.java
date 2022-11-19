@@ -119,7 +119,7 @@ public class Board {
 
         // Place the tiles
         for (var tile : tilePlacement.getTiles()) {
-            setTile(tile.tile(), tile.pos());
+            setTile(tile.value(), tile.pos());
         }
     }
 
@@ -155,17 +155,17 @@ public class Board {
 
     /**
      * Get positioned tiles
-     * @return Returns an ArrayList<TilePositioned> of all tiles on the board
+     * @return Returns an ArrayList<Positioned<Tile>> of all tiles on the board
      * @author Quinn Parrott, 101169535
      */
-    public ArrayList<TilePositioned> getTiles() {
+    public ArrayList<Positioned<Tile>> getTiles() {
         // TODO: This could be much more efficient if a data structure such as a HashMap was used instead of ArrayList
-        var result = new ArrayList<TilePositioned>(this.board.size());
+        var result = new ArrayList<Positioned<Tile>>(this.board.size());
 
         int i = 0;
         for (var tile : this.board) {
             if (tile.isPresent()) { // Ignore empty tiles
-                result.add(new TilePositioned(tile.get(), Position.FromIndex(i).get()));
+                result.add(new Positioned<Tile>(tile.get(), Position.FromIndex(i).get()));
             }
             i++;
         }

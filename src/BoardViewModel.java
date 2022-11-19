@@ -7,11 +7,11 @@ import java.util.List;
  */
 public class BoardViewModel {
     private Board board;
-    private List<TilePositioned> placedTiles;
+    private List<Positioned<Tile>> placedTiles;
 
     public BoardViewModel(
         Board board,
-        List<TilePositioned> placedTiles
+        List<Positioned<Tile>> placedTiles
     ) {
         this.board = board;
         this.placedTiles = placedTiles;
@@ -25,7 +25,7 @@ public class BoardViewModel {
         this.board = board;
     }
 
-    public List<TilePositioned> getPlacedTiles() {
+    public List<Positioned<Tile>> getPlacedTiles() {
         return placedTiles;
     }
 }
