@@ -80,7 +80,7 @@ public class Game {
                 int distance = (int) Math.round(placement.minTileDistance(tile.pos()));
 
                 if (distance == 0) {
-                    if (tile.tile().chr() != board.getTile(tile.pos()).get().chr() || !firstOverlap) {
+                    if (board.getTile(tile.pos()).isPresent() || !firstOverlap) {
                         throw new PlacementException(String.format("Can't place tile at %s since there is already a " +
                                 "tile there", tile.pos()), placement, Optional.of(this.board));
                     } else {

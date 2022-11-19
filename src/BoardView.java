@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class that displays a Board
@@ -37,18 +38,16 @@ public class BoardView extends JPanel {
 
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            var boardTile = model.getBoard().getTile(pos).get();
 
-            var placedTile = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
-
-            JButton button = new JButton(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
+            JButton button = new JButton();
             buttons.add(button);
             callbackDispatch.add(CallbackType.None);
             button.addActionListener(source -> {
                 var placedTileInner = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
-                var boardTileInner = model.getBoard().getTile(pos).get();
-                var tileInner = placedTileInner.map(TilePositioned::tile).orElse(boardTileInner);
-                callbackDispatch(new TilePositioned(tileInner, pos));
+                switch (this.callbackDispatch.get(pos.getIndex())){
+                    case AddTile -> boardViewAddTile(pos);
+                    case RemoveTile -> boardViewRemoveTile(new TilePositioned(placedTileInner.get().tile(), pos));
+                }
             });
             this.add(button);
         }
@@ -59,35 +58,30 @@ public class BoardView extends JPanel {
     public void update() {
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            var boardTile = model.getBoard().getTile(pos).get();
 
             var placedTile = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
+            var boardTile = model.getBoard().getTile(pos);
 
             JButton button = this.buttons.get(i);
             this.callbackDispatch.set(i, CallbackType.None);
-            button.setText(String.format("%c", placedTile.map(TilePositioned::tile).orElse(boardTile).chr()));
+            char letter = placedTile.map(tilePositioned -> tilePositioned.tile().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar()));
+            button.setText(String.format("%c", letter));
 
             if (placedTile.isPresent()) {
                 this.callbackDispatch.set(i, CallbackType.RemoveTile);
             } else {
                 this.callbackDispatch.set(i, CallbackType.AddTile);
             }
-            button.setEnabled(!boardTile.isFilledWithLetter());
+            button.setEnabled(model.getBoard().getTile(pos).isEmpty());
 
             button.setBackground(colorUnselected);
-        }
-    }
-
-    private void callbackDispatch(TilePositioned tile) {
-        switch (this.callbackDispatch.get(tile.pos().getIndex())){
-            case AddTile -> boardViewAddTile(tile.pos());
-            case RemoveTile -> boardViewRemoveTile(tile);
         }
     }
 
     public void addBoardTileRemover(IBoardTileRemover remover) {
         this.boardTileRemover.add(remover);
     }
+
     private void boardViewRemoveTile(TilePositioned tile) {
         for (var remover: this.boardTileRemover) {
             remover.handleBoardTileRemover(tile);

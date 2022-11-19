@@ -184,6 +184,10 @@ public class Position {
         return pos;
     }
 
+    public char getBackgroundChar() {
+        return Board.getCenterTilePos() == getIndex() ? '*' : '_';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
