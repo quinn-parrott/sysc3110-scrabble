@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 public class AIPlayer extends Player {
 
@@ -29,7 +27,7 @@ public class AIPlayer extends Player {
         String letterHandString;
         boolean valid;
         for (String word : this.wordList.getWordlist()) {
-            if (word.length() > 1) {
+            if (word.length() > 2) {
                 letterHandString = sb.toString();
                 valid = true;
                 for (char c : word.toUpperCase().toCharArray()) {
@@ -74,6 +72,7 @@ public class AIPlayer extends Player {
             if (tp.isPresent()) {
                 try {
                     game.previewPlacement(tp.get());
+                    System.out.println(word);
                     return tp;
                 } catch (PlacementException ignored) {}
             }
@@ -94,7 +93,7 @@ public class AIPlayer extends Player {
             tiles.clear();
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
-                Optional<Position> cPos = Position.FromIndex(j + (i * Board.getROW_NUMBER()));
+                Optional<Position> cPos = Position.FromIndex(i + (j * Board.getROW_NUMBER()));
                 cPos.ifPresent(position -> tiles.add(new TilePositioned(tbs.get(c).tile(), position)));
             }
             Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
@@ -128,11 +127,20 @@ public class AIPlayer extends Player {
             }
             return TilePlacement.FromTiles(tiles);
         }
-        Optional<TilePlacement> tp = checkHorizontal(game, word);
-        if (tp.isEmpty()) {
-            tp = checkVertical(game, word);
+        Random r = new Random();
+        if (r.nextBoolean()) {
+            Optional<TilePlacement> tp = checkHorizontal(game, word);
+            if (tp.isEmpty()) {
+                tp = checkVertical(game, word);
+            }
+            return tp;
+        } else {
+            Optional<TilePlacement> tp = checkVertical(game, word);
+            if (tp.isEmpty()) {
+                tp = checkHorizontal(game, word);
+            }
+            return tp;
         }
-        return tp;
     }
 
     /**
@@ -142,19 +150,26 @@ public class AIPlayer extends Player {
      */
     public void AITurn(Game game) {
         ArrayList<String> possibleWords = getPossibleWords(1);
+        boolean hasPlayed = false;
         possibleWords.sort(new PointComparator());
         for (String word : possibleWords) {
             Optional<TilePlacement> tp = this.boardPlacement(game, word);
             if (tp.isPresent()) {
                 try {
                     game.place(tp.get());
+                    hasPlayed = true;
                     break;
                 } catch (PlacementException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        game.pass();
+        if (!hasPlayed) {
+            for (Tile t : this.getTileHand()) {
+                System.out.println(t.chr());
+            }
+            game.pass();
+        }
     }
 
     public static void main(String[] args) {
@@ -164,6 +179,18 @@ public class AIPlayer extends Player {
         al.add(p1);
         al.add(p2);
         Game g = new Game(al, new WordList());
+        p1.AITurn(g);
+        g.printBoardState();
+        p2.AITurn(g);
+        g.printBoardState();
+        p1.AITurn(g);
+        g.printBoardState();
+        p2.AITurn(g);
+        g.printBoardState();
+        p1.AITurn(g);
+        g.printBoardState();
+        p2.AITurn(g);
+        g.printBoardState();
         p1.AITurn(g);
         g.printBoardState();
         p2.AITurn(g);
