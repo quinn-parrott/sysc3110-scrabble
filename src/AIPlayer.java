@@ -57,10 +57,9 @@ public class AIPlayer extends Player {
      * @return Returns the starting index at which to place tiles
      */
     private Optional<TilePlacement> checkHorizontal(Game game, String word) {
-        ArrayList<TilePositioned> currBoard = game.getBoard().getTiles();
         ArrayList<TilePositioned> tiles = new ArrayList<>();
         HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
-        for (int i = 0; i < currBoard.size() - word.length(); i++) {
+        for (int i = 0; i < Board.getROW_NUMBER() * Board.getCOLUMN_NUMBER() - word.length(); i++) {
             if (i % Board.getROW_NUMBER() > Board.getROW_NUMBER() - word.length()) {
                 i += word.length();
                 continue;
@@ -89,10 +88,10 @@ public class AIPlayer extends Player {
      * @return Returns the starting index at which to place tiles
      */
     private Optional<TilePlacement> checkVertical(Game game, String word) {
-        ArrayList<TilePositioned> currBoard = game.getBoard().getTiles();
-        for (int i = 0; i < currBoard.size() - (Board.getCOLUMN_NUMBER() * word.length()); i++) {
-            ArrayList<TilePositioned> tiles = new ArrayList<>();
-            HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+        ArrayList<TilePositioned> tiles = new ArrayList<>();
+        HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+        for (int i = 0; i < Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER(); i++) {
+            tiles.clear();
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
                 Optional<Position> cPos = Position.FromIndex(j + (i * Board.getROW_NUMBER()));
@@ -109,6 +108,13 @@ public class AIPlayer extends Player {
         return Optional.empty();
     }
 
+    /**
+     * Determines if there is a placement for a passed word on the current board state of the game object
+     * @param game Game object the AI player is playing in
+     * @param word A word the AI player is trying to play
+     * @return Returns an optional of a TilePlacement object, which is empty if no placement of the given word is
+     * possible
+     */
     private Optional<TilePlacement> boardPlacement(Game game, String word) {
         if (game.getBoard().getTile(Position.FromIndex(Board.getCenterTilePos()).get()).get().chr() == '*') {
             ArrayList<TilePositioned> tiles = new ArrayList<>();
@@ -129,6 +135,11 @@ public class AIPlayer extends Player {
         return tp;
     }
 
+    /**
+     * Function call to make a move for the AI player, either playing their highest scoring word, or passing if no word
+     * is possible to play
+     * @param game The Game object within which the AI Player is playing
+     */
     public void AITurn(Game game) {
         ArrayList<String> possibleWords = getPossibleWords(1);
         possibleWords.sort(new PointComparator());
