@@ -43,7 +43,7 @@ public class PlayerAdderView {
                 continue;
             }
 
-            if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+            if (numberOfPlayers < 1 || numberOfPlayers > 4) {
                 JOptionPane.showMessageDialog(this.parent, "Invalid entry!  Number of players must be between 1 and 4");
                 continue;
             }

@@ -142,6 +142,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardView.update();
+        Player currPlayer = this.game.getPlayer();
+        if (currPlayer.getClass() == AIPlayer.class) {
+            ((AIPlayer) currPlayer).AITurn(this.game);
+            this.update();
+        }
     }
 
     /**

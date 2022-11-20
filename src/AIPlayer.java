@@ -72,7 +72,6 @@ public class AIPlayer extends Player {
             if (tp.isPresent()) {
                 try {
                     game.previewPlacement(tp.get());
-                    System.out.println(word);
                     return tp;
                 } catch (PlacementException ignored) {}
             }
@@ -165,9 +164,6 @@ public class AIPlayer extends Player {
             }
         }
         if (!hasPlayed) {
-            for (Tile t : this.getTileHand()) {
-                System.out.println(t.chr());
-            }
             game.pass();
         }
     }
