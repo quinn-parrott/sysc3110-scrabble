@@ -18,7 +18,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
-    private List<TilePositioned> placedTiles;
+    private List<Positioned<Tile>> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
     private BoardViewModel boardViewModel;
@@ -170,7 +170,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
 
-    public void handleBoardTileRemover(TilePositioned tile) {
+    public void handleBoardTileRemover(Positioned<Tile> tile) {
         for (var i = 0; i < this.placedTiles.size(); i++) {
             var temp = this.placedTiles.get(i);
             if (temp.pos() == tile.pos()) {
@@ -179,7 +179,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                 // Make the tile selectable in the tile tray again
                 int j = 0;
                 for (var entry : tileTrayModel.getEntries()) {
-                    if (entry.status().equals(TileTrayModel.TileStatus.Played) && entry.tile().chr() == temp.tile().chr()) {
+                    if (entry.status().equals(TileTrayModel.TileStatus.Played) && entry.tile().chr() == temp.value().chr()) {
                         tileTrayModel.setEntry(j, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, entry.tile()));
                         tileTrayModel.setSelected(Optional.of(j));
 
@@ -218,11 +218,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         tileTrayModel.setSelected(selected);
         tileTrayView.update();
-        this.placedTiles.add(new TilePositioned(entry.tile(), pos));
+        this.placedTiles.add(new Positioned<Tile>(entry.tile(), pos));
         this.boardView.update();
     }
 
-    private Component createBoard(Board board, List<TilePositioned> placedTiles) {
+    private Component createBoard(Board board, List<Positioned<Tile>> placedTiles) {
         this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
         var boardView = new BoardView(this.boardViewModel);
         boardView.addBoardTileAdder(this);

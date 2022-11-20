@@ -4,5 +4,5 @@
  * @author Quinn, 101169535
  */
 public interface IBoardTileRemover {
-    void handleBoardTileRemover(TilePositioned tile);
+    void handleBoardTileRemover(Positioned<Tile> tile);
 }

@@ -46,7 +46,7 @@ public class BoardView extends JPanel {
                 var placedTileInner = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
                 switch (this.callbackDispatch.get(pos.getIndex())){
                     case AddTile -> boardViewAddTile(pos);
-                    case RemoveTile -> boardViewRemoveTile(new TilePositioned(placedTileInner.get().tile(), pos));
+                    case RemoveTile -> boardViewRemoveTile(new Positioned<Tile>(placedTileInner.get().value(), pos));
                 }
             });
             this.add(button);
@@ -64,7 +64,7 @@ public class BoardView extends JPanel {
 
             JButton button = this.buttons.get(i);
             this.callbackDispatch.set(i, CallbackType.None);
-            char letter = placedTile.map(tilePositioned -> tilePositioned.tile().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar()));
+            char letter = placedTile.map(tilePositioned -> tilePositioned.value().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar()));
             button.setText(String.format("%c", letter));
 
             if (placedTile.isPresent()) {
@@ -82,7 +82,7 @@ public class BoardView extends JPanel {
         this.boardTileRemover.add(remover);
     }
 
-    private void boardViewRemoveTile(TilePositioned tile) {
+    private void boardViewRemoveTile(Positioned<Tile> tile) {
         for (var remover: this.boardTileRemover) {
             remover.handleBoardTileRemover(tile);
         }

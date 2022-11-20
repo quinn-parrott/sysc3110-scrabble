@@ -8,14 +8,14 @@ import java.util.*;
 public class TilePlacement {
     // This class represents a single player turn
 
-    private final List<TilePositioned> tiles;
+    private final List<Positioned<Tile>> tiles;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
-     * @param tiles ArrayList of TilePositioned objects, which contain a Tile object, and a Position object
+     * @param tiles ArrayList of Positioned<Tile> objects, which contain a Tile object, and a Position object
      * @author Colin Mandeville, 101140289
      */
-    public TilePlacement(List<TilePositioned> tiles) {
+    public TilePlacement(List<Positioned<Tile>> tiles) {
         // TODO: Validate that all characters are in order
         this.tiles = tiles;
     }
@@ -97,7 +97,7 @@ public class TilePlacement {
         }
 
         // Create the tile placement by combining the letters with tile positions
-        var tiles = new ArrayList<TilePositioned>(word.length());
+        var tiles = new ArrayList<Positioned<Tile>>(word.length());
         for (int i = 0; i < word.length(); i++) {
             char tileLetter = word.charAt(i);
             // TODO: Un-hardcode these letters
@@ -105,7 +105,7 @@ public class TilePlacement {
                 continue; // Skip empty letter slots
             }
             // TODO: Do something about the point value here so that it's not zero (maybe remove point from `Tile`?)
-            tiles.add(new TilePositioned(new Tile(tileLetter, 0), positions.get(i)));
+            tiles.add(new Positioned<Tile>(new Tile(tileLetter, 0), positions.get(i)));
         }
         return Optional.of(new TilePlacement(tiles));
     }
@@ -135,7 +135,7 @@ public class TilePlacement {
                 builder.append("_".repeat(delta - 1));
             }
 
-            builder.append(tile.tile().chr());
+            builder.append(tile.value().chr());
             lastPosition = pos;
         }
 
@@ -156,11 +156,11 @@ public class TilePlacement {
      * Getter method for the tiles attribute of the TilePlacement object
      * @author Quinn Parrott, 101169535
      */
-    public List<TilePositioned> getTiles() {
+    public List<Positioned<Tile>> getTiles() {
         return this.tiles;
     }
 
-    public static Optional<TilePlacement> FromTiles(List<TilePositioned> tiles) {
+    public static Optional<TilePlacement> FromTiles(List<Positioned<Tile>> tiles) {
         // Sorting tiles make sure the letters are in order when the word is built
         var placedTiles =
                 tiles
