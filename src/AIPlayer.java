@@ -172,31 +172,6 @@ public class AIPlayer extends Player {
         }
     }
 
-    public static void main(String[] args) {
-        AIPlayer p1 = new AIPlayer("AI");
-        AIPlayer p2 = new AIPlayer("Al");
-        ArrayList<Player> al = new ArrayList<>();
-        al.add(p1);
-        al.add(p2);
-        Game g = new Game(al, new WordList());
-        p1.AITurn(g);
-        g.printBoardState();
-        p2.AITurn(g);
-        g.printBoardState();
-        p1.AITurn(g);
-        g.printBoardState();
-        p2.AITurn(g);
-        g.printBoardState();
-        p1.AITurn(g);
-        g.printBoardState();
-        p2.AITurn(g);
-        g.printBoardState();
-        p1.AITurn(g);
-        g.printBoardState();
-        p2.AITurn(g);
-        g.printBoardState();
-    }
-
     public static class PointComparator implements java.util.Comparator<String> {
         public PointComparator() {
             super();
