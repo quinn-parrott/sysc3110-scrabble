@@ -11,7 +11,7 @@ public class Board {
     private static final int COLUMN_NUMBER = 15;
     private static final int ROW_NUMBER = 15;
 
-    private final ArrayList<Tile> board; // TODO: Rename to something more descriptive
+    private final ArrayList<Optional<Tile>> board; // TODO: Rename to something more descriptive
 
     /**
      * Board Constructor, defines ArrayList to contain Board and sets each square to an arbitrary _ on each tile,
@@ -21,11 +21,7 @@ public class Board {
     public Board() {
         this.board = new ArrayList<>();
         for (int i = 0; i < COLUMN_NUMBER * ROW_NUMBER; i++) {
-            if (i == getCenterTilePos()) {
-                this.board.add(new Tile('*', 0));
-            } else {
-                this.board.add(new Tile('_', 0));
-            }
+            this.board.add(Optional.empty());
         }
     }
 
@@ -49,7 +45,8 @@ public class Board {
     }
 
     /**
-     * Sets a tile object to be contained at a specific x and y coordinate, where y represents row and x represents column
+     * Sets a tile object to be contained at a specific x and y coordinate, where y
+     * represents row and x represents column
      * @param tile tile to be set to the x and y coordinate
      * @param x x coordinate representing the column number
      * @param y y coordinate representing the row number
@@ -63,12 +60,12 @@ public class Board {
 
     /**
      * Sets a tile object to be contained at a specific index of the ArrayList
-     * @param tile tile to be set to a specific index of this.board
-     * @param index index of this.board
+     * @param tile tile to be set to a specific index of board
+     * @param index index of board
      * @author Quinn Parrott, 101169535
      */
     public void setTile(Tile tile, int index) {
-        this.board.set(index, tile);
+        this.board.set(index, Optional.of(tile));
     }
 
     /**
@@ -78,19 +75,7 @@ public class Board {
      * @author Quinn Parrott, 101169535
      */
     public Optional<Tile> getTile(Position pos) {
-        return getTile(pos.getX(), pos.getY());
-    }
-
-    /**
-     * Getter method for tiles contained at a set x,y coordinate on the board
-     * @param x x referring to column number
-     * @param y y referring to row number
-     * @return Returns the tile object at an x y coordinate on the board
-     * @author Quinn Parrott, 101169535
-     */
-    public Optional<Tile> getTile(int x, int y) {
-        Optional<Position> i = Position.FromInts(x, y);
-        return i.map(position -> this.board.get(position.getIndex()));
+        return this.board.get(pos.getIndex());
     }
 
     /**
@@ -120,13 +105,10 @@ public class Board {
         // Check that all tiles are placeable
         for (var tile : tilePlacement.getTiles()) {
             var tileOpt = getTile(tile.pos());
-            if (tileOpt.isEmpty()) {
-                throw new PlacementException(String.format("'%s' is outside the board", tile.pos()), tilePlacement, Optional.of(this));
-            } else if (tileOpt.get().isFilledWithLetter()) {
-                if (tileOpt.get().chr() != tilePlacement.getTiles().get(i).tile().chr()) {
-                    throw new PlacementException(String.format("'%s' already has a letter", tile.pos()), tilePlacement, Optional.of(this));
-                }
+            if (tileOpt.isPresent()) {
+                throw new PlacementException(String.format("'%s' already has a letter", tile.pos()), tilePlacement, Optional.of(this));
             }
+
             // TODO Make sure words don't wrap to other rows
 //            int x = tile.pos().getX();
 //            if (Math.floorDiv(x, ROW_NUMBER) != Math.floorDiv(x + tilePlacement.getTiles().size(), ROW_NUMBER)) {
@@ -153,7 +135,9 @@ public class Board {
 
             // Print each tile in row i
             for (int j = 0; j < COLUMN_NUMBER; j++) {
-                System.out.print(this.board.get(15 * i + j).chr() + "  ");
+                var pos = Position.FromInts(j, i).get();
+                var index = pos.getIndex();
+                System.out.print(this.board.get(index).map(Tile::chr).orElse(pos.getBackgroundChar()) + "  ");
             }
 
             System.out.println();
@@ -180,8 +164,8 @@ public class Board {
 
         int i = 0;
         for (var tile : this.board) {
-            if (tile.isFilledWithLetter()) { // Ignore empty tiles
-                result.add(new TilePositioned(tile, Position.FromIndex(i).get()));
+            if (tile.isPresent()) { // Ignore empty tiles
+                result.add(new TilePositioned(tile.get(), Position.FromIndex(i).get()));
             }
             i++;
         }
@@ -201,9 +185,9 @@ public class Board {
             var seq = "";
             for (int y = 0; y < ROW_NUMBER; y++) {
                 var pos = Position.FromInts(x, y).get();
-                var tile = getTile(pos).get();
-                if (tile.isFilledWithLetter()) {
-                    seq += tile.chr();
+                var tile = getTile(pos);
+                if (tile.isPresent()) {
+                    seq += tile.get().chr();
                 } else {
                     if (seq.length() > 1) {
                         results.add(seq);
@@ -223,9 +207,9 @@ public class Board {
             var seq = "";
             for (int x = 0; x < COLUMN_NUMBER; x++) {
                 var pos = Position.FromInts(x, y).get();
-                var tile = getTile(pos).get();
-                if (tile.isFilledWithLetter()) {
-                    seq += tile.chr();
+                var tile = getTile(pos);
+                if (tile.isPresent()) {
+                    seq += tile.get().chr();
                 } else {
                     if (seq.length() > 1) {
                         results.add(seq);
@@ -257,7 +241,9 @@ public class Board {
 
         int i = 0;
         for (var tile : this.board) {
-            newBoard.setTile(tile, i);
+            if (tile.isPresent()) {
+                newBoard.setTile(tile.get(), i);
+            }
             i += 1;
         }
 

@@ -102,11 +102,7 @@ public class TilePlacement {
             char tileLetter = word.charAt(i);
             // TODO: Un-hardcode these letters
             if (tileLetter == '_' || tileLetter == '*' || tileLetter == ' ' || tileLetter == '-'){
-                if(i == 0 || i == word.length()-1) {
-                   tileLetter = '_';
-                }else{
-                    continue; // Skip empty letter slots
-                }
+                continue; // Skip empty letter slots
             }
             // TODO: Do something about the point value here so that it's not zero (maybe remove point from `Tile`?)
             tiles.add(new TilePositioned(new Tile(tileLetter, 0), positions.get(i)));
