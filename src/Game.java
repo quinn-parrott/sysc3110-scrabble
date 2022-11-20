@@ -145,14 +145,14 @@ public class Game {
             this.wordsPlayed.add(word);
         }
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
-        this.turns.add(placement);
-        for (GameView view : this.views) {
-            view.update();
-        }
         int PLAYER_HAND_SIZE = 7;
         for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
             Optional<WildcardableTile> t = gameBag.drawTile();
             t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+        }
+        this.turns.add(placement);
+        for (GameView view : this.views) {
+            view.update();
         }
     }
 
