@@ -175,10 +175,25 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             var temp = this.placedTiles.get(i);
             if (temp.pos() == tile.pos()) {
                 this.placedTiles.remove(i);
+
+                // Make the tile selectable in the tile tray again
+                int j = 0;
+                for (var entry : tileTrayModel.getEntries()) {
+                    if (entry.status().equals(TileTrayModel.TileStatus.Played) && entry.tile().chr() == temp.tile().chr()) {
+                        tileTrayModel.setEntry(j, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, entry.tile()));
+                        tileTrayModel.setSelected(Optional.of(j));
+
+                        tileTrayView.update();
+                        break;
+                    }
+
+                    j++;
+                }
+
+                this.boardView.update();
                 break;
             }
         }
-        this.boardView.update();
     }
 
     public void handleBoardTileAdder(Position pos) {
@@ -187,10 +202,24 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             return;
         }
 
-        var tile_i = tileTrayModel.getSelected().get();
-        this.placedTiles.add(new TilePositioned(tileTrayModel.getEntries().get(tile_i).tile(), pos));
+        int tile_i = tileTrayModel.getSelected().get();
+        var entry = tileTrayModel.getEntries().get(tile_i);
+        tileTrayModel.setEntry(tile_i, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Played, entry.tile()));
+
+        Optional<Integer> selected = Optional.empty();
+        var entries = tileTrayModel.getEntries();
+        for (int i = 0; i < entries.size(); i++) {
+            var ent = entries.get(i);
+            if (ent.status().equals(TileTrayModel.TileStatus.Unplayed)) {
+                selected = Optional.of(i);
+                break;
+            }
+        }
+
+        tileTrayModel.setSelected(selected);
+        tileTrayView.update();
+        this.placedTiles.add(new TilePositioned(entry.tile(), pos));
         this.boardView.update();
-        // TODO: Remove from hand
     }
 
     private Component createBoard(Board board, List<TilePositioned> placedTiles) {
