@@ -143,7 +143,7 @@ public class testGame {
         p1.addTile(new Tile('A', 1));
         p1.addTile(new Tile('D', 2));
         g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
-        Assertions.assertEquals(10, g1.getPlayer().getPoints());
+        Assertions.assertEquals(20, g1.getPlayer().getPoints());
     }
 
     @Test
@@ -165,6 +165,67 @@ public class testGame {
         p1.addTile(new Tile('K', 5));
         p1.addTile(new Tile('E', 1));
         g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
-        Assertions.assertEquals(22, g1.getPlayer().getPoints());
+        Assertions.assertEquals(32, g1.getPlayer().getPoints());
+    }
+
+    @Test
+    void test3xLetterPointsGivenCorrectly() throws  PlacementException{
+        ArrayList<Player> players = new ArrayList<>();
+        Player p1 = new Player("P1");
+        players.add(p1);
+        var g1 = new Game(players, new WordList());
+
+        p1.addTile(new Tile('B', 3));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('E', 1));
+        p1.addTile(new Tile('A', 1));
+        p1.addTile(new Tile('D', 2));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
+
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('O', 1));
+        p1.addTile(new Tile('K', 5));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
+
+        p1.addTile(new Tile('T', 1));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('S', 1));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("J6:v;TR_ES").orElseThrow());
+        Assertions.assertEquals(41, g1.getPlayer().getPoints());
+    }
+
+    @Test
+    void test3xWordPointsGivenCorrectly() throws  PlacementException {
+        ArrayList<Player> players = new ArrayList<>();
+        Player p1 = new Player("P1");
+        players.add(p1);
+        var g1 = new Game(players, new WordList());
+
+        p1.addTile(new Tile('B', 3));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('E', 1));
+        p1.addTile(new Tile('E', 1));
+        p1.addTile(new Tile('D', 2));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREED").orElseThrow());
+
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('O', 1));
+        p1.addTile(new Tile('K', 5));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
+
+        p1.addTile(new Tile('T', 1));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('S', 1));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("J6:v;TR_ES").orElseThrow());
+
+        p1.addTile(new Tile('I', 1));
+        p1.addTile(new Tile('N', 1));
+        p1.addTile(new Tile('G', 2));
+        g1.place(TilePlacement.FromShorthand("M8:h;ING").orElseThrow());
+        Assertions.assertEquals(77, g1.getPlayer().getPoints());
     }
 }

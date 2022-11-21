@@ -197,9 +197,9 @@ public class Board {
                 } else {
                     if (seq.length() > 1) {
                         results.put(seq, indexPosSeq);
-                        seq = "";
-                        indexPosSeq = new ArrayList<>();
                     }
+                    seq = "";
+                    indexPosSeq = new ArrayList<>();
                 }
             }
 
@@ -223,9 +223,9 @@ public class Board {
                 } else {
                     if (seq.length() > 1) {
                         results.put(seq, indexPosSeq);
-                        seq = "";
-                        indexPosSeq = new ArrayList<>();
                     }
+                    seq = "";
+                    indexPosSeq = new ArrayList<>();
                 }
             }
 

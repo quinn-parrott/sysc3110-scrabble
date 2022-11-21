@@ -157,9 +157,11 @@ public class Game {
                         case '%':
                             tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()) * 3; break;
                         case '@':
-                            wordMultiplier *= 2; break;
+                            wordMultiplier *= 2;
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()); break;
                         case '#':
-                            wordMultiplier *= 3; break;
+                            wordMultiplier *= 3;
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()); break;
 
                     }
 
@@ -287,15 +289,26 @@ public class Game {
         p1.addTile(new Tile('B', 3));
         p1.addTile(new Tile('R', 1));
         p1.addTile(new Tile('E', 1));
-        p1.addTile(new Tile('A', 1));
+        p1.addTile(new Tile('E', 1));
         p1.addTile(new Tile('D', 2));
-        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
+        g1.place(TilePlacement.FromShorthand("H8:h;BREED").orElseThrow());
 
         p1.addTile(new Tile('R', 1));
         p1.addTile(new Tile('O', 1));
         p1.addTile(new Tile('K', 5));
         p1.addTile(new Tile('E', 1));
         g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
+
+        p1.addTile(new Tile('T', 1));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('S', 1));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("J6:v;TR_ES").orElseThrow());
+
+        p1.addTile(new Tile('I', 1));
+        p1.addTile(new Tile('N', 1));
+        p1.addTile(new Tile('G', 1));
+        g1.place(TilePlacement.FromShorthand("M8:h;ING").orElseThrow());
         g1.board.printBoard();
     }
 }
