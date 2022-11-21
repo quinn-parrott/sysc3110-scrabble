@@ -178,14 +178,18 @@ public class Game {
         }
 
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
+
+        int currentPlayerHandSize= this.getPlayer().getTileHand().size();
+        int PLAYER_HAND_SIZE = 7;
+        int NumTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
+        for (int i = 0; i < NumTilesToAdd; i++) {
+            Optional<Tile> t = gameBag.drawTile();
+            t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+        }
+
         this.turns.add(placement);
         for (GameView view : this.views) {
             view.update();
-        }
-        int PLAYER_HAND_SIZE = 7;
-        for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-            Optional<Tile> t = gameBag.drawTile();
-            t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
         }
     }
 
@@ -277,38 +281,5 @@ public class Game {
 
     public Board getBoard() {
         return this.board;
-    }
-
-    public static void main(String[] args) throws PlacementException {
-        ArrayList<Player> players = new ArrayList<>();
-        Player p1 = new Player("P1");
-        players.add(p1);
-//
-        var g1 = new Game(players, new WordList());
-
-        p1.addTile(new Tile('B', 3));
-        p1.addTile(new Tile('R', 1));
-        p1.addTile(new Tile('E', 1));
-        p1.addTile(new Tile('E', 1));
-        p1.addTile(new Tile('D', 2));
-        g1.place(TilePlacement.FromShorthand("H8:h;BREED").orElseThrow());
-
-        p1.addTile(new Tile('R', 1));
-        p1.addTile(new Tile('O', 1));
-        p1.addTile(new Tile('K', 5));
-        p1.addTile(new Tile('E', 1));
-        g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
-
-        p1.addTile(new Tile('T', 1));
-        p1.addTile(new Tile('R', 1));
-        p1.addTile(new Tile('S', 1));
-        p1.addTile(new Tile('E', 1));
-        g1.place(TilePlacement.FromShorthand("J6:v;TR_ES").orElseThrow());
-
-        p1.addTile(new Tile('I', 1));
-        p1.addTile(new Tile('N', 1));
-        p1.addTile(new Tile('G', 1));
-        g1.place(TilePlacement.FromShorthand("M8:h;ING").orElseThrow());
-        g1.board.printBoard();
     }
 }
