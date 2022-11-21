@@ -143,7 +143,7 @@ public class testGame {
         p1.addTile(new Tile('A', 1));
         p1.addTile(new Tile('D', 2));
         g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
-        Assertions.assertEquals(8, g1.getPlayer().getPoints());
+        Assertions.assertEquals(10, g1.getPlayer().getPoints());
     }
 
     @Test
@@ -165,6 +165,6 @@ public class testGame {
         p1.addTile(new Tile('K', 5));
         p1.addTile(new Tile('E', 1));
         g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
-        Assertions.assertEquals(19, g1.getPlayer().getPoints());
+        Assertions.assertEquals(22, g1.getPlayer().getPoints());
     }
 }

@@ -9,6 +9,7 @@ public class Position {
     // This will represent the placement on the board x is received as letter input, y as a number
     private final int x;
     private final int y;
+    private static HashMap<Integer, Character> premiumSquares;
 
     /**
      * Constructor for Position Class. Verifies that input x is a letter (not case-sensitive) and
@@ -185,7 +186,17 @@ public class Position {
     }
 
     public char getBackgroundChar() {
-        return Board.getCenterTilePos() == getIndex() ? '*' : '_';
+        this.premiumSquares = PremiumSquares.getPremiumSquares();
+        int i =  getIndex();
+        if(Board.getCenterTilePos() == i){
+            return '*';
+        }else{
+            if(premiumSquares.containsKey(i)){
+                return premiumSquares.get(i);
+            }else{
+                return '_';
+            }
+        }
     }
 
     @Override

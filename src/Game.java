@@ -13,6 +13,8 @@ public class Game {
     private ArrayList<GameView> views;
     private TileBag gameBag;
     public WordList wordList;
+    private static HashMap<Integer, Character> gamePremiumSquares;
+    private static HashMap<String, ArrayList> wordsAndPos;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
@@ -30,6 +32,7 @@ public class Game {
         this.wordList = wordList;
         this.views = new ArrayList<>();
         this.gameBag = new TileBag();
+        this.gamePremiumSquares = PremiumSquares.getPremiumSquares();
         int PLAYER_HAND_SIZE = 7;
         for (Player player : this.players) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
@@ -101,7 +104,9 @@ public class Game {
 
         nextBoard.placeTiles(placement);
 
-        for (String word : nextBoard.collectCharSequences()) {
+        this.wordsAndPos = nextBoard.collectCharSequences();
+
+        for (String word : wordsAndPos.keySet()) {
             if (!this.wordsPlayed.contains(word)) {
                 newWords.add(word);
             }
@@ -139,11 +144,37 @@ public class Game {
         int score = 0;
 
         for (String word : newWords) {
+            int tileScore = 0;
+            int wordMultiplier = 1;
+            int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                score += tileDetails.get(word.charAt(i)).tile().pointValue();
+                if (gamePremiumSquares.containsKey(this.wordsAndPos.get(word).get(i))) {
+                    var chr = gamePremiumSquares.get(this.wordsAndPos.get(word).get(i));
+                    switch (chr){
+
+                        case '$':
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()) * 2; break;
+                        case '%':
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()) * 3; break;
+                        case '@':
+                            wordMultiplier *= 2; break;
+                        case '#':
+                            wordMultiplier *= 3; break;
+
+                    }
+
+                    gamePremiumSquares.remove(this.wordsAndPos.get(word).get(i));
+
+                }else{
+                    tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
+                }
             }
             this.wordsPlayed.add(word);
+            wordscore = tileScore * wordMultiplier;
+            score += wordscore;
+
         }
+
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
         this.turns.add(placement);
         for (GameView view : this.views) {
@@ -244,5 +275,27 @@ public class Game {
 
     public Board getBoard() {
         return this.board;
+    }
+
+    public static void main(String[] args) throws PlacementException {
+        ArrayList<Player> players = new ArrayList<>();
+        Player p1 = new Player("P1");
+        players.add(p1);
+//
+        var g1 = new Game(players, new WordList());
+
+        p1.addTile(new Tile('B', 3));
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('E', 1));
+        p1.addTile(new Tile('A', 1));
+        p1.addTile(new Tile('D', 2));
+        g1.place(TilePlacement.FromShorthand("H8:h;BREAD").orElseThrow());
+
+        p1.addTile(new Tile('R', 1));
+        p1.addTile(new Tile('O', 1));
+        p1.addTile(new Tile('K', 5));
+        p1.addTile(new Tile('E', 1));
+        g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
+        g1.board.printBoard();
     }
 }

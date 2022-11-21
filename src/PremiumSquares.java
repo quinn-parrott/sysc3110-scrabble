@@ -52,6 +52,13 @@ public class PremiumSquares {
 
     }
 
+    /**
+     * Method to return position index from the board
+     * @param p point(x,y)
+     * @return int position index
+     *
+     * @author Tao Lufula, 101164153
+     */
     private static int getIndexFromPoint(Point p){
         return (int) (15 * ((p.getY() - 1)) + (p.getX() - 1));
     }
