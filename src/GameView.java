@@ -119,17 +119,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardView.update();
-        Player currPlayer = this.game.getPlayer();
-        if (currPlayer.getClass() == AIPlayer.class) {
-            ((AIPlayer) currPlayer).AITurn(this.game);
-            this.update();
-        }
     }
 
     /**
      * Changes the play button text depending on the game circumstance
      * @param text
-     *
      * @author Tao Lufula, 101164153
      */
     public void switchPlayButtonText(String text){
