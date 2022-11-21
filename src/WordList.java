@@ -56,7 +56,7 @@ public class WordList {
      * @return wordlist attribute of the Wordlist object
      */
     public HashSet<String> getWordlist() {
-        return wordlist;
+        return new HashSet<>(wordlist);
     }
 }
 
