@@ -77,7 +77,7 @@ public class PlayerAdderView {
             }
 
             for (int i = 0; i < numberOfAIs; i++) {
-                players.add(new AIPlayer("AI" + (i+1)));
+                players.add(new Player("AI" + (i+1), true));
             }
 
             return players;
