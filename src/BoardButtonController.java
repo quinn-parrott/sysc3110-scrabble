@@ -17,11 +17,11 @@ public class BoardButtonController implements ActionListener {
         var placedTileInner = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
         switch (view.getCallbackDispatch().get(pos.getIndex())){
             case AddTile -> boardViewAddTile(pos);
-            case RemoveTile -> boardViewRemoveTile(new Positioned<Tile>(placedTileInner.get().value(), pos));
+            case RemoveTile -> boardViewRemoveTile(new Positioned<>(placedTileInner.get().value(), pos));
         }
     }
 
-    private void boardViewRemoveTile(Positioned<Tile> tile) {
+    private void boardViewRemoveTile(Positioned<WildcardableStoreTile> tile) {
         for (var remover: view.getBoardTileRemover()) {
             remover.handleBoardTileRemover(tile);
         }

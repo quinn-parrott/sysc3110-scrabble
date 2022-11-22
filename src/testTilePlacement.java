@@ -70,11 +70,11 @@ public class testTilePlacement {
     @Test
     void testFromTiles() {
         var al = new ArrayList<Positioned<Tile>>();
-        al.add(new Positioned<Tile>(new Tile('B', 0), Position.FromInts(7,7).orElseThrow()));
-        al.add(new Positioned<Tile>(new Tile('R', 0), Position.FromInts(7,8).orElseThrow()));
-        al.add(new Positioned<Tile>(new Tile('E', 0), Position.FromInts(7,9).orElseThrow()));
-        al.add(new Positioned<Tile>(new Tile('A', 0), Position.FromInts(7,10).orElseThrow()));
-        al.add(new Positioned<Tile>(new Tile('D', 0), Position.FromInts(7,11).orElseThrow()));
+        al.add(new Positioned<>(new Tile('B', 0), Position.FromInts(7,7).orElseThrow()));
+        al.add(new Positioned<>(new Tile('R', 0), Position.FromInts(7,8).orElseThrow()));
+        al.add(new Positioned<>(new Tile('E', 0), Position.FromInts(7,9).orElseThrow()));
+        al.add(new Positioned<>(new Tile('A', 0), Position.FromInts(7,10).orElseThrow()));
+        al.add(new Positioned<>(new Tile('D', 0), Position.FromInts(7,11).orElseThrow()));
         var p = TilePlacement.FromTiles(al);
         Assertions.assertFalse(p.isEmpty());
         TilePlacement expected = TilePlacement.FromShorthand("h8:v;bread").get();

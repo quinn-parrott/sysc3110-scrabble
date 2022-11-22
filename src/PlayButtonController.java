@@ -17,7 +17,13 @@ public class PlayButtonController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (this.boardModel.getPlacedTiles().size() != 0) {
-            Optional<TilePlacement> tp = TilePlacement.FromTiles(this.boardModel.getPlacedTiles());
+            Optional<TilePlacement> tp = TilePlacement.FromTiles(
+                    this.boardModel.getPlacedTiles()
+                            .stream()
+                            .map(t -> new Positioned<>(new Tile(t.value().chr(), t.value().pointValue()), t.pos()))
+                            .toList()
+            );
+
             if (tp.isPresent()) {
                 try {
                     this.gameModel.place(tp.get());

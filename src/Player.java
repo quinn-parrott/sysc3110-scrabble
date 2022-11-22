@@ -9,7 +9,7 @@ public class Player {
 
     private String name;
     private int points;
-    private ArrayList<Tile> tileHand;
+    private ArrayList<WildcardableTile> tileHand;
     private static final int TILE_HAND_SIZE = 7;
 
     public static int getTileHandSize() {
@@ -50,7 +50,7 @@ public class Player {
      * @return Returns Player tileHand attribute
      * @author Tao Lufula, 101164153
      */
-    public ArrayList<Tile> getTileHand() {
+    public ArrayList<WildcardableTile> getTileHand() {
         return tileHand;
     }
 
@@ -68,7 +68,7 @@ public class Player {
      * @param tile tile to be added to the Player instance's tileHand
      * @author Tao Lufula, 101164153
      */
-    public void addTile(Tile tile){
+    public void addTile(WildcardableTile tile){
         this.tileHand.add(tile);
     }
 
@@ -77,7 +77,7 @@ public class Player {
      * @param tile tile to be removed from the Player instance's tileHand
      * @author Tao Lufula, 101164153
      */
-    public void removeTile(Tile tile){
+    public void removeTile(WildcardableTile tile){
         this.tileHand.remove(tile);
     }
 }

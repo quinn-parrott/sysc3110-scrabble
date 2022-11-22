@@ -105,13 +105,13 @@ public class TilePlacement {
                 continue; // Skip empty letter slots
             }
             // TODO: Do something about the point value here so that it's not zero (maybe remove point from `Tile`?)
-            tiles.add(new Positioned<Tile>(new Tile(tileLetter, 0), positions.get(i)));
+            tiles.add(new Positioned<>(new Tile(tileLetter, 0), positions.get(i)));
         }
         return Optional.of(new TilePlacement(tiles));
     }
 
     /**
-     * Overridden String representation of the TilePLacement class
+     * Overridden String representation of the TilePlacement class
      * @return Returns a String representation of the TilePlacement class
      * @author Quinn Parrott, 101169535
      */

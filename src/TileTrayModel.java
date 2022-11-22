@@ -38,7 +38,7 @@ public class TileTrayModel {
         this.selected = selected;
     }
 
-    public record TileTrayEntry(TileStatus status, Tile tile) {}
+    public record TileTrayEntry(TileStatus status, WildcardableTile tile) {}
     public enum TileStatus {
         Unplayed,
         Played
