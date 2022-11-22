@@ -277,11 +277,11 @@ public class Game {
                 i += word.length();
                 continue;
             }
-            ArrayList<TilePositioned> tiles = new ArrayList<>();
+            ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
                 Optional<Position> cPos = Position.FromIndex(j + i);
-                cPos.ifPresent(position -> tiles.add(new TilePositioned(tbs.get(c).tile(), position)));
+                cPos.ifPresent(position -> tiles.add(new Positioned<Tile>(tbs.get(c).tile(), position)));
             }
             Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
             if (tp.isPresent()) {
@@ -300,14 +300,14 @@ public class Game {
      * @return Returns the starting index at which to place tiles
      */
     private Optional<TilePlacement> checkVertical(String word) {
-        ArrayList<TilePositioned> tiles = new ArrayList<>();
+        ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
         HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
         for (int i = 0; i < Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER(); i++) {
             tiles.clear();
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
                 Optional<Position> cPos = Position.FromInts(i, j);
-                cPos.ifPresent(position -> tiles.add(new TilePositioned(tbs.get(c).tile(), position)));
+                cPos.ifPresent(position -> tiles.add(new Positioned<Tile>(tbs.get(c).tile(), position)));
             }
             Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
             if (tp.isPresent()) {
@@ -327,8 +327,9 @@ public class Game {
      * possible
      */
     private Optional<TilePlacement> boardPlacement(String word) {
-        if (this.board.getTile(Position.FromIndex(Board.getCenterTilePos()).get()).get().chr() == '*') {
-            ArrayList<TilePositioned> tiles = new ArrayList<>();
+
+        if (this.wordsPlayed.size() == 0) {
+            ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
             ArrayList<String> words = this.getPlayer().getPossibleWords(0);
             words.sort(new PointComparator());
             String first = "";
@@ -338,7 +339,7 @@ public class Game {
             HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
             for (int i = 0; i < first.length(); i++) {
                 char c = first.toUpperCase().toCharArray()[i];
-                tiles.add(new TilePositioned(tbs.get(c).tile(), Position.FromInts(Math.floorDiv(Board.getROW_NUMBER(), 2), Math.floorDiv(Board.getCOLUMN_NUMBER(), 2) + i).get()));
+                tiles.add(new Positioned<Tile>(tbs.get(c).tile(), Position.FromInts(Math.floorDiv(Board.getROW_NUMBER(), 2), Math.floorDiv(Board.getCOLUMN_NUMBER(), 2) + i).get()));
             }
             return TilePlacement.FromTiles(tiles);
         }
