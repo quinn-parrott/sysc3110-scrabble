@@ -96,25 +96,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(150,50));
 
-        playButton.addActionListener((e) -> {
-            if (this.boardViewModel.getPlacedTiles().size() != 0) {
-                Optional<TilePlacement> tp = TilePlacement.FromTiles(this.boardViewModel.getPlacedTiles());
-                if (tp.isPresent()) {
-                    try {
-                        this.game.place(tp.get());
-                        this.placedTiles.removeIf(_all -> true);
-                        boardViewModel.setBoard(this.game.getBoard());
-                    } catch (PlacementException pe) {
-                        JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Invalid tile");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No Word Played");
-            }
-            this.update();
-        });
+        playButton.addActionListener(new ControllerPlayButton(this, this.game, this.boardViewModel));
 
         passTurn.addActionListener(new ControllerPassButton(this, this.game, this.boardViewModel));
 
