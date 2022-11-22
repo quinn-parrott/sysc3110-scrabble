@@ -120,10 +120,7 @@ public class PremiumSquares {
      * @author Tao Lufula, 101164153
      */
     private static int getIndexFromPoint(Point p){
-        return (int) (15 * ((p.getY() - 1)) + (p.getX() - 1));
+        return (int) (Board.getROW_NUMBER() * ((p.getY() - 1)) + (p.getX() - 1));
     }
 
-    public static void main(String[] args) {
-        getPremiumSquares();
-    }
 }

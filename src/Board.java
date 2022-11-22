@@ -268,6 +268,6 @@ public class Board {
      * @author Tao Lufula, 101164153
      */
     private static int getIndexPositionFromPoint(Point p){
-        return (int) (15 * ((p.getY())) + (p.getX()));
+        return (int) (getROW_NUMBER() * ((p.getY())) + (p.getX()));
     }
 }
