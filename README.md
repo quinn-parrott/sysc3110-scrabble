@@ -47,9 +47,9 @@ Changes from Milestone 2
 --------------------------------------------------------------------------------------------------------
 This version of Scrabble (Milestone 2) differs from Milestone 1 in terms of gameplay and allowing AI opponents. 
 The user is prompted to allow a number of AI Players, such that the total number of Human and AI Players is 
-greater than or equal to 2, but less than or equal to 4. In addition to this, there are Blank Tiles included 
-which can be made into any letter but is worth 0 points, and there are premium tiles which modify scores earned 
-from placing words overlapping with them. Premium tiles are denoted as follows:
+greater than or equal to 2, but less than or equal to 4. In addition to this, there are WildCard Tiles included 
+(Represented in the hand as &) which can be made into any letter but is worth 0 points, and there are premium 
+tiles which modify scores earned from placing words overlapping with them. Premium tiles are denoted as follows:
 
     $ = 2x Letter Score
     % = 3x Letter Score
