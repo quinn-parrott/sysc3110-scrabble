@@ -14,6 +14,7 @@ public class Game {
     private TileBag gameBag;
     public WordList wordList;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
+    private int numPassesSequentially;
 
     /**
      * Constructor for the Game class
@@ -30,6 +31,7 @@ public class Game {
         this.wordList = wordList;
         this.views = new ArrayList<>();
         this.gameBag = new TileBag();
+        this.numPassesSequentially = 0;
         int PLAYER_HAND_SIZE = 7;
         for (Player player : this.players) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
@@ -146,6 +148,7 @@ public class Game {
         }
         this.players.get(this.turns.size() % this.players.size()).addPoints(score);
         this.turns.add(placement);
+        this.numPassesSequentially = 0;
         for (GameView view : this.views) {
             view.update();
         }
@@ -161,9 +164,25 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     public void pass() {
+        this.numPassesSequentially++;
         this.turns.add(new TilePlacement(new ArrayList<>()));
         for (GameView view : this.views) {
             view.update();
+        }
+        if (this.numPassesSequentially == this.players.size()) {
+            ArrayList<Player> winners = new ArrayList();
+            winners.add(this.players.get(0));
+            for (int i = 1; i < this.players.size(); i++) {
+                if (winners.get(0).getPoints() < this.players.get(i).getPoints()) {
+                    winners.clear();
+                    winners.add(this.players.get(i));
+                } else if (winners.get(0).getPoints() == this.players.get(i).getPoints()) {
+                    winners.add(this.players.get(i));
+                }
+            }
+            for (GameView view : this.views) {
+                view.endGame(winners);
+            }
         }
     }
 
