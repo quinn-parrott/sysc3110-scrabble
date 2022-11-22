@@ -69,6 +69,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         scoreBoardAndButtonPanel.setLayout(new BorderLayout());
         this.scoreboard = new ScoreboardView(game);
         scoreBoardAndButtonPanel.add(this.scoreboard.getView(), BorderLayout.NORTH);
+        scoreBoardAndButtonPanel.add(this.createLegend(), BorderLayout.CENTER);
         scoreBoardAndButtonPanel.add(this.createPlayButtons(), BorderLayout.SOUTH);
 
         pane.add(boardAndTileHandPanel, BorderLayout.WEST);
@@ -79,6 +80,32 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1400, 1000);
         this.setVisible(true);
+    }
+
+    /**
+     * Method to create Legend for special squares
+     *
+     * @author Tao Lufula, 101164153
+     */
+    private Component createLegend() {
+        JPanel legendPanel = new JPanel();
+        legendPanel.setLayout(new GridLayout(12,1));
+
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("                                    LEGEND"));
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("  $ : Double letter score"));
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("  % : Triple letter score"));
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("  @ : Double word score"));
+        legendPanel.add(new JLabel("  "));
+        legendPanel.add(new JLabel("  # : Triple word score"));
+        legendPanel.add(new JLabel("  "));
+
+
+        return legendPanel;
     }
 
 
