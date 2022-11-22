@@ -129,7 +129,7 @@ public class Game {
 
         StringBuilder tilesUsed = new StringBuilder();
 
-        for (Positioned<Tile> tile : placement.getTiles()) {
+        for (var tile : placement.getTiles()) {
             tilesUsed.append(tile.value().chr());
         }
 
@@ -151,7 +151,7 @@ public class Game {
         }
         int PLAYER_HAND_SIZE = 7;
         for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-            Optional<Tile> t = gameBag.drawTile();
+            Optional<WildcardableTile> t = gameBag.drawTile();
             t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
         }
     }
@@ -176,28 +176,28 @@ public class Game {
     private boolean playerHasNeededTiles(List<Positioned<Tile>> tiles) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
 
-        StringBuilder word = new StringBuilder();
+        var letters = new ArrayList<>();
 
-        for (Positioned<Tile> tilePositioned : tiles) {
-            var chr = tilePositioned.value().chr();
-            if (chr > 64 && chr < 91) {
-                word.append(chr);
+        int wildcards = 0;
+        for (WildcardableTile tile : activePlayer.getTileHand()) {
+            if (tile.isWildcard()) {
+                wildcards++;
+            } else {
+                Character chr = tile.chr();
+                letters.add(chr);
             }
         }
 
-        Tile matchTile;
-
-        for (int i = 0; i < word.length(); i++) {
-            matchTile = null;
-            for (Tile tile : activePlayer.getTileHand()) {
-                if (matchTile == null && tile.chr() == word.charAt(i)) {
-                    matchTile = tile;
+        for (var tile : tiles) {
+            Character chr = tile.value().chr();
+            if (!letters.remove(chr)) {
+                wildcards--;
+                if (wildcards < 0) {
+                    return false;
                 }
             }
-            if (matchTile == null) {
-                return false;
-            }
         }
+
         return true;
     }
 
@@ -208,11 +208,24 @@ public class Game {
      */
     private void removeTilesFromHand(String letters) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+
         for (char c : letters.toCharArray()) {
-            for (Tile tile: activePlayer.getTileHand()) {
-                if (tile.chr() == c) {
+
+            boolean found = false;
+            for (WildcardableTile tile: activePlayer.getTileHand()) {
+                if (!tile.isWildcard() && tile.chr() == c) {
                     activePlayer.getTileHand().remove(tile);
+                    found = true;
                     break;
+                }
+            }
+
+            if (!found) {
+                for (WildcardableTile tile: activePlayer.getTileHand()) {
+                    if (tile.isWildcard()) {
+                        activePlayer.getTileHand().remove(tile);
+                        break;
+                    }
                 }
             }
         }

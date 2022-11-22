@@ -9,7 +9,7 @@ import java.util.Optional;
  * GUI of the game. This class will handle all the JFrame Components for the scrabble game
  *
  */
-public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemover{
+public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemover {
     private static final Color colorUnselected = new Color(240, 240, 240);
     private static final Color colorSelected = new Color(200, 200, 200);
 
@@ -18,7 +18,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
-    private List<Positioned<Tile>> placedTiles;
+    private List<Positioned<WildcardableStoreTile>> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
     private BoardViewModel boardViewModel;
@@ -50,7 +50,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
 
         this.placedTiles = new ArrayList<>();
-        this.boardComponent = this.createBoard(game.getBoard(), this.placedTiles);
+        this.boardComponent = this.createBoard();
         this.boardComponent.setPreferredSize(new Dimension(500, 600));
 
         JPanel boardAndTileHandPanel = new JPanel();
@@ -147,7 +147,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
 
-    public void handleBoardTileRemover(Positioned<Tile> tile) {
+    public void handleBoardTileRemover(Positioned<WildcardableStoreTile> tile) {
         for (var i = 0; i < this.placedTiles.size(); i++) {
             var temp = this.placedTiles.get(i);
             if (temp.pos().equals(tile.pos())) {
@@ -156,12 +156,24 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                 // Make the tile selectable in the tile tray again
                 int j = 0;
                 for (var entry : tileTrayModel.getEntries()) {
-                    if (entry.status().equals(TileTrayModel.TileStatus.Played) && entry.tile().chr() == temp.value().chr()) {
-                        tileTrayModel.setEntry(j, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, entry.tile()));
-                        tileTrayModel.setSelected(Optional.of(j));
+                    if (entry.status().equals(TileTrayModel.TileStatus.Played)) {
+                        if (temp.value().isWildcard()) {
+                            if ( entry.tile().isWildcard() ) {
+                                tileTrayModel.setEntry(j, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, entry.tile()));
+                                tileTrayModel.setSelected(Optional.of(j));
 
-                        tileTrayView.update();
-                        break;
+                                tileTrayView.update();
+                                break;
+                            }
+                        } else {
+                            if (entry.tile().chr() == temp.value().chr()) {
+                                tileTrayModel.setEntry(j, new TileTrayModel.TileTrayEntry(TileTrayModel.TileStatus.Unplayed, entry.tile()));
+                                tileTrayModel.setSelected(Optional.of(j));
+
+                                tileTrayView.update();
+                                break;
+                            }
+                        }
                     }
 
                     j++;
@@ -195,11 +207,23 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         tileTrayModel.setSelected(selected);
         tileTrayView.update();
-        this.placedTiles.add(new Positioned<Tile>(entry.tile(), pos));
+
+        var tile = entry.tile();
+
+        char letter = tile.chr();
+        if (tile.isWildcard()) {
+            String letters = "";
+            while (letters.length() != 1) {
+                letters = Optional.ofNullable(JOptionPane.showInputDialog(this, "What letter?")).orElse("").toUpperCase();
+            }
+            letter = letters.toCharArray()[0];
+        }
+
+        this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(letter, tile.isWildcard(), tile.pointValue()), pos));
         this.boardView.update();
     }
 
-    private Component createBoard(Board board, List<Positioned<Tile>> placedTiles) {
+    private Component createBoard() {
         this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
         var boardView = new BoardView(this.boardViewModel);
         boardView.addBoardTileAdder(this);

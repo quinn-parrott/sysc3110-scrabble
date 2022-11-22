@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class TileBag {
 
-    private final HashMap<Tile, Integer> tilesLeft;
+    private final HashMap<WildcardableTile, Integer> tilesLeft;
     private static final int MIN_TILES_FOR_EXCHANGE = 7;
 
     /**
@@ -38,10 +38,10 @@ public class TileBag {
      * @return returns the Tile removed from the tilesLeft ArrayList
      * @author Colin Mandeville, 101140289
      */
-    public Optional<Tile> drawTile() {
+    public Optional<WildcardableTile> drawTile() {
         Random rand = new Random();
         if (this.getNumTilesLeft() > 0) {
-            ArrayList<Tile> listTiles = new ArrayList<>(this.tilesLeft.keySet());
+            ArrayList<WildcardableTile> listTiles = new ArrayList<>(this.tilesLeft.keySet());
             int randInt = rand.nextInt(this.tilesLeft.keySet().size());
             this.tilesLeft.replace(listTiles.get(randInt), this.tilesLeft.get(listTiles.get(randInt)),
                     this.tilesLeft.get(listTiles.get(randInt)) - 1);
@@ -59,14 +59,14 @@ public class TileBag {
      * @author Tao Lufula, 101164153
      */
     private void addTileToBag(Tile tile){
-        Tile t = null;
+        Optional<WildcardableTile> t = Optional.empty();
         for (TileBagDetails tbg : TileBagSingleton.getBagDetails().values()) {
             if(tile.chr() == tbg.tile().chr()) {
-                t = tbg.tile();
+                t = Optional.of(tbg.tile());
             }
         }
-        if(t != null) {
-            this.tilesLeft.put(t, this.tilesLeft.get(t) + 1);
+        if(t.isPresent()) {
+            this.tilesLeft.put(t.get(), this.tilesLeft.get(t) + 1);
         }
     }
 
@@ -76,7 +76,7 @@ public class TileBag {
      */
     public boolean isEmpty() {
         int numTiles = 0;
-        for (Tile t : this.tilesLeft.keySet()) {
+        for (WildcardableTile t : this.tilesLeft.keySet()) {
             numTiles += this.tilesLeft.get(t);
         }
         return numTiles == 0;
