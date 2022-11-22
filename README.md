@@ -7,16 +7,17 @@ Colin Mandeville, Jawad Nasrallah, Quinn Parrott, Tao Lufula
 Game Description:
 --------------------------------------------------------------------------------------------------------
 
-A GUI based scrabble game that allows two players to compete against each other, and play scrabble using a 
-GUI. The game follows the traditional Scrabble rules. Players take turns to make words out of the 7 letters 
-they have and place it on the board. The player with the most points at the end wins. This program was 
-programmed in Java. 
+A GUI based scrabble game that allows two to four players to compete against each other, as well as against 
+AI players, and play scrabble using a GUI. The game follows the traditional Scrabble rules. Players take 
+turns to make words out of the 7 letters they have and place it on the board. The player with the most 
+points at the end wins. This program was programmed in Java. 
 
 The implementation and excecution of this GUI-based game of scrabble has been designed to allow
-two players to play against one-another. The game is played following the traditional rules of Scrabble. Each 
-player takes a turn to place letters on the board, from the bag of letters he is dealt. The ulimate goal is 
-to build words using the letters given to you, and end up with more points than your opposition. This 
-Scrabble-software was implemented using IntelliJ.
+two to four players to play against one-another and/or against an AI player. The game is played following 
+the traditional rules of Scrabble. Each player takes a turn to place letters on the board, from the hand of 
+tiles they are dealt. The ulimate goal is to build words using the letters given to you, and end up with 
+more points than your opposition. This Scrabble-software was implemented using IntelliJ.
+
 
 
 Instructions to Run:
@@ -42,29 +43,31 @@ Code: The program is implemented in Java.
 
 
 
-Changes from Milestone 1
+Changes from Milestone 2
 --------------------------------------------------------------------------------------------------------
-This version of Scrabble (Milestone 2) differs from Milestone 1 in terms of User Interface. The game
-is now GUI based, compared to before (text based). The user(s) are guided through the game from the GUI, 
-compared to Milestone 1, where the game was played through the Command Line Interface. The game is now 
-easier to play.
+This version of Scrabble (Milestone 2) differs from Milestone 1 in terms of gameplay and allowing AI opponents. 
+The user is prompted to allow a number of AI Players, such that the total number of Human and AI Players is 
+greater than or equal to 2, but less than or equal to 4. In addition to this, there are Blank Tiles included 
+which can be made into any letter but is worth 0 points, and there are premium tiles which modify scores earned 
+from placing words overlapping with them. Premium tiles are denoted as follows:
+
+    $ = 2x Letter Score
+    % = 3x Letter Score
+    @ = 2x Word Score
+    # = 3x Word Score
 
 
 
 Project roadmap: 
 --------------------------------------------------------------------------------------------------------
 
-Week of Nov 14 - Nov 18: Meet with team. Discuss the AI design. Layout milestone components for team members. 
-Implement code, have Milestone 3 complete by Nov 18.
+Week of Nov 23 - Nov 24: Create a project goal for final Milestone. Distribute among team.
 
 
-Week of Nov 21 - Nov 25: Create a project goal for final Milestone. Distribute among team.
+Week of Nov 25 - Nov 28: Individual application development along with meeting to track progress.
 
 
-Week of Nov 28 - Dec 2: Weekly meeting to track progress.
+Week of Nov 29 -  Dec 2: Begin finalizing code. Final reviews.
 
 
-Week of Dec 5 - Dec 9: Begin finalizing code. Final reviews.
-
-
-Week of Dec 12 - Dec 16: Prepare to submit final, completed version of Scrabble.
+Week of Dec 3  -  Dec 5: Prepare to submit final, completed version of Scrabble.
