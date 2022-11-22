@@ -116,12 +116,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             this.update();
         });
 
-        passTurn.addActionListener((e) -> {
-            this.game.pass();
-            this.placedTiles.removeIf(_all -> true);
-            boardViewModel.setBoard(this.game.getBoard());
-            this.update();
-        });
+        passTurn.addActionListener(new ControllerPassButton(this, this.game, this.boardViewModel));
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BorderLayout());
@@ -231,4 +226,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         return boardView;
     }
 
+    public List<Positioned<Tile>> getPlacedTiles() {
+        return placedTiles;
+    }
 }
