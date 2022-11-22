@@ -1,12 +1,12 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ControllerBoardButton implements ActionListener {
+public class BoardButtonController implements ActionListener {
 
     private BoardView view;
     private BoardViewModel model;
 
-    public ControllerBoardButton(BoardView view, BoardViewModel model) {
+    public BoardButtonController(BoardView view, BoardViewModel model) {
         this.view = view;
         this.model = model;
     }

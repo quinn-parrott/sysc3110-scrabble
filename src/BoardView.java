@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class that displays a Board
@@ -43,7 +42,7 @@ public class BoardView extends JPanel {
             buttons.add(button);
             callbackDispatch.add(CallbackType.None);
             button.setActionCommand(String.valueOf(i));
-            button.addActionListener(new ControllerBoardButton(this, this.model));
+            button.addActionListener(new BoardButtonController(this, this.model));
             this.add(button);
         }
 

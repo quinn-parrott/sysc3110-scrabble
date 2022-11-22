@@ -96,9 +96,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(150,50));
 
-        playButton.addActionListener(new ControllerPlayButton(this, this.game, this.boardViewModel));
+        playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
 
-        passTurn.addActionListener(new ControllerPassButton(this, this.game, this.boardViewModel));
+        passTurn.addActionListener(new PassButtonController(this, this.game, this.boardViewModel));
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BorderLayout());
@@ -150,7 +150,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     public void handleBoardTileRemover(Positioned<Tile> tile) {
         for (var i = 0; i < this.placedTiles.size(); i++) {
             var temp = this.placedTiles.get(i);
-            if (temp.pos() == tile.pos()) {
+            if (temp.pos().equals(tile.pos())) {
                 this.placedTiles.remove(i);
 
                 // Make the tile selectable in the tile tray again
@@ -206,9 +206,5 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
         return boardView;
-    }
-
-    public List<Positioned<Tile>> getPlacedTiles() {
-        return placedTiles;
     }
 }

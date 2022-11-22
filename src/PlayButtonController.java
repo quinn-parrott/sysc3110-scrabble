@@ -3,13 +3,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
-public class ControllerPlayButton implements ActionListener {
+public class PlayButtonController implements ActionListener {
 
     private final GameView view;
     private final Game gameModel;
     private final BoardViewModel boardModel;
 
-    public ControllerPlayButton(GameView view, Game gameModel, BoardViewModel boardModel) {
+    public PlayButtonController(GameView view, Game gameModel, BoardViewModel boardModel) {
         this.view = view;
         this.gameModel = gameModel;
         this.boardModel = boardModel;
@@ -21,7 +21,7 @@ public class ControllerPlayButton implements ActionListener {
             if (tp.isPresent()) {
                 try {
                     this.gameModel.place(tp.get());
-                    this.view.getPlacedTiles().removeIf(_all -> true);
+                    this.boardModel.getPlacedTiles().removeIf(_all -> true);
                     this.boardModel.setBoard(this.gameModel.getBoard());
                 } catch (PlacementException pe) {
                     JOptionPane.showMessageDialog(this.view, String.format("Bad placement: %s", pe.getMessage()));
