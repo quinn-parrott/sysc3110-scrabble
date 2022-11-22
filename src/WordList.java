@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 /**
  * Checking for valid scrabble words
- *
  * @author Tao Lufula, 101164153
  */
 
