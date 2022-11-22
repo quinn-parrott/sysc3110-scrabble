@@ -96,32 +96,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(150,50));
 
-        playButton.addActionListener((e) -> {
-            if (this.boardViewModel.getPlacedTiles().size() != 0) {
-                Optional<TilePlacement> tp = TilePlacement.FromTiles(this.boardViewModel.getPlacedTiles());
-                if (tp.isPresent()) {
-                    try {
-                        this.game.place(tp.get());
-                        this.placedTiles.removeIf(_all -> true);
-                        boardViewModel.setBoard(this.game.getBoard());
-                    } catch (PlacementException pe) {
-                        JOptionPane.showMessageDialog(this, String.format("Bad placement: %s", pe.getMessage()));
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Invalid tile");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No Word Played");
-            }
-            this.update();
-        });
+        playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
 
-        passTurn.addActionListener((e) -> {
-            this.game.pass();
-            this.placedTiles.removeIf(_all -> true);
-            boardViewModel.setBoard(this.game.getBoard());
-            this.update();
-        });
+        passTurn.addActionListener(new PassButtonController(this, this.game, this.boardViewModel));
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BorderLayout());
@@ -173,7 +150,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     public void handleBoardTileRemover(Positioned<Tile> tile) {
         for (var i = 0; i < this.placedTiles.size(); i++) {
             var temp = this.placedTiles.get(i);
-            if (temp.pos() == tile.pos()) {
+            if (temp.pos().equals(tile.pos())) {
                 this.placedTiles.remove(i);
 
                 // Make the tile selectable in the tile tray again
@@ -230,5 +207,4 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.boardView = boardView;
         return boardView;
     }
-
 }

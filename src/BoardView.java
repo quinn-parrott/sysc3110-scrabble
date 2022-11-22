@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class that displays a Board
@@ -42,13 +41,8 @@ public class BoardView extends JPanel {
             JButton button = new JButton();
             buttons.add(button);
             callbackDispatch.add(CallbackType.None);
-            button.addActionListener(source -> {
-                var placedTileInner = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
-                switch (this.callbackDispatch.get(pos.getIndex())){
-                    case AddTile -> boardViewAddTile(pos);
-                    case RemoveTile -> boardViewRemoveTile(new Positioned<Tile>(placedTileInner.get().value(), pos));
-                }
-            });
+            button.setActionCommand(String.valueOf(i));
+            button.addActionListener(new BoardButtonController(this, this.model));
             this.add(button);
         }
 
@@ -82,20 +76,19 @@ public class BoardView extends JPanel {
         this.boardTileRemover.add(remover);
     }
 
-    private void boardViewRemoveTile(Positioned<Tile> tile) {
-        for (var remover: this.boardTileRemover) {
-            remover.handleBoardTileRemover(tile);
-        }
-    }
-
     public void addBoardTileAdder(IBoardTileAdder adder) {
         this.boardTileAdder.add(adder);
     }
 
-    private void boardViewAddTile(Position pos) {
-        for (var adder: this.boardTileAdder) {
-            adder.handleBoardTileAdder(pos);
-        }
+    public List<CallbackType> getCallbackDispatch() {
+        return callbackDispatch;
     }
 
+    public List<IBoardTileAdder> getBoardTileAdder() {
+        return boardTileAdder;
+    }
+
+    public List<IBoardTileRemover> getBoardTileRemover() {
+        return boardTileRemover;
+    }
 }
