@@ -10,20 +10,34 @@ public class Player {
     private String name;
     private int points;
     private ArrayList<Tile> tileHand;
+    private boolean isAI;
     private static final int TILE_HAND_SIZE = 7;
+
+    private static final WordList WORD_LIST = new WordList();
 
     public static int getTileHandSize() {
         return TILE_HAND_SIZE;
     }
 
     /**
-     * Default constructor for Player Class
+     * Constructor for the player class if no boolean for isAI attribute is passed
      * @param name the name of the player
      * @author Tao Lufula, 101164153
      */
     public Player(String name) {
+        this(name, false);
+    }
+
+    /**
+     * Default constructor for Player Class
+     * @param name the name of the player
+     * @param isAI boolean, true = this is an AI player, false = not an AI player
+     * @author Colin Mandeville, 101140289
+     */
+    public Player(String name, boolean isAI) {
         this.name = name;
         this.points = 0;
+        this.isAI = isAI;
         this.tileHand = new ArrayList<>();
     }
 
@@ -79,5 +93,47 @@ public class Player {
      */
     public void removeTile(Tile tile){
         this.tileHand.remove(tile);
+    }
+
+    /**
+     * Getter for the isAI method
+     * @return Returns attribute for isAI boolean
+     */
+    public boolean isAI() {
+        return isAI;
+    }
+
+    /**
+     * Filters down full wordlist to only those which the player has almost all the tiles to play
+     * @param numTilesOff The number of tiles that the player's hand can be off by
+     * @return Returns an ArrayList of all words the player may be able to play
+     */
+    public ArrayList<String> getPossibleWords(int numTilesOff) {
+        ArrayList<String> possibleWords = new ArrayList<>();
+        StringBuilder tileHandSB = new StringBuilder();
+        for (Tile tile : this.getTileHand()) {
+            tileHandSB.append(tile.chr());
+        }
+        for (String word : WORD_LIST.getWordlist()) {
+            int missingTileCount = numTilesOff;
+            if (word.length() > 2) {
+                String letterHandString = tileHandSB.toString();
+                boolean valid = true;
+                for (char c : word.toUpperCase().toCharArray()) {
+                    if (letterHandString.contains(Character.toString(c))) {
+                        letterHandString = letterHandString.replaceFirst(Character.toString(c), " ");
+                    } else if (missingTileCount > 0) {
+                        missingTileCount--;
+                    } else {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid) {
+                    possibleWords.add(word);
+                }
+            }
+        }
+        return possibleWords;
     }
 }

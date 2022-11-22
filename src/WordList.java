@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Scanner;
@@ -51,6 +52,13 @@ public class WordList {
         return this.wordlist.contains(word.toUpperCase());
     }
 
+    /**
+     * Getter method for the list of valid words, used by AI players when determining a move
+     * @return wordlist attribute of the Wordlist object
+     */
+    public HashSet<String> getWordlist() {
+        return new HashSet<>(wordlist);
+    }
 }
 
 

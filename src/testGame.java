@@ -167,4 +167,32 @@ public class testGame {
         g1.place(TilePlacement.FromShorthand("H9:v;ROKE").orElseThrow());
         Assertions.assertEquals(19, g1.getPlayer().getPoints());
     }
+
+    @Test
+    void testAITurnOnlyUsableByAI() {
+        Player ai = new Player("AI", true);
+        Player human = new Player("Colin");
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(ai);
+        al.add(human);
+        Game g = new Game(al, new WordList());
+        Assertions.assertEquals(ai, g.getPlayer());
+        g.AITurn();
+        Assertions.assertEquals(human, g.getPlayer());
+        g.AITurn();
+        Assertions.assertEquals(human, g.getPlayer());
+    }
+
+    @Test
+    void testAIFirstMove() {
+        Player ai = new Player("AI", true);
+        Player human = new Player("Colin");
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(ai);
+        al.add(human);
+        Game g = new Game(al, new WordList());
+        g.AITurn();
+        Assertions.assertNotEquals('*' ,g.getBoard().getTile(8,8).orElseThrow().chr());
+        Assertions.assertNotEquals(0, ai.getPoints());
+    }
 }
