@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -230,5 +231,22 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
         return boardView;
+    }
+
+    public void endGame(ArrayList<Player> winners) {
+        StringBuilder wins = new StringBuilder();
+        if (winners.size() == 1) {
+            wins.append(" ").append(winners.get(0).getName());
+            JOptionPane.showMessageDialog(this, wins + " is the winner!", "Results", JOptionPane.PLAIN_MESSAGE);
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        } else {
+            for (int i = 0; i < winners.size() - 1; i++) {
+                wins.append(" ").append(winners.get(i).getName()).append(",");
+            }
+            wins.append(" and ").append(winners.get(winners.size() - 1).getName());
+            JOptionPane.showMessageDialog(this, wins + " are the winners!", "Results", JOptionPane.PLAIN_MESSAGE);
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
+
     }
 }
