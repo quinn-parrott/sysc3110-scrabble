@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 
@@ -9,15 +8,14 @@ import java.util.Random;
  */
 public class TileBag {
 
-    private final HashMap<Tile, Integer> tilesLeft;
-    private static final int MIN_TILES_FOR_EXCHANGE = 7;
+    private final ArrayList<WildcardableTile> tilesLeft;
 
     /**
      * Constructor for TileBag Class.
      * @author Colin Mandeville, 101140289
      */
     public TileBag() {
-        this.tilesLeft = new HashMap<>();
+        this.tilesLeft = new ArrayList<>();
         this.resetBag();
     }
 
@@ -29,7 +27,9 @@ public class TileBag {
     public void resetBag() {
         this.tilesLeft.clear();
         for (TileBagDetails bagDetails : TileBagSingleton.getBagDetails().values()) {
-            this.tilesLeft.put(bagDetails.tile(), bagDetails.numInBag());
+            for (int i = 0; i < bagDetails.numInBag(); i++) {
+                this.tilesLeft.add(bagDetails.tile());
+            }
         }
     }
 
@@ -38,36 +38,13 @@ public class TileBag {
      * @return returns the Tile removed from the tilesLeft ArrayList
      * @author Colin Mandeville, 101140289
      */
-    public Optional<Tile> drawTile() {
+    public Optional<WildcardableTile> drawTile() {
         Random rand = new Random();
         if (this.getNumTilesLeft() > 0) {
-            ArrayList<Tile> listTiles = new ArrayList<>(this.tilesLeft.keySet());
-            int randInt = rand.nextInt(this.tilesLeft.keySet().size());
-            this.tilesLeft.replace(listTiles.get(randInt), this.tilesLeft.get(listTiles.get(randInt)),
-                    this.tilesLeft.get(listTiles.get(randInt)) - 1);
-            if (this.tilesLeft.get(listTiles.get(randInt)) == 0) {
-                this.tilesLeft.remove(listTiles.get(randInt));
-            }
-            return Optional.of(listTiles.get(randInt));
+            int randInt = rand.nextInt(this.tilesLeft.size());
+            return Optional.of(this.tilesLeft.remove(randInt));
         }
         return Optional.empty();
-    }
-
-    /**
-     * addTileToBag method adds a given tile back to the tile bag. It is used when exchanging tiles.
-     * @param tile tile being added to the bag
-     * @author Tao Lufula, 101164153
-     */
-    private void addTileToBag(Tile tile){
-        Tile t = null;
-        for (TileBagDetails tbg : TileBagSingleton.getBagDetails().values()) {
-            if(tile.chr() == tbg.tile().chr()) {
-                t = tbg.tile();
-            }
-        }
-        if(t != null) {
-            this.tilesLeft.put(t, this.tilesLeft.get(t) + 1);
-        }
     }
 
     /**
@@ -75,11 +52,7 @@ public class TileBag {
      * @return Returns the Boolean of if the tilesLeft attribute contains a value
      */
     public boolean isEmpty() {
-        int numTiles = 0;
-        for (Tile t : this.tilesLeft.keySet()) {
-            numTiles += this.tilesLeft.get(t);
-        }
-        return numTiles == 0;
+        return this.tilesLeft.size() == 0;
     }
 
     /**
@@ -87,10 +60,6 @@ public class TileBag {
      * @return size of tilesLeft Arraylist, i.e. number of tiles left in the bag
      */
     public int getNumTilesLeft() {
-        int tilesLeft = 0;
-        for (TileBagDetails tbg : TileBagSingleton.getBagDetails().values()) {
-            tilesLeft += this.tilesLeft.getOrDefault(tbg.tile(), 0);
-        }
-        return tilesLeft;
+        return this.tilesLeft.size();
     }
 }

@@ -116,7 +116,7 @@ public class Position {
      * @author Quinn Parrott, 101169535
      */
     public static double Distance(Position pos1, Position pos2) {
-        var e = Math.sqrt(Math.pow(pos1.getY() - pos2.getY(), 2) + Math.pow(pos1.getX() - pos2.getX(), 2));
+        var e = Math.ceil(Math.sqrt(Math.pow(pos1.getY() - pos2.getY(), 2) + Math.pow(pos1.getX() - pos2.getX(), 2)));
         return e;
     }
 

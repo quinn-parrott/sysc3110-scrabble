@@ -4,5 +4,5 @@
  * @author Quinn, 101169535
  */
 public interface IBoardTileRemover {
-    void handleBoardTileRemover(Positioned<Tile> tile);
+    void handleBoardTileRemover(Positioned<WildcardableStoreTile> tile);
 }

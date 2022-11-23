@@ -23,7 +23,7 @@ public class TilePlacement {
     /**
      * Construct a TilePlacement from a shorthand string format
      * @param shorthand ex: "a1-a5;river", "a1:h;wh_ever"
-     * @return Returns an Optional of a TilePLacement object constructed from shorthand
+     * @return Returns an Optional of a TilePlacement object constructed from shorthand
      * @author Quinn Parrott, 101169535
      */
     public static Optional<TilePlacement> FromShorthand(String shorthand) {
@@ -105,13 +105,13 @@ public class TilePlacement {
                 continue; // Skip empty letter slots
             }
             // TODO: Do something about the point value here so that it's not zero (maybe remove point from `Tile`?)
-            tiles.add(new Positioned<Tile>(new Tile(tileLetter, 0), positions.get(i)));
+            tiles.add(new Positioned<>(new Tile(tileLetter, 0), positions.get(i)));
         }
         return Optional.of(new TilePlacement(tiles));
     }
 
     /**
-     * Overridden String representation of the TilePLacement class
+     * Overridden String representation of the TilePlacement class
      * @return Returns a String representation of the TilePlacement class
      * @author Quinn Parrott, 101169535
      */

@@ -18,15 +18,16 @@ public class PlayerAdderView {
     }
 
     /**
-     * Method to get the number of players that will be playing the game.
-     * Player must be between 2 and 4.
+     * Method to get the number of players and AIplayers that will be playing the game.
+     * Number of players + AIs must be between 2 and 4.
      *
      *  @author Tao Lufula, 101164153
+     *  @author Colin Mandeville, 101140289
      */
     public java.util.List<Player> getPlayers() {
         while(true) {
             JPanel playerPanel = new JPanel();
-            JTextField enterNumOfPlayers = new JTextField("Enter number of players (2 to 4) :  ");
+            JTextField enterNumOfPlayers = new JTextField("Enter number of players (1-4) :  ");
             enterNumOfPlayers.setEditable(false);
             playerPanel.add(enterNumOfPlayers);
 
@@ -34,20 +35,52 @@ public class PlayerAdderView {
             playerPanel.add(PlayersNumber);
             JOptionPane.showOptionDialog(this.parent, playerPanel, "Players' Setup" + "                    " + "SCRABBLE ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 
-            int numberOfPlayers = 0;
+            int numberOfPlayers;
             try {
                 numberOfPlayers = Integer.parseInt(PlayersNumber.getText());
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this.parent, "Invalid entry! Enter number between 2 to 4");
+                JOptionPane.showMessageDialog(this.parent, "Invalid entry! Enter number between 1 and 4");
                 continue;
             }
 
-            if (numberOfPlayers < 2 || numberOfPlayers > 4) {
-                JOptionPane.showMessageDialog(this.parent, "Invalid entry!  Number of players must be between 2 to 4");
+            if (numberOfPlayers < 1 || numberOfPlayers > 4) {
+                JOptionPane.showMessageDialog(this.parent, "Invalid entry!  Number of players must be between 1 and 4");
                 continue;
             }
 
-            return getPlayersNames(numberOfPlayers).stream().map(Player::new).collect(Collectors.toList());
+            playerPanel = new JPanel();
+            enterNumOfPlayers = new JTextField("Enter number of AIs :  ");
+            enterNumOfPlayers.setEditable(false);
+            playerPanel.add(enterNumOfPlayers);
+
+            PlayersNumber = new JTextField(10);
+            playerPanel.add(PlayersNumber);
+            JOptionPane.showOptionDialog(this.parent, playerPanel, "Players' Setup" + "                    " + "SCRABBLE ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+            int numberOfAIs;
+            try {
+                numberOfAIs = Integer.parseInt(PlayersNumber.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this.parent, "Invalid entry! Enter a number");
+                continue;
+            }
+
+            if (numberOfAIs + numberOfPlayers < 2 || numberOfAIs + numberOfPlayers > 4) {
+                JOptionPane.showMessageDialog(this.parent, "Invalid entry!  Number of players + AIs must be between 2 and 4");
+                continue;
+            }
+
+            ArrayList<Player> players = new ArrayList<>();
+
+            for (String name : getPlayersNames(numberOfPlayers)) {
+                players.add(new Player(name));
+            }
+
+            for (int i = 0; i < numberOfAIs; i++) {
+                players.add(new Player("AI" + (i+1), true));
+            }
+
+            return players;
         }
     }
 
@@ -56,7 +89,7 @@ public class PlayerAdderView {
      *
      * @param numberOfPlayers specified by the user in  getPlayers
      * @return The collected players
-     *  @author Tao Lufula, 101164153
+     * @author Tao Lufula, 101164153
      */
     private ArrayList<String> getPlayersNames(int numberOfPlayers){
 

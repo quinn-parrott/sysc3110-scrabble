@@ -104,6 +104,19 @@ public class Game {
 
         nextBoard.placeTiles(placement);
 
+        // Check that the TilePlacement does not contain any spaces
+        {
+            var tiles = placement.getTiles();
+            var firstTile = tiles.get(0);
+            var lastTile = tiles.get(tiles.size() - 1);
+            for (var pos : Position.Interpolate(firstTile.pos(), lastTile.pos()).get()) {
+                if (nextBoard.getTile(pos).isEmpty()) {
+                    throw new PlacementException("There can't be spaces in the placed word",
+                            placement, Optional.of(board));
+                }
+            }
+        }
+
         this.wordsAndPos = nextBoard.collectCharSequences();
 
         for (String word : wordsAndPos.keySet()) {
@@ -134,7 +147,7 @@ public class Game {
 
         StringBuilder tilesUsed = new StringBuilder();
 
-        for (Positioned<Tile> tile : placement.getTiles()) {
+        for (var tile : placement.getTiles()) {
             tilesUsed.append(tile.value().chr());
         }
 
@@ -177,20 +190,22 @@ public class Game {
 
         }
 
-        this.players.get(this.turns.size() % this.players.size()).addPoints(score);
-
+        this.getPlayer().addPoints(score);
         int currentPlayerHandSize= this.getPlayer().getTileHand().size();
         int PLAYER_HAND_SIZE = 7;
         int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
         for (int i = 0; i < numTilesToAdd; i++) {
-            Optional<Tile> t = gameBag.drawTile();
-            t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+            Optional<WildcardableTile> t = gameBag.drawTile();
+            if (t.isPresent()) {
+                if (t.get().isWildcard() && this.getPlayer().isAI()) {
+                    t = Optional.of(new WildcardableTile('E', 0));
+                }
+                t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+            }
         }
 
         this.turns.add(placement);
-        for (GameView view : this.views) {
-            view.update();
-        }
+        this.update();
     }
 
     /**
@@ -199,8 +214,16 @@ public class Game {
      */
     public void pass() {
         this.turns.add(new TilePlacement(new ArrayList<>()));
+        this.update();
+    }
+
+    private void update() {
         for (GameView view : this.views) {
             view.update();
+        }
+        if (this.getPlayer().isAI()) {
+            this.AITurn();
+            this.update();
         }
     }
 
@@ -213,28 +236,28 @@ public class Game {
     private boolean playerHasNeededTiles(List<Positioned<Tile>> tiles) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
 
-        StringBuilder word = new StringBuilder();
+        var letters = new ArrayList<>();
 
-        for (Positioned<Tile> tilePositioned : tiles) {
-            var chr = tilePositioned.value().chr();
-            if (chr > 64 && chr < 91) {
-                word.append(chr);
+        int wildcards = 0;
+        for (WildcardableTile tile : activePlayer.getTileHand()) {
+            if (tile.isWildcard()) {
+                wildcards++;
+            } else {
+                Character chr = tile.chr();
+                letters.add(chr);
             }
         }
 
-        Tile matchTile;
-
-        for (int i = 0; i < word.length(); i++) {
-            matchTile = null;
-            for (Tile tile : activePlayer.getTileHand()) {
-                if (matchTile == null && tile.chr() == word.charAt(i)) {
-                    matchTile = tile;
+        for (var tile : tiles) {
+            Character chr = tile.value().chr();
+            if (!letters.remove(chr)) {
+                wildcards--;
+                if (wildcards < 0) {
+                    return false;
                 }
             }
-            if (matchTile == null) {
-                return false;
-            }
         }
+
         return true;
     }
 
@@ -245,11 +268,24 @@ public class Game {
      */
     private void removeTilesFromHand(String letters) {
         Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+
         for (char c : letters.toCharArray()) {
-            for (Tile tile: activePlayer.getTileHand()) {
-                if (tile.chr() == c) {
+
+            boolean found = false;
+            for (WildcardableTile tile: activePlayer.getTileHand()) {
+                if (!tile.isWildcard() && tile.chr() == c) {
                     activePlayer.getTileHand().remove(tile);
+                    found = true;
                     break;
+                }
+            }
+
+            if (!found) {
+                for (WildcardableTile tile: activePlayer.getTileHand()) {
+                    if (tile.isWildcard()) {
+                        activePlayer.getTileHand().remove(tile);
+                        break;
+                    }
                 }
             }
         }
@@ -282,4 +318,163 @@ public class Game {
     public Board getBoard() {
         return this.board;
     }
+
+    /**
+     * Checks for the first valid horizontal placement of a string on a Board object
+     * @param word String representing the word to be played
+     * @return Returns the starting index at which to place tiles
+     */
+    private Optional<TilePlacement> checkHorizontal(String word) {
+        HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+        for (int i = 0; i < Board.getROW_NUMBER() * Board.getCOLUMN_NUMBER() - word.length(); i++) {
+            if (i % Board.getROW_NUMBER() > Board.getROW_NUMBER() - word.length()) {
+                i += word.length();
+                continue;
+            }
+            ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
+            for (int j = 0; j < word.length(); j++) {
+                char c = word.toCharArray()[j];
+                Optional<Position> cPos = Position.FromIndex(j + i);
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                cPos.ifPresent(position -> tiles.add(new Positioned<>(tile, position)));
+            }
+            Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
+            if (tp.isPresent()) {
+                try {
+                    this.previewPlacement(tp.get());
+                    return tp;
+                } catch (PlacementException ignored) {}
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Checks for the first valid vertical placement of a string on a Board object
+     * @param word String representing the word to be played
+     * @return Returns the starting index at which to place tiles
+     */
+    private Optional<TilePlacement> checkVertical(String word) {
+        ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
+        HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+        for (int i = 0; i < Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER(); i++) {
+            tiles.clear();
+            for (int j = 0; j < word.length(); j++) {
+                char c = word.toCharArray()[j];
+                Optional<Position> cPos = Position.FromInts(i, j);
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                cPos.ifPresent(position -> tiles.add(new Positioned<>(tile, position)));
+            }
+            Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
+            if (tp.isPresent()) {
+                try {
+                    this.previewPlacement(tp.get());
+                    return tp;
+                } catch (PlacementException ignored) {}
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Determines if there is a placement for a passed word on the current board state of the game object
+     * @param word A word the AI player is trying to play
+     * @return Returns an optional of a TilePlacement object, which is empty if no placement of the given word is
+     * possible
+     */
+    private Optional<TilePlacement> boardPlacement(String word) {
+
+        if (this.wordsPlayed.size() == 0) {
+            ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
+            ArrayList<String> words = this.getPlayer().getPossibleWords(0);
+            words.sort(new PointComparator());
+            String first = "";
+            if (words.size() > 0) {
+                first = words.get(0);
+            }
+            HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+            for (int i = 0; i < first.length(); i++) {
+                char c = first.toUpperCase().toCharArray()[i];
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                tiles.add(new Positioned<Tile>(tile, Position.FromInts(Math.floorDiv(Board.getROW_NUMBER(), 2), Math.floorDiv(Board.getCOLUMN_NUMBER(), 2) + i).get()));
+            }
+            return TilePlacement.FromTiles(tiles);
+        }
+        Random r = new Random();
+        if (r.nextBoolean()) {
+            Optional<TilePlacement> tp = checkHorizontal(word);
+            if (tp.isEmpty()) {
+                tp = checkVertical(word);
+            }
+            return tp;
+        } else {
+            Optional<TilePlacement> tp = checkVertical(word);
+            if (tp.isEmpty()) {
+                tp = checkHorizontal(word);
+            }
+            return tp;
+        }
+    }
+
+    /**
+     * Function call to make a move for the AI player, either playing their highest scoring word, or passing if no word
+     * is possible to play
+     */
+    public void AITurn() {
+        ArrayList<String> possibleWords = this.getPlayer().getPossibleWords(1);
+        boolean hasPlayed = false;
+        possibleWords.sort(new PointComparator());
+        for (String word : possibleWords) {
+            Optional<TilePlacement> tp = this.boardPlacement(word);
+            if (tp.isPresent()) {
+                try {
+                    this.place(tp.get());
+                    hasPlayed = true;
+                    break;
+                } catch (PlacementException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if (!hasPlayed) {
+            this.pass();
+        }
+    }
+
+    public static class PointComparator implements java.util.Comparator<String> {
+        @Override
+        public int compare(String o1, String o2) {
+            HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
+            int score1 = 0;
+            int score2 = 0;
+            for (int i = 0; i < o1.length(); i++) {
+                score1 += tbs.get(o1.toUpperCase().toCharArray()[i]).tile().pointValue();
+            }
+            for (int i = 0; i < o2.length(); i++) {
+                score2 += tbs.get(o2.toUpperCase().toCharArray()[i]).tile().pointValue();
+            }
+            if (score1 > score2) {
+                return -1;
+            } else if (score2 > score1) {
+                return 1;
+            }
+            return 0;
+        }
+    }
+
 }
