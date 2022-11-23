@@ -287,6 +287,7 @@ public class Game {
      * Checks for the first valid horizontal placement of a string on a Board object
      * @param word String representing the word to be played
      * @return Returns the starting index at which to place tiles
+     * @Author Colin Mandeville, 101140289
      */
     private Optional<TilePlacement> checkHorizontal(String word) {
         HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
@@ -322,6 +323,7 @@ public class Game {
      * Checks for the first valid vertical placement of a string on a Board object
      * @param word String representing the word to be played
      * @return Returns the starting index at which to place tiles
+     * @Author Colin Mandeville, 101140289
      */
     private Optional<TilePlacement> checkVertical(String word) {
         ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
@@ -355,6 +357,7 @@ public class Game {
      * @param word A word the AI player is trying to play
      * @return Returns an optional of a TilePlacement object, which is empty if no placement of the given word is
      * possible
+     * @Author Colin Mandeville, 101140289
      */
     private Optional<TilePlacement> boardPlacement(String word) {
 
@@ -398,6 +401,7 @@ public class Game {
     /**
      * Function call to make a move for the AI player, either playing their highest scoring word, or passing if no word
      * is possible to play
+     * @Author Colin Mandeville, 101140289
      */
     public void AITurn() {
         ArrayList<String> possibleWords = this.getPlayer().getPossibleWords(1);
@@ -410,9 +414,7 @@ public class Game {
                     this.place(tp.get());
                     hasPlayed = true;
                     break;
-                } catch (PlacementException e) {
-                    throw new RuntimeException(e);
-                }
+                } catch (PlacementException ignored) {}
             }
         }
         if (!hasPlayed) {
