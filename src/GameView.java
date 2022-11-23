@@ -214,15 +214,14 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         if (winners.size() == 1) {
             wins.append(" ").append(winners.get(0).getName());
             JOptionPane.showMessageDialog(this, wins + " is the winner!", "Results", JOptionPane.PLAIN_MESSAGE);
-            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else {
             for (int i = 0; i < winners.size() - 1; i++) {
                 wins.append(" ").append(winners.get(i).getName()).append(",");
             }
             wins.append(" and ").append(winners.get(winners.size() - 1).getName());
             JOptionPane.showMessageDialog(this, wins + " are the winners!", "Results", JOptionPane.PLAIN_MESSAGE);
-            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
     }
 }
