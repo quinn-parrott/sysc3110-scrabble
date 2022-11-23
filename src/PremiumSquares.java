@@ -10,117 +10,106 @@ import java.util.HashMap;
  */
 
 public class PremiumSquares {
-    private static ArrayList<Point> twoXLetterScore;
-    private static ArrayList<Point> threeXLetterScore;
-    private static ArrayList<Point> twoXWordScore;
-    private static ArrayList<Point> threeXWordScore;
 
     private static final HashMap<Integer, Character> premiumSquares = new HashMap<>();
 
     public static HashMap<Integer, Character> getPremiumSquares() {
 
         // 2x Letters
+        ArrayList<Position> twoXLetterScore;
         twoXLetterScore = new ArrayList<>();
-        twoXLetterScore.add(new Point(4,1));
-        twoXLetterScore.add(new Point(12,1));
-        twoXLetterScore.add(new Point(7,3));
-        twoXLetterScore.add(new Point(9,3));
-        twoXLetterScore.add(new Point(1,4));
-        twoXLetterScore.add(new Point(8,4));
-        twoXLetterScore.add(new Point(15,4));
-        twoXLetterScore.add(new Point(3,7));
-        twoXLetterScore.add(new Point(7,7));
-        twoXLetterScore.add(new Point(9,7));
-        twoXLetterScore.add(new Point(13,7));
-        twoXLetterScore.add(new Point(4,8));
-        twoXLetterScore.add(new Point(12,8));
-        twoXLetterScore.add(new Point(3,9));
-        twoXLetterScore.add(new Point(7,9));
-        twoXLetterScore.add(new Point(9,9));
-        twoXLetterScore.add(new Point(13,9));
-        twoXLetterScore.add(new Point(1,12));
-        twoXLetterScore.add(new Point(8,12));
-        twoXLetterScore.add(new Point(15,12));
-        twoXLetterScore.add(new Point(7,13));
-        twoXLetterScore.add(new Point(9,13));
-        twoXLetterScore.add(new Point(4,15));
-        twoXLetterScore.add(new Point(12,15));
+        twoXLetterScore.add(new Position(3,0));
+        twoXLetterScore.add(new Position(11,0));
+        twoXLetterScore.add(new Position(6,2));
+        twoXLetterScore.add(new Position(8,2));
+        twoXLetterScore.add(new Position(0,3));
+        twoXLetterScore.add(new Position(7,3));
+        twoXLetterScore.add(new Position(14,3));
+        twoXLetterScore.add(new Position(2,6));
+        twoXLetterScore.add(new Position(6,6));
+        twoXLetterScore.add(new Position(8,6));
+        twoXLetterScore.add(new Position(12,6));
+        twoXLetterScore.add(new Position(3,7));
+        twoXLetterScore.add(new Position(11,7));
+        twoXLetterScore.add(new Position(2,8));
+        twoXLetterScore.add(new Position(6,8));
+        twoXLetterScore.add(new Position(8,8));
+        twoXLetterScore.add(new Position(12,8));
+        twoXLetterScore.add(new Position(0,11));
+        twoXLetterScore.add(new Position(7,11));
+        twoXLetterScore.add(new Position(14,11));
+        twoXLetterScore.add(new Position(6,12));
+        twoXLetterScore.add(new Position(8,12));
+        twoXLetterScore.add(new Position(3,14));
+        twoXLetterScore.add(new Position(11,14));
 
-        for(Point p: twoXLetterScore) {
-            premiumSquares.put(getIndexFromPoint(p), '$');
+        for(Position p: twoXLetterScore) {
+            premiumSquares.put(p.getIndex(), '$');
         }
 
         // 3x Letters
+        ArrayList<Position> threeXLetterScore;
         threeXLetterScore = new ArrayList<>();
-        threeXLetterScore.add(new Point(2,6));
-        threeXLetterScore.add(new Point(2,10));
-        threeXLetterScore.add(new Point(6,2));
-        threeXLetterScore.add(new Point(6,6));
-        threeXLetterScore.add(new Point(6,10));
-        threeXLetterScore.add(new Point(6,14));
-        threeXLetterScore.add(new Point(10,2));
-        threeXLetterScore.add(new Point(10,6));
-        threeXLetterScore.add(new Point(10,10));
-        threeXLetterScore.add(new Point(10,14));
-        threeXLetterScore.add(new Point(14,6));
-        threeXLetterScore.add(new Point(14,10));
+        threeXLetterScore.add(new Position(1,5));
+        threeXLetterScore.add(new Position(1,9));
+        threeXLetterScore.add(new Position(5,1));
+        threeXLetterScore.add(new Position(5,5));
+        threeXLetterScore.add(new Position(5,9));
+        threeXLetterScore.add(new Position(5,13));
+        threeXLetterScore.add(new Position(9,1));
+        threeXLetterScore.add(new Position(9,5));
+        threeXLetterScore.add(new Position(9,9));
+        threeXLetterScore.add(new Position(9,13));
+        threeXLetterScore.add(new Position(13,5));
+        threeXLetterScore.add(new Position(13,9));
 
-        for(Point p: threeXLetterScore){
-            premiumSquares.put(getIndexFromPoint(p), '%');
+        for(Position p: threeXLetterScore){
+            premiumSquares.put(p.getIndex(), '%');
         }
 
         // 2x Words
+        ArrayList<Position> twoXWordScore;
         twoXWordScore = new ArrayList<>();
-        twoXWordScore.add(new Point(2,2));
-        twoXWordScore.add(new Point(3,3));
-        twoXWordScore.add(new Point(4,4));
-        twoXWordScore.add(new Point(5,5));
-        twoXWordScore.add(new Point(8,8));
-        twoXWordScore.add(new Point(11,11));
-        twoXWordScore.add(new Point(12,12));
-        twoXWordScore.add(new Point(13,13));
-        twoXWordScore.add(new Point(14,14));
-        twoXWordScore.add(new Point(11,5));
-        twoXWordScore.add(new Point(12,4));
-        twoXWordScore.add(new Point(13,3));
-        twoXWordScore.add(new Point(14,2));
-        twoXWordScore.add(new Point(5,11));
-        twoXWordScore.add(new Point(4,12));
-        twoXWordScore.add(new Point(3,13));
-        twoXWordScore.add(new Point(2,14));
+        twoXWordScore.add(new Position(1,1));
+        twoXWordScore.add(new Position(2,2));
+        twoXWordScore.add(new Position(3,3));
+        twoXWordScore.add(new Position(4,4));
+        twoXWordScore.add(new Position(7,7));
+        twoXWordScore.add(new Position(10,10));
+        twoXWordScore.add(new Position(11,11));
+        twoXWordScore.add(new Position(12,12));
+        twoXWordScore.add(new Position(13,13));
+        twoXWordScore.add(new Position(10,4));
+        twoXWordScore.add(new Position(11,3));
+        twoXWordScore.add(new Position(12,2));
+        twoXWordScore.add(new Position(13,1));
+        twoXWordScore.add(new Position(4,10));
+        twoXWordScore.add(new Position(3,11));
+        twoXWordScore.add(new Position(2,12));
+        twoXWordScore.add(new Position(1,13));
 
-        for(Point p: twoXWordScore){
-            premiumSquares.put(getIndexFromPoint(p), '@');
+        for(Position p: twoXWordScore){
+            premiumSquares.put(p.getIndex(), '@');
         }
 
         // 3x Words
+        ArrayList<Position> threeXWordScore;
         threeXWordScore = new ArrayList<>();
-        threeXWordScore.add(new Point(1,1));
-        threeXWordScore.add(new Point(1,8));
-        threeXWordScore.add(new Point(1,15));
-        threeXWordScore.add(new Point(8,1));
-        threeXWordScore.add(new Point(8,15));
-        threeXWordScore.add(new Point(15,1));
-        threeXWordScore.add(new Point(15,8));
-        threeXWordScore.add(new Point(15,15));
+        threeXWordScore.add(new Position(0,0));
+        threeXWordScore.add(new Position(0,7));
+        threeXWordScore.add(new Position(0,14));
+        threeXWordScore.add(new Position(7,0));
+        threeXWordScore.add(new Position(7,14));
+        threeXWordScore.add(new Position(14,0));
+        threeXWordScore.add(new Position(14,7));
+        threeXWordScore.add(new Position(14,14));
 
-        for(Point p: threeXWordScore){
-            premiumSquares.put(getIndexFromPoint(p), '#');
+        for(Position p: threeXWordScore){
+            premiumSquares.put(p.getIndex(), '#');
         }
 
         return premiumSquares;
 
-    }
-
-    /**
-     * Method to return position index from the board
-     * @param p point(x,y)
-     * @return int position index
-     *
-     * @author Tao Lufula, 101164153
-     */
-    private static int getIndexFromPoint(Point p){
-        return (int) (Board.getROW_NUMBER() * ((p.getY() - 1)) + (p.getX() - 1));
     }
 
 }

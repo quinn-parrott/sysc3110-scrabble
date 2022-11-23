@@ -89,22 +89,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      */
     private Component createLegend() {
         JPanel legendPanel = new JPanel();
-        legendPanel.setLayout(new GridLayout(12,1));
-
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("                                    LEGEND"));
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("  $ : Double letter score"));
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("  % : Triple letter score"));
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("  @ : Double word score"));
-        legendPanel.add(new JLabel("  "));
-        legendPanel.add(new JLabel("  # : Triple word score"));
-        legendPanel.add(new JLabel("  "));
-
-
+        JTextArea legendText = (new JTextArea("\n           LEGEND" + "\n\n  $ : Double letter score  " + "\n\n  % : Triple letter score  " + "\n\n  @ : Double word score  " + "\n\n  # : Triple word score  " + "\n\n"));
+        legendText.setEditable(false);
+        legendPanel.add(legendText);
         return legendPanel;
     }
 
@@ -156,7 +143,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         buttonsPanel.add(playButton, BorderLayout.EAST);
         buttonsPanel.add(passTurn, BorderLayout.WEST);
 
-        playerTurnLabel.setPreferredSize(new Dimension(150,150));
+        playerTurnLabel.setPreferredSize(new Dimension(150,100));
         buttonsPanel.add(playerTurnLabel, BorderLayout.NORTH);
 
         return buttonsPanel;
