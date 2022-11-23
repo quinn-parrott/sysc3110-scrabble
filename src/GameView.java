@@ -90,11 +90,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private Component createPlayButtons() {
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
         this.switchPlayButtonText("PLAY");
-        playButton.setPreferredSize(new Dimension(150,50));
+        playButton.setPreferredSize(new Dimension(140,50));
 
         //Pass players turn when they press this button
         passTurn.setText("PASS");
-        passTurn.setPreferredSize(new Dimension(150,50));
+        passTurn.setPreferredSize(new Dimension(140,50));
 
         playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
 
