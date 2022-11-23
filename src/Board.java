@@ -191,8 +191,11 @@ public class Board {
                 } else {
                     if (seq.length() > 1) {
                         results.add(seq);
-                        seq = "";
                     }
+                    seq = "";
+                }
+                if (seq.length() > 1) {
+                    results.add(seq);
                 }
             }
 
@@ -213,8 +216,11 @@ public class Board {
                 } else {
                     if (seq.length() > 1) {
                         results.add(seq);
-                        seq = "";
                     }
+                    seq = "";
+                }
+                if (seq.length() > 1) {
+                    results.add(seq);
                 }
             }
 
