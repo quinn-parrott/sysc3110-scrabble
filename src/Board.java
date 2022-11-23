@@ -194,11 +194,7 @@ public class Board {
                     }
                     seq = "";
                 }
-                if (seq.length() > 1) {
-                    results.add(seq);
-                }
             }
-
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
             if (seq.length() > 1) {
                 results.add(seq);
@@ -219,11 +215,7 @@ public class Board {
                     }
                     seq = "";
                 }
-                if (seq.length() > 1) {
-                    results.add(seq);
-                }
             }
-
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
             if (seq.length() > 1) {
                 results.add(seq);
