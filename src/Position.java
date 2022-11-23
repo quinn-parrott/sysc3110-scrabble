@@ -18,7 +18,7 @@ public class Position {
      * @param y Input for the row, Should be a number less than 16
      * @author Colin Mandeville, 101140289
      */
-    public Position(int x, int y) {
+    private Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
