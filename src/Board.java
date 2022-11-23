@@ -181,7 +181,6 @@ public class Board {
      * @author Quinn Parrott, 101169535
      */
     public HashMap<String, ArrayList> collectCharSequences() {
-//        var results = new HashSet<String>();
         var results = new HashMap<String, ArrayList>();
 
         for (int x = 0; x < COLUMN_NUMBER; x++) {
