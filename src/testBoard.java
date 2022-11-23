@@ -77,7 +77,7 @@ class testBoard {
         words.add("LAW");
         words.add("AT");
         words.add("WE");
-        for (String word : board.collectCharSequences()) {
+        for (String word : board.collectCharSequences().keySet()) {
             Assertions.assertTrue(words.contains(word));
             words.remove(word);
         }
@@ -109,7 +109,7 @@ class testBoard {
         System.out.println(placement);
         board.printBoard();
 
-        for (var w : board.collectCharSequences()) {
+        for (var w : board.collectCharSequences().keySet()) {
             if (w.length() > 1) {
                 System.out.println(w);
             }

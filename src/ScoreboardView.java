@@ -41,7 +41,7 @@ public class ScoreboardView {
             score.add(x);
             score.add(y);
         }
-        grid.setPreferredSize(new Dimension(280,500));
+        grid.setPreferredSize(new Dimension(300,460));
         update();
 
         this.view = grid;

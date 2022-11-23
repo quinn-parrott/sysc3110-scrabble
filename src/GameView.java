@@ -69,6 +69,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         scoreBoardAndButtonPanel.setLayout(new BorderLayout());
         this.scoreboard = new ScoreboardView(game);
         scoreBoardAndButtonPanel.add(this.scoreboard.getView(), BorderLayout.NORTH);
+        scoreBoardAndButtonPanel.add(this.createLegend(), BorderLayout.CENTER);
         scoreBoardAndButtonPanel.add(this.createPlayButtons(), BorderLayout.SOUTH);
 
         pane.add(boardAndTileHandPanel, BorderLayout.WEST);
@@ -79,6 +80,20 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1400, 1000);
         this.setVisible(true);
+    }
+
+    /**
+     * Method to create Legend for special squares
+     *
+     * @author Tao Lufula, 101164153
+     */
+    private Component createLegend() {
+        JPanel legendPanel = new JPanel();
+        String text = "\n           LEGEND" + "\n\n  $ : Double letter score  " + "\n  % : Triple letter score  " + "\n  @ : Double word score  " + "\n  # : Triple word score";
+        JTextArea legendText = new JTextArea(text);
+        legendText.setEditable(false);
+        legendPanel.add(legendText);
+        return legendPanel;
     }
 
 
@@ -106,7 +121,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         buttonsPanel.add(playButton, BorderLayout.EAST);
         buttonsPanel.add(passTurn, BorderLayout.WEST);
 
-        playerTurnLabel.setPreferredSize(new Dimension(150,150));
+        playerTurnLabel.setPreferredSize(new Dimension(150,50));
         buttonsPanel.add(playerTurnLabel, BorderLayout.NORTH);
 
         return buttonsPanel;

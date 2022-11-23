@@ -1,4 +1,6 @@
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -178,50 +180,57 @@ public class Board {
      * @return Returns a HashSet<String> of all words on the board
      * @author Quinn Parrott, 101169535
      */
-    public HashSet<String> collectCharSequences() {
-        var results = new HashSet<String>();
+    public HashMap<String, ArrayList> collectCharSequences() {
+        var results = new HashMap<String, ArrayList>();
 
         for (int x = 0; x < COLUMN_NUMBER; x++) {
             var seq = "";
+            ArrayList<Integer> indexPosSeq = new ArrayList<>();
+
             for (int y = 0; y < ROW_NUMBER; y++) {
                 var pos = Position.FromInts(x, y).get();
                 var tile = getTile(pos);
                 if (tile.isPresent()) {
                     seq += tile.get().chr();
+                    indexPosSeq.add(getIndexPositionFromPoint(new Point(pos.getX(),pos.getY())));
                 } else {
                     if (seq.length() > 1) {
-                        results.add(seq);
+                        results.put(seq, indexPosSeq);
                     }
                     seq = "";
+                    indexPosSeq = new ArrayList<>();
                 }
             }
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
             if (seq.length() > 1) {
-                results.add(seq);
+                results.put(seq, indexPosSeq);
             }
         }
 
         // TODO: Dedup with other loop
         for (int y = 0; y < ROW_NUMBER; y++) {
             var seq = "";
+            ArrayList<Integer> indexPosSeq = new ArrayList<>();
+
             for (int x = 0; x < COLUMN_NUMBER; x++) {
                 var pos = Position.FromInts(x, y).get();
                 var tile = getTile(pos);
                 if (tile.isPresent()) {
                     seq += tile.get().chr();
+                    indexPosSeq.add(getIndexPositionFromPoint(new Point(pos.getX(),pos.getY())));
                 } else {
                     if (seq.length() > 1) {
-                        results.add(seq);
+                        results.put(seq, indexPosSeq);
                     }
                     seq = "";
+                    indexPosSeq = new ArrayList<>();
                 }
             }
             // TODO: Is there a way to get rid of this final check (dedup with inner loop)
             if (seq.length() > 1) {
-                results.add(seq);
+                results.put(seq, indexPosSeq);
             }
         }
-
 
 
         return results;
@@ -246,5 +255,16 @@ public class Board {
         }
 
         return newBoard;
+    }
+
+    /**
+     * Method to return position index from the board
+     * @param p point(x,y)
+     * @return int position index
+     *
+     * @author Tao Lufula, 101164153
+     */
+    private static int getIndexPositionFromPoint(Point p){
+        return (int) (getROW_NUMBER() * ((p.getY())) + (p.getX()));
     }
 }

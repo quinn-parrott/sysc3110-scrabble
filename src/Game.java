@@ -13,6 +13,8 @@ public class Game {
     private ArrayList<GameView> views;
     private TileBag gameBag;
     public WordList wordList;
+    private static HashMap<Integer, Character> gamePremiumSquares;
+    private static HashMap<String, ArrayList> wordsAndPos;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
@@ -30,6 +32,7 @@ public class Game {
         this.wordList = wordList;
         this.views = new ArrayList<>();
         this.gameBag = new TileBag();
+        this.gamePremiumSquares = PremiumSquares.getPremiumSquares();
         int PLAYER_HAND_SIZE = 7;
         for (Player player : this.players) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
@@ -114,7 +117,9 @@ public class Game {
             }
         }
 
-        for (String word : nextBoard.collectCharSequences()) {
+        this.wordsAndPos = nextBoard.collectCharSequences();
+
+        for (String word : wordsAndPos.keySet()) {
             if (!this.wordsPlayed.contains(word)) {
                 newWords.add(word);
             }
@@ -152,14 +157,44 @@ public class Game {
         int score = 0;
 
         for (String word : newWords) {
+            int tileScore = 0;
+            int wordMultiplier = 1;
+            int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                score += tileDetails.get(word.charAt(i)).tile().pointValue();
+                if (gamePremiumSquares.containsKey(this.wordsAndPos.get(word).get(i))) {
+                    var chr = gamePremiumSquares.get(this.wordsAndPos.get(word).get(i));
+                    switch (chr){
+
+                        case '$':
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()) * 2; break;
+                        case '%':
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()) * 3; break;
+                        case '@':
+                            wordMultiplier *= 2;
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()); break;
+                        case '#':
+                            wordMultiplier *= 3;
+                            tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue()); break;
+
+                    }
+
+                    gamePremiumSquares.remove(this.wordsAndPos.get(word).get(i));
+
+                }else{
+                    tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
+                }
             }
             this.wordsPlayed.add(word);
+            wordscore = tileScore * wordMultiplier;
+            score += wordscore;
+
         }
-        this.players.get(this.turns.size() % this.players.size()).addPoints(score);
+
+        this.getPlayer().addPoints(score);
+        int currentPlayerHandSize= this.getPlayer().getTileHand().size();
         int PLAYER_HAND_SIZE = 7;
-        for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
+        int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
+        for (int i = 0; i < numTilesToAdd; i++) {
             Optional<WildcardableTile> t = gameBag.drawTile();
             if (t.isPresent()) {
                 if (t.get().isWildcard() && this.getPlayer().isAI()) {
@@ -168,6 +203,7 @@ public class Game {
                 t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
             }
         }
+
         this.turns.add(placement);
         this.update();
     }
@@ -287,7 +323,7 @@ public class Game {
      * Checks for the first valid horizontal placement of a string on a Board object
      * @param word String representing the word to be played
      * @return Returns the starting index at which to place tiles
-     * @Author Colin Mandeville, 101140289
+     * @author Colin Mandeville, 101140289
      */
     private Optional<TilePlacement> checkHorizontal(String word) {
         HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
