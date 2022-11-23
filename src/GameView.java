@@ -124,7 +124,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     /**
      * Changes the play button text depending on the game circumstance
      * @param text
-     *
      * @author Tao Lufula, 101164153
      */
     public void switchPlayButtonText(String text){
