@@ -195,32 +195,4 @@ public class testGame {
         Assertions.assertNotEquals('*' ,g.getBoard().getTile(Position.FromIndex(Board.getCenterTilePos()).get()).orElseThrow().chr());
         Assertions.assertNotEquals(0, ai.getPoints());
     }
-
-    @Test
-    void testAITurnOnlyUsableByAI() {
-        Player ai = new Player("AI", true);
-        Player human = new Player("Colin");
-        ArrayList<Player> al = new ArrayList<>();
-        al.add(ai);
-        al.add(human);
-        Game g = new Game(al, new WordList());
-        Assertions.assertEquals(ai, g.getPlayer());
-        g.AITurn();
-        Assertions.assertEquals(human, g.getPlayer());
-        g.AITurn();
-        Assertions.assertEquals(human, g.getPlayer());
-    }
-
-    @Test
-    void testAIFirstMove() {
-        Player ai = new Player("AI", true);
-        Player human = new Player("Colin");
-        ArrayList<Player> al = new ArrayList<>();
-        al.add(ai);
-        al.add(human);
-        Game g = new Game(al, new WordList());
-        g.AITurn();
-        Assertions.assertNotEquals('*' ,g.getBoard().getTile(Position.FromIndex(Board.getCenterTilePos()).get()).orElseThrow().chr());
-        Assertions.assertNotEquals(0, ai.getPoints());
-    }
 }

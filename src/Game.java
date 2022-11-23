@@ -148,7 +148,12 @@ public class Game {
         int PLAYER_HAND_SIZE = 7;
         for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
             Optional<WildcardableTile> t = gameBag.drawTile();
-            t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+            if (t.isPresent()) {
+                if (t.get().isWildcard() && this.getPlayer().isAI()) {
+                    t = Optional.of(new WildcardableTile('E', 0));
+                }
+                t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
+            }
         }
         this.turns.add(placement);
         this.update();
@@ -281,7 +286,13 @@ public class Game {
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
                 Optional<Position> cPos = Position.FromIndex(j + i);
-                cPos.ifPresent(position -> tiles.add(new Positioned<Tile>(tbs.get(c).tile(), position)));
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                cPos.ifPresent(position -> tiles.add(new Positioned<>(tile, position)));
             }
             Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
             if (tp.isPresent()) {
@@ -307,7 +318,13 @@ public class Game {
             for (int j = 0; j < word.length(); j++) {
                 char c = word.toCharArray()[j];
                 Optional<Position> cPos = Position.FromInts(i, j);
-                cPos.ifPresent(position -> tiles.add(new Positioned<Tile>(tbs.get(c).tile(), position)));
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                cPos.ifPresent(position -> tiles.add(new Positioned<>(tile, position)));
             }
             Optional<TilePlacement> tp = TilePlacement.FromTiles(tiles);
             if (tp.isPresent()) {
@@ -339,7 +356,13 @@ public class Game {
             HashMap<Character, TileBagDetails> tbs = TileBagSingleton.getBagDetails();
             for (int i = 0; i < first.length(); i++) {
                 char c = first.toUpperCase().toCharArray()[i];
-                tiles.add(new Positioned<Tile>(tbs.get(c).tile(), Position.FromInts(Math.floorDiv(Board.getROW_NUMBER(), 2), Math.floorDiv(Board.getCOLUMN_NUMBER(), 2) + i).get()));
+                Tile tile;
+                if (tbs.get(c).tile().isWildcard()) {
+                    tile = new Tile ('E', 0);
+                } else {
+                    tile = new Tile (tbs.get(c).tile().chr(), tbs.get(c).tile().pointValue());
+                }
+                tiles.add(new Positioned<Tile>(tile, Position.FromInts(Math.floorDiv(Board.getROW_NUMBER(), 2), Math.floorDiv(Board.getCOLUMN_NUMBER(), 2) + i).get()));
             }
             return TilePlacement.FromTiles(tiles);
         }
