@@ -29,6 +29,7 @@ public class PlayButtonController implements ActionListener {
                     this.gameModel.place(tp.get());
                     this.boardModel.getPlacedTiles().removeIf(_all -> true);
                     this.boardModel.setBoard(this.gameModel.getBoard());
+                    this.view.update();
                 } catch (PlacementException pe) {
                     JOptionPane.showMessageDialog(this.view, String.format("Bad placement: %s", pe.getMessage()));
                 }
@@ -38,6 +39,5 @@ public class PlayButtonController implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(this.view, "No Word Played");
         }
-        this.view.update();
     }
 }
