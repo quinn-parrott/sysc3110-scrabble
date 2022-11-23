@@ -101,6 +101,19 @@ public class Game {
 
         nextBoard.placeTiles(placement);
 
+        // Check that the TilePlacement does not contain any spaces
+        {
+            var tiles = placement.getTiles();
+            var firstTile = tiles.get(0);
+            var lastTile = tiles.get(tiles.size() - 1);
+            for (var pos : Position.Interpolate(firstTile.pos(), lastTile.pos()).get()) {
+                if (nextBoard.getTile(pos).isEmpty()) {
+                    throw new PlacementException("There can't be spaces in the placed word",
+                            placement, Optional.of(board));
+                }
+            }
+        }
+
         for (String word : nextBoard.collectCharSequences()) {
             if (!this.wordsPlayed.contains(word)) {
                 newWords.add(word);
