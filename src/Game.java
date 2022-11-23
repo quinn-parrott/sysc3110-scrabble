@@ -181,8 +181,8 @@ public class Game {
 
         int currentPlayerHandSize= this.getPlayer().getTileHand().size();
         int PLAYER_HAND_SIZE = 7;
-        int NumTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
-        for (int i = 0; i < NumTilesToAdd; i++) {
+        int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
+        for (int i = 0; i < numTilesToAdd; i++) {
             Optional<Tile> t = gameBag.drawTile();
             t.ifPresent(tile -> this.getPlayer().getTileHand().add(tile));
         }
