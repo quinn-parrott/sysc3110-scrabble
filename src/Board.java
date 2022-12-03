@@ -180,8 +180,8 @@ public class Board {
      * @return Returns a HashSet<String> of all words on the board
      * @author Quinn Parrott, 101169535
      */
-    public HashMap<String, ArrayList> collectCharSequences() {
-        var results = new HashMap<String, ArrayList>();
+    public HashMap<String, ArrayList<Integer>> collectCharSequences() {
+        var results = new HashMap<String, ArrayList<Integer>>();
 
         for (int x = 0; x < COLUMN_NUMBER; x++) {
             var seq = "";
