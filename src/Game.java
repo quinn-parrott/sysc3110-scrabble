@@ -16,7 +16,6 @@ public class Game {
     private final List<TilePlacement> turns;
     private TileBag gameBag;
     private HashMap<Integer, Character> gamePremiumSquares;
-    private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
      * Constructor for the Game class
@@ -28,7 +27,6 @@ public class Game {
         this.players = players;
         this.wordsPlayed = new ArrayList<>();
         this.turns = new ArrayList<>();
-        this.board = new Board();
         this.wordList = wordList;
         this.views = new ArrayList<>();
         this.gameBag = new TileBag();
@@ -57,6 +55,7 @@ public class Game {
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public GameUpdateState previewPlacement(TilePlacement placement) throws PlacementException {
+        var board = getBoard();
 
         if (wordsPlayed.size() == 0) {
             // First turn
@@ -64,7 +63,7 @@ public class Game {
             var distanceFromCenter = (int) placement.minTileDistance(p);
             if (distanceFromCenter > 0) {
                 throw new PlacementException("At least one tile must intercept with the center on the first turn",
-                        placement, Optional.of(this.board));
+                        placement, Optional.of(board));
             }
         } else {
             enum MinResult {
@@ -83,7 +82,7 @@ public class Game {
                 if (distance == 0) {
                     if (board.getTile(tile.pos()).isPresent() || !firstOverlap) {
                         throw new PlacementException(String.format("Can't place tile at %s since there is already a " +
-                                "tile there", tile.pos()), placement, Optional.of(this.board));
+                                "tile there", tile.pos()), placement, Optional.of(board));
                     } else {
                         firstOverlap = false;
                     }
@@ -100,7 +99,8 @@ public class Game {
             }
         }
 
-        var nextBoard = this.board.clone();
+        // TODO: Probably don't need to clone this?
+        var nextBoard = board.clone();
 
         nextBoard.placeTiles(placement);
 
@@ -126,7 +126,7 @@ public class Game {
             }
             if (word.length() > 1 && !this.wordList.isValidWord(word)) {
                 throw new PlacementException(String.format("'%s' is not a valid word", word),
-                        placement, Optional.of(this.board));
+                        placement, Optional.of(board));
             }
         }
 
@@ -145,7 +145,6 @@ public class Game {
      */
     public void place(TilePlacement placement) throws PlacementException {
         var update = this.previewPlacement(placement);
-        this.board = update.board();
 
         StringBuilder tilesUsed = new StringBuilder();
 
@@ -298,7 +297,7 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     public void printBoardState() {
-        this.board.printBoard();
+        getBoard().printBoard();
         System.out.println("Scores (Player : Points)");
         for (Player player : this.players) {
             System.out.println(player.getName() + " : " + player.getPoints());
@@ -318,7 +317,15 @@ public class Game {
     }
 
     public Board getBoard() {
-        return this.board;
+        var board = new Board();
+        for (var placement : this.turns) {
+            try {
+                board.placeTiles(placement);
+            } catch (PlacementException e) {
+                throw new RuntimeException("Invalid turns prevented board reconstruction. This should never happen", e);
+            }
+        }
+        return board;
     }
 
     /**
