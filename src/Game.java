@@ -6,7 +6,7 @@ import java.util.*;
  * @author Quinn Parrott, 101169535
  */
 public class Game {
-    public record GameUpdateState(Board board, ArrayList<String> newWords) {};
+    public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> wordsAndPos) {};
 
     private final List<Player> players;
     private final ArrayList<String> wordsPlayed;
@@ -15,7 +15,6 @@ public class Game {
     private TileBag gameBag;
     private WordList wordList;
     private static HashMap<Integer, Character> gamePremiumSquares;
-    private HashMap<String, ArrayList<Integer>> wordsAndPos;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
@@ -117,7 +116,7 @@ public class Game {
             }
         }
 
-        this.wordsAndPos = nextBoard.collectCharSequences();
+        var wordsAndPos = nextBoard.collectCharSequences();
         ArrayList<String> newWords = new ArrayList<>();
 
         for (String word : wordsAndPos.keySet()) {
@@ -135,7 +134,7 @@ public class Game {
                     placement, Optional.of(board));
         }
 
-        return new GameUpdateState(nextBoard, newWords);
+        return new GameUpdateState(nextBoard, newWords, wordsAndPos);
     }
 
     /**
@@ -163,8 +162,8 @@ public class Game {
             int wordMultiplier = 1;
             int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                if (gamePremiumSquares.containsKey(this.wordsAndPos.get(word).get(i))) {
-                    var chr = gamePremiumSquares.get(this.wordsAndPos.get(word).get(i));
+                if (gamePremiumSquares.containsKey(update.wordsAndPos().get(word).get(i))) {
+                    var chr = gamePremiumSquares.get(update.wordsAndPos().get(word).get(i));
                     switch (chr){
 
                         case '$':
@@ -180,7 +179,7 @@ public class Game {
 
                     }
 
-                    gamePremiumSquares.remove(this.wordsAndPos.get(word).get(i));
+                    gamePremiumSquares.remove(update.wordsAndPos().get(word).get(i));
 
                 }else{
                     tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
