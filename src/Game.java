@@ -8,12 +8,13 @@ import java.util.*;
 public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> wordsAndPos) {};
 
+    private ArrayList<GameView> views;
+    private WordList wordList;
+
     private final List<Player> players;
     private final ArrayList<String> wordsPlayed;
     private final List<TilePlacement> turns;
-    private ArrayList<GameView> views;
     private TileBag gameBag;
-    private WordList wordList;
     private HashMap<Integer, Character> gamePremiumSquares;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
