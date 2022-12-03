@@ -14,7 +14,7 @@ public class Game {
     private ArrayList<GameView> views;
     private TileBag gameBag;
     private WordList wordList;
-    private static HashMap<Integer, Character> gamePremiumSquares;
+    private HashMap<Integer, Character> gamePremiumSquares;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
 
     /**
