@@ -6,9 +6,10 @@ import java.util.*;
  * @author Quinn Parrott, 101169535
  */
 public class Game {
+    public record GameUpdateState(Board board, ArrayList<String> newWords) {};
+
     private final List<Player> players;
     private final ArrayList<String> wordsPlayed;
-    private final ArrayList<String> newWords;
     private final List<TilePlacement> turns;
     private ArrayList<GameView> views;
     private TileBag gameBag;
@@ -26,7 +27,6 @@ public class Game {
     public Game(List<Player> players, WordList wordList) {
         this.players = players;
         this.wordsPlayed = new ArrayList<>();
-        this.newWords = new ArrayList<>();
         this.turns = new ArrayList<>();
         this.board = new Board();
         this.wordList = wordList;
@@ -56,9 +56,7 @@ public class Game {
      * @return Returns a Board object with the TilePlacement parameter placed on it
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
-    public Board previewPlacement(TilePlacement placement) throws PlacementException {
-        var nextBoard = this.board.clone();
-        newWords.clear();
+    public GameUpdateState previewPlacement(TilePlacement placement) throws PlacementException {
 
         if (wordsPlayed.size() == 0) {
             // First turn
@@ -102,6 +100,8 @@ public class Game {
             }
         }
 
+        var nextBoard = this.board.clone();
+
         nextBoard.placeTiles(placement);
 
         // Check that the TilePlacement does not contain any spaces
@@ -118,6 +118,7 @@ public class Game {
         }
 
         this.wordsAndPos = nextBoard.collectCharSequences();
+        ArrayList<String> newWords = new ArrayList<>();
 
         for (String word : wordsAndPos.keySet()) {
             if (!this.wordsPlayed.contains(word)) {
@@ -134,7 +135,7 @@ public class Game {
                     placement, Optional.of(board));
         }
 
-        return nextBoard;
+        return new GameUpdateState(nextBoard, newWords);
     }
 
     /**
@@ -143,7 +144,8 @@ public class Game {
      * @author Quinn Parrott, 101169535, and Colin Mandeville, 101140289
      */
     public void place(TilePlacement placement) throws PlacementException {
-        this.board = this.previewPlacement(placement);
+        var update = this.previewPlacement(placement);
+        this.board = update.board();
 
         StringBuilder tilesUsed = new StringBuilder();
 
@@ -156,7 +158,7 @@ public class Game {
         HashMap<Character, TileBagDetails> tileDetails = TileBagSingleton.getBagDetails();
         int score = 0;
 
-        for (String word : newWords) {
+        for (String word : update.newWords()) {
             int tileScore = 0;
             int wordMultiplier = 1;
             int wordscore = 0;
