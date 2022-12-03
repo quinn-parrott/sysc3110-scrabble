@@ -12,7 +12,7 @@ public class Game {
     private final List<TilePlacement> turns;
     private ArrayList<GameView> views;
     private TileBag gameBag;
-    public WordList wordList;
+    private WordList wordList;
     private static HashMap<Integer, Character> gamePremiumSquares;
     private HashMap<String, ArrayList<Integer>> wordsAndPos;
     private Board board; // TODO: Can be removed if reconstructed each round (superfluous)?
