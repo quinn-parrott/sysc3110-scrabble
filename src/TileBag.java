@@ -6,9 +6,9 @@ import java.util.Random;
  * The bag of tiles that are currently not being used (not in player hands or on board)
  * @author Colin Mandeville, 101140289
  */
-public class TileBag {
+public class TileBag implements Cloneable {
 
-    private final ArrayList<WildcardableTile> tilesLeft;
+    private ArrayList<WildcardableTile> tilesLeft;
 
     /**
      * Constructor for TileBag Class.
@@ -61,5 +61,16 @@ public class TileBag {
      */
     public int getNumTilesLeft() {
         return this.tilesLeft.size();
+    }
+
+    @Override
+    public TileBag clone() {
+        try {
+            TileBag clone = (TileBag) super.clone();
+            clone.tilesLeft = (ArrayList<WildcardableTile>) this.tilesLeft.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

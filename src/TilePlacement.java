@@ -5,17 +5,17 @@ import java.util.*;
  *
  * @author Colin Mandeville, 101140289
  */
-public class TilePlacement {
+public class TilePlacement implements Cloneable {
     // This class represents a single player turn
 
-    private final List<Positioned<Tile>> tiles;
+    private ArrayList<Positioned<Tile>> tiles;
 
     /**
      * Constructor for TilePlacement, Will handle placing word onto board in future
      * @param tiles ArrayList of Positioned<Tile> objects, which contain a Tile object, and a Position object
      * @author Colin Mandeville, 101140289
      */
-    public TilePlacement(List<Positioned<Tile>> tiles) {
+    public TilePlacement(ArrayList<Positioned<Tile>> tiles) {
         // TODO: Validate that all characters are in order
         this.tiles = tiles;
     }
@@ -160,15 +160,15 @@ public class TilePlacement {
         return this.tiles;
     }
 
-    public static Optional<TilePlacement> FromTiles(List<Positioned<Tile>> tiles) {
+    public static Optional<TilePlacement> FromTiles(ArrayList<Positioned<Tile>> tiles) {
         // Sorting tiles make sure the letters are in order when the word is built
         var placedTiles =
-                tiles
+                new ArrayList<>(tiles
                         .stream()
                         .sorted(
                                 Comparator.comparingInt(o -> o.pos().getIndex())
                         )
-                        .toList();
+                        .toList());
 
         if (placedTiles.size() == 0) {
             return Optional.empty();
@@ -189,6 +189,17 @@ public class TilePlacement {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public TilePlacement clone() {
+        try {
+            TilePlacement clone = (TilePlacement) super.clone();
+            clone.tiles = (ArrayList<Positioned<Tile>>) this.tiles.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
 
