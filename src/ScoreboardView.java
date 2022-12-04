@@ -57,14 +57,10 @@ public class ScoreboardView {
             JLabel x = nameLabels.get(i);
             JLabel y = pointsLabels.get(i);
             var player = players.get(i);
-            if (player == currentPlayer) {
-                x.setBorder(new LineBorder(Color.red));
-            } else {
-                x.setBorder(new LineBorder(Color.green));
-            }
 
-            x.setText(player.getName() + "'s score:  ");
-            y.setText("  "+ player.getPoints());
+            x.setBorder(new LineBorder(player == currentPlayer ? Color.red : Color.green));
+            x.setText(String.format("%s's score:  ", player.getName()));
+            y.setText(String.format("  %s", player.getPoints()));
         }
     }
 
