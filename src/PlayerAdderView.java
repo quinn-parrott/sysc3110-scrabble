@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 /**
@@ -24,20 +24,23 @@ public class PlayerAdderView {
      *  @author Tao Lufula, 101164153
      *  @author Colin Mandeville, 101140289
      */
-    public java.util.List<Player> getPlayers() {
+    public Optional<java.util.List<Player>> getPlayers() {
         while(true) {
-            JPanel playerPanel = new JPanel();
-            JTextField enterNumOfPlayers = new JTextField("Enter number of players (1-4) :  ");
-            enterNumOfPlayers.setEditable(false);
-            playerPanel.add(enterNumOfPlayers);
-
-            JTextField PlayersNumber = new JTextField(10);
-            playerPanel.add(PlayersNumber);
-            JOptionPane.showOptionDialog(this.parent, playerPanel, "Players' Setup" + "                    " + "SCRABBLE ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+            var playerNumber = Optional.ofNullable(
+                    JOptionPane.showInputDialog(
+                            this.parent,
+                            "Ente number of players (1-4):",
+                            "Players' Setup" + "                    " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            if (playerNumber.isEmpty()) {
+                return Optional.empty();
+            }
 
             int numberOfPlayers;
             try {
-                numberOfPlayers = Integer.parseInt(PlayersNumber.getText());
+                numberOfPlayers = Integer.parseInt(playerNumber.get());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this.parent, "Invalid entry! Enter number between 1 and 4");
                 continue;
@@ -48,18 +51,21 @@ public class PlayerAdderView {
                 continue;
             }
 
-            playerPanel = new JPanel();
-            enterNumOfPlayers = new JTextField("Enter number of AIs :  ");
-            enterNumOfPlayers.setEditable(false);
-            playerPanel.add(enterNumOfPlayers);
-
-            PlayersNumber = new JTextField(10);
-            playerPanel.add(PlayersNumber);
-            JOptionPane.showOptionDialog(this.parent, playerPanel, "Players' Setup" + "                    " + "SCRABBLE ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+            var aiNum = Optional.ofNullable(
+                    JOptionPane.showInputDialog(
+                            this.parent,
+                            "Enter number of AIs:",
+                            "Players' Setup" + "                    " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            if (aiNum.isEmpty()) {
+                return Optional.empty();
+            }
 
             int numberOfAIs;
             try {
-                numberOfAIs = Integer.parseInt(PlayersNumber.getText());
+                numberOfAIs = Integer.parseInt(aiNum.get());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this.parent, "Invalid entry! Enter a number");
                 continue;
@@ -70,9 +76,13 @@ public class PlayerAdderView {
                 continue;
             }
 
-            ArrayList<Player> players = new ArrayList<>();
+            var playersOpt = getPlayersNames(numberOfPlayers);
+            if (playersOpt.isEmpty()) {
+                return Optional.empty();
+            }
 
-            for (String name : getPlayersNames(numberOfPlayers)) {
+            ArrayList<Player> players = new ArrayList<>();
+            for (String name : playersOpt.get()) {
                 players.add(new Player(name));
             }
 
@@ -80,7 +90,7 @@ public class PlayerAdderView {
                 players.add(new Player("AI" + (i+1), true));
             }
 
-            return players;
+            return Optional.of(players);
         }
     }
 
@@ -91,7 +101,7 @@ public class PlayerAdderView {
      * @return The collected players
      * @author Tao Lufula, 101164153
      */
-    private ArrayList<String> getPlayersNames(int numberOfPlayers){
+    private Optional<ArrayList<String>> getPlayersNames(int numberOfPlayers){
 
         var playersList = new ArrayList<String>(numberOfPlayers);
 
@@ -100,28 +110,31 @@ public class PlayerAdderView {
             boolean validName = false;
 
             while (!validName) {
+                var playerName = Optional.ofNullable(
+                        JOptionPane.showInputDialog(
+                                this.parent,
+                                "Enter name of player " + (i + 1),
+                                "Players' Setup" + "                    " + "SCRABBLE",
+                                JOptionPane.PLAIN_MESSAGE
+                        )
+                );
 
-                JPanel addNamePanel = new JPanel();
-                JTextField enterName = new JTextField("Enter name of player " + (i + 1));
-                enterName.setEditable(false);
-                addNamePanel.add(enterName);
+                if (playerName.isEmpty()) {
+                    return Optional.empty();
+                }
 
-                JTextField getName = new JTextField(10);
-                addNamePanel.add(getName);
-                JOptionPane.showOptionDialog(this.parent, addNamePanel, "Players Names", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-
-                if (getName.getText().isEmpty()) {
+                if (playerName.get().isEmpty()) {
                     JOptionPane.showMessageDialog(this.parent, "Invalid entry! Name cannot be empty");
                 }
                 else {
-                    playersList.add(getName.getText());
+                    playersList.add(playerName.get());
                     validName = true;
                 }
 
             }
         }
 
-        return playersList;
+        return Optional.of(playersList);
     }
 
 }

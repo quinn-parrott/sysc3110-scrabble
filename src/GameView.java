@@ -44,9 +44,12 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         // A layout manager for these components is still pending
 
-        List<Player> playersList = (new PlayerAdderView(this)).getPlayers();
+        Optional<List<Player>> playersList = (new PlayerAdderView(this)).getPlayers();
+        if (playersList.isEmpty()) {
+            System.exit(0);
+        }
 
-        game = new Game(playersList, new WordList());
+        game = new Game(playersList.get(), new WordList());
 
 
         this.placedTiles = new ArrayList<>();
