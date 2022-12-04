@@ -237,7 +237,7 @@ public class testGame {
         al.add(ai);
         al.add(human);
         Game g = new Game(al, new WordList());
-        g.AITurn();
+        (new AiPlayer(g)).AiTurn();
         Assertions.assertNotEquals('*', g.getBoard().getTile(Position.FromIndex(Board.getCenterTilePos()).get()).orElseThrow().chr());
         Assertions.assertNotEquals(0, ai.getPoints());
     }
@@ -251,9 +251,9 @@ public class testGame {
         al.add(human);
         Game g = new Game(al, new WordList());
         Assertions.assertEquals(ai, g.getPlayer());
-        g.AITurn();
+        (new AiPlayer(g)).AiTurn();
         Assertions.assertEquals(human, g.getPlayer());
-        g.AITurn();
+        (new AiPlayer(g)).AiTurn();
         Assertions.assertEquals(human, g.getPlayer());
     }
 
