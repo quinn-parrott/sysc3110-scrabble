@@ -6,13 +6,12 @@ import java.util.*;
  * @author Quinn Parrott, 101169535
  */
 public class Game {
-    public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> wordsAndPos) {};
+    public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {};
 
     private ArrayList<GameView> views;
     private WordList wordList;
 
     private final List<Player> players;
-    private final ArrayList<String> wordsPlayed;
     private final List<TilePlacement> turns;
     private TileBag gameBag;
     private HashMap<Integer, Character> gamePremiumSquares;
@@ -25,7 +24,6 @@ public class Game {
      */
     public Game(List<Player> players, WordList wordList) {
         this.players = players;
-        this.wordsPlayed = new ArrayList<>();
         this.turns = new ArrayList<>();
         this.wordList = wordList;
         this.views = new ArrayList<>();
@@ -56,8 +54,9 @@ public class Game {
      */
     public GameUpdateState previewPlacement(TilePlacement placement) throws PlacementException {
         var board = getBoard();
+        var playedWords = board.collectCharSequences();
 
-        if (wordsPlayed.size() == 0) {
+        if (playedWords.size() == 0) {
             // First turn
             var p = Position.FromIndex(Board.getCenterTilePos()).orElseThrow();
             var distanceFromCenter = (int) placement.minTileDistance(p);
@@ -117,11 +116,11 @@ public class Game {
             }
         }
 
-        var wordsAndPos = nextBoard.collectCharSequences();
+        var nextWords = nextBoard.collectCharSequences();
         ArrayList<String> newWords = new ArrayList<>();
 
-        for (String word : wordsAndPos.keySet()) {
-            if (!this.wordsPlayed.contains(word)) {
+        for (String word : nextWords.keySet()) {
+            if (!playedWords.containsKey(word)) {
                 newWords.add(word);
             }
             if (word.length() > 1 && !this.wordList.isValidWord(word)) {
@@ -135,7 +134,7 @@ public class Game {
                     placement, Optional.of(board));
         }
 
-        return new GameUpdateState(nextBoard, newWords, wordsAndPos);
+        return new GameUpdateState(nextBoard, newWords, nextWords);
     }
 
     /**
@@ -162,8 +161,8 @@ public class Game {
             int wordMultiplier = 1;
             int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                if (gamePremiumSquares.containsKey(update.wordsAndPos().get(word).get(i))) {
-                    var chr = gamePremiumSquares.get(update.wordsAndPos().get(word).get(i));
+                if (gamePremiumSquares.containsKey(update.playedWords().get(word).get(i))) {
+                    var chr = gamePremiumSquares.get(update.playedWords().get(word).get(i));
                     switch (chr){
 
                         case '$':
@@ -179,13 +178,12 @@ public class Game {
 
                     }
 
-                    gamePremiumSquares.remove(update.wordsAndPos().get(word).get(i));
+                    gamePremiumSquares.remove(update.playedWords().get(word).get(i));
 
                 }else{
                     tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
                 }
             }
-            this.wordsPlayed.add(word);
             wordscore = tileScore * wordMultiplier;
             score += wordscore;
 
@@ -406,7 +404,7 @@ public class Game {
      */
     private Optional<TilePlacement> boardPlacement(String word) {
 
-        if (this.wordsPlayed.size() == 0) {
+        if (getBoard().collectCharSequences().size() == 0) {
             ArrayList<Positioned<Tile>> tiles = new ArrayList<>();
             ArrayList<String> words = this.getPlayer().getPossibleWords(0);
             words.sort(new PointComparator());
