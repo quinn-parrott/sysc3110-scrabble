@@ -152,10 +152,12 @@ public class AiPlayer {
             TilePlacement tp = it.next();
             try {
                 game.place(tp);
+                game.discardLastTurnFromUndo(); // Make it so this turn cannot be undone
                 return;
             } catch (PlacementException ignored) {}
         }
         game.pass();
+        game.discardLastTurnFromUndo(); // Make it so this turn cannot be undone
     }
 
     private static class PointComparator implements java.util.Comparator<String> {
