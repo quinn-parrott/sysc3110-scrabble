@@ -129,29 +129,38 @@ public class Board {
      * @author Colin Mandeville, 101140289
      */
     public void printBoard() {
-        // TODO: This print function seems to print the wrong coordinate system (x/y backwards)?
+        System.out.println(render());
+    }
+
+    /**
+     * Visual representation of the board
+     * @author Colin Mandeville, 101140289
+     */
+    public String render() {
+        StringBuilder builder = new StringBuilder();
+
         // Print each row of the board and the Vertical Legend
         for (int i = 0; i < ROW_NUMBER; i++) {
-            System.out.printf("%2s ", i + 1);
+            builder.append(String.format("%2s ", i + 1));
 
             // Print each tile in row i
             for (int j = 0; j < COLUMN_NUMBER; j++) {
                 var pos = Position.FromInts(j, i).get();
                 var index = pos.getIndex();
-                System.out.print(this.board.get(index).map(Tile::chr).orElse(pos.getBackgroundChar()) + "  ");
+                builder.append(this.board.get(index).map(Tile::chr).orElse(pos.getBackgroundChar())).append("  ");
             }
 
-            System.out.println();
+            builder.append('\n');
         }
 
         // Print the Horizontal Legend
-        System.out.print("   ");
+        builder.append("   ");
         for (int i = 0; i < COLUMN_NUMBER; i++) {
             int j = i + 'A';
             char c = (char) j;
-            System.out.print(c + "  ");
+            builder.append(c).append("  ");
         }
-        System.out.println();
+        return builder.toString();
     }
 
     /**
