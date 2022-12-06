@@ -1,5 +1,5 @@
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Class representing a player's state
