@@ -8,7 +8,6 @@ import java.util.*;
  */
 public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {};
-
     private ArrayList<GameView> views;
     private WordList wordList;
 
@@ -362,6 +361,54 @@ public class Game {
         return this.state.state(GameMutableState::clone).players;
     }
 
+    /**
+     * Method to save current board state into a file
+     * @param filename String representing the name of the file being saved
+     */
+    public void saveGame(String filename) throws IOException {
+        File file = new File(filename);
+        FileOutputStream f = null;
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            f = new FileOutputStream(file.getName());
+        } catch (Exception ignored) {}
+        try {
+            assert f != null;
+            f.write(this.toXML().toString().getBytes());
+            f.close();
+        } catch (Exception ignored) {}
+    }
+
+    /**
+     * Converts the Game instance into XML data
+     * @return Returns a String representing the XML data of the Game instance
+     */
+    private String toXML() {
+        int numTabs = 0;
+        StringBuilder sb = new StringBuilder();
+        sb.append("<Game>\n");
+        for (Player p : players) {
+            sb.append(p.toXML(numTabs + 1));
+        }
+        for (TilePlacement tp : turns) {
+            sb.append(tp.toXML(numTabs + 1));
+        }
+        sb.append("    ").append("<TileBag>\n").append(gameBag.toXML(numTabs + 1));
+        sb.append("    </TileBag>\n").append("    <PremiumSquares>\n");
+        for (int key : gamePremiumSquares.keySet()) {
+            sb.append("        ").append("<Premium index=\"").append(key).append("\" char=\"");
+            sb.append(gamePremiumSquares.get(key)).append("\"></Premium>\n");
+        }
+        sb.append("    </PremiumSquares>\n").append("</Game>");
+        return sb.toString();
+    }
+
+    public void loadGame(String filename) {
+
+    }
+
     public Board getBoard() {
         var board = new Board();
         for (var placement : this.state.state(GameMutableState::clone).turns) {
@@ -399,4 +446,21 @@ public class Game {
         return result;
     }
 
+    public static void main(String[] args) throws PlacementException {
+        Player p = new Player("Colin", false);
+        p.addTile(new WildcardableTile('W', 4));
+        p.addTile(new WildcardableTile('E', 1));
+        p.addTile(new WildcardableTile('F', 4));
+        Player p2 = new Player("Quinn", false);
+        List<Player> l = new ArrayList<>();
+        l.add(p);
+        l.add(p2);
+        Game g = new Game(l, new WordList());
+        List<Positioned<Tile>> turn = new ArrayList<>();
+        turn.add(new Positioned<>(new Tile(p.getTileHand().get(2).chr(), p.getTileHand().get(2).pointValue()), Position.FromIndex(Board.getCenterTilePos()).get()));
+        turn.add(new Positioned<>(new Tile(p.getTileHand().get(1).chr(), p.getTileHand().get(1).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 1).get()));
+        turn.add(new Positioned<>(new Tile(p.getTileHand().get(0).chr(), p.getTileHand().get(0).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 2).get()));
+        g.place(TilePlacement.FromTiles(turn).get());
+        System.out.println(g.toXML());
+    }
 }

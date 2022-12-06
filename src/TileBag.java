@@ -64,4 +64,14 @@ public class TileBag implements Serializable {
         return this.tilesLeft.size();
     }
 
+    public String toXML(int numTabs) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+        tabs.append("    ".repeat(numTabs));
+        for (WildcardableTile t : tilesLeft) {
+            sb.append(tabs).append(t.toXML(numTabs));
+        }
+        return sb.toString();
+    }
+
 }

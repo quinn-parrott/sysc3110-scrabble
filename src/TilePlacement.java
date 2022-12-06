@@ -191,6 +191,18 @@ public class TilePlacement implements Serializable {
 
         return Optional.empty();
     }
+
+    public String toXML(int numTabs) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+        tabs.append("    ".repeat(numTabs));
+        sb.append(tabs).append("<TilePlacement>\n");
+        for (Positioned<Tile> t : tiles) {
+            sb.append(t.toXML(numTabs + 1));
+        }
+        sb.append(tabs).append("</TilePlacement>\n");
+        return sb.toString();
+    }
 }
 
 

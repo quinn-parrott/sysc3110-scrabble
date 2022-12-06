@@ -217,4 +217,12 @@ public class Position implements Serializable {
     public String toString() {
         return String.format("%c%d", 'A' + this.getX(), this.getY() + 1);
     }
+
+    public String toXML(int numTabs) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+        tabs.append("    ".repeat(numTabs));
+        sb.append(tabs).append("<Position x=\"").append(x).append("\" y=\"").append(y).append("\">").append("</Position>\n");
+        return sb.toString();
+    }
 }
