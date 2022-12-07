@@ -28,6 +28,8 @@ public class PlayButtonController implements ActionListener {
             if (tp.isPresent()) {
                 try {
                     this.gameModel.place(tp.get());
+                    this.gameModel.runAi();
+                    this.gameModel.commit();
                     this.boardModel.getPlacedTiles().removeIf(_all -> true);
                     this.boardModel.setBoard(this.gameModel.getBoard());
                     this.view.update();

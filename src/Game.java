@@ -31,17 +31,20 @@ public class Game {
             this.gamePremiumSquares = gamePremiumSquares;
         }
 
-        @Override
         public GameMutableState clone() {
+            // Beware ye who seek to enter below:
+            // beyond lay cloning evils so vile that the faint of heart may perish.
             try {
-                GameMutableState clone = (GameMutableState) super.clone();
-                clone.players = (ArrayList<Player>) this.players.clone();
-                clone.turns = (ArrayList<TilePlacement>) this.turns.clone();
-                clone.gameBag = this.gameBag.clone();
-                clone.gamePremiumSquares = (HashMap<Integer, Character>) this.gamePremiumSquares.clone();
-                return clone;
-            } catch (CloneNotSupportedException e) {
-                throw new AssertionError();
+                // The only reliable way to make a _true_ deep copy in java is to serialize
+                // then deserialize the objects.
+                var stream = new ByteArrayOutputStream();
+                var output = new ObjectOutputStream(stream);
+                output.writeObject(this);
+
+                var input = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
+                return (GameMutableState) input.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -58,19 +61,22 @@ public class Game {
         this.wordList = wordList;
         this.views = new ArrayList<>();
 
-        this.state = new Transactionable<>(new GameMutableState(
-                 new ArrayList<>(players),
-                 new ArrayList<>(),
-                 new TileBag(),
-                 PremiumSquares.getPremiumSquares()
-        ));
+        var playersTemp = new ArrayList<>(players);
+        var tileBag = new TileBag();
 
         int PLAYER_HAND_SIZE = 7;
-        for (Player player : this.state.state().players) {
+        for (Player player : playersTemp) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(this.state.state().gameBag.drawTile().get());
+                player.getTileHand().add(tileBag.drawTile().get());
             }
         }
+
+        this.state = new Transactionable<>(new GameMutableState(
+            playersTemp,
+            new ArrayList<>(),
+            tileBag,
+            PremiumSquares.getPremiumSquares()
+        ));
     }
 
     /**
@@ -197,8 +203,8 @@ public class Game {
             int wordMultiplier = 1;
             int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                if (this.state.state().gamePremiumSquares.containsKey(update.playedWords().get(word).get(i))) {
-                    var chr = this.state.state().gamePremiumSquares.get(update.playedWords().get(word).get(i));
+                if (this.state.state(GameMutableState::clone).gamePremiumSquares.containsKey(update.playedWords().get(word).get(i))) {
+                    var chr = this.state.state(GameMutableState::clone).gamePremiumSquares.get(update.playedWords().get(word).get(i));
                     switch (chr){
 
                         case '$':
@@ -214,7 +220,7 @@ public class Game {
 
                     }
 
-                    this.state.state().gamePremiumSquares.remove(update.playedWords().get(word).get(i));
+                    this.state.state(GameMutableState::clone).gamePremiumSquares.remove(update.playedWords().get(word).get(i));
 
                 }else{
                     tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
@@ -230,7 +236,7 @@ public class Game {
         int PLAYER_HAND_SIZE = 7;
         int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
         for (int i = 0; i < numTilesToAdd; i++) {
-            Optional<WildcardableTile> t = this.state.state().gameBag.drawTile();
+            Optional<WildcardableTile> t = this.state.state(GameMutableState::clone).gameBag.drawTile();
             if (t.isPresent()) {
                 if (t.get().isWildcard() && this.getPlayer().isAI()) {
                     t = Optional.of(new WildcardableTile('E', 0));
@@ -239,8 +245,7 @@ public class Game {
             }
         }
 
-        this.state.state().turns.add(placement);
-        this.state.pushCopy(this.state.state().clone()); // Commit the state change
+        this.state.state(GameMutableState::clone).turns.add(placement);
         this.update();
     }
 
@@ -249,18 +254,23 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     public void pass() {
-        this.state.state().turns.add(new TilePlacement(new ArrayList<>()));
-        this.state.pushCopy(this.state.state().clone()); // Commit the state change
+        this.state.state(GameMutableState::clone).turns.add(new TilePlacement(new ArrayList<>()));
         this.update();
+    }
+
+    public void commit() {
+        this.state.commitWorking(GameMutableState::clone); // Commit the state change
+    }
+
+    public void runAi() {
+        while (this.getPlayer().isAI()) {
+            (new AiPlayer(this)).AiTurn();
+        }
     }
 
     private void update() {
         for (GameView view : this.views) {
             view.update();
-        }
-        if (this.getPlayer().isAI()) {
-            (new AiPlayer(this)).AiTurn();
-            this.update();
         }
     }
 
@@ -341,7 +351,7 @@ public class Game {
     }
 
     public int getNumTurns() {
-        return this.state.state().turns.size();
+        return this.state.state(GameMutableState::clone).turns.size();
     }
 
     public Player getPlayer() {
@@ -349,12 +359,12 @@ public class Game {
     }
 
     public List<Player> getPlayers() {
-        return this.state.state().players;
+        return this.state.state(GameMutableState::clone).players;
     }
 
     public Board getBoard() {
         var board = new Board();
-        for (var placement : this.state.state().turns) {
+        for (var placement : this.state.state(GameMutableState::clone).turns) {
             try {
                 board.placeTiles(placement);
             } catch (PlacementException e) {
@@ -364,8 +374,17 @@ public class Game {
         return board;
     }
 
-    public void discardLastTurnFromUndo() {
-        this.state.discardLastCommit();
+    public void popCommitToWorking() {
+        this.state.popCommitToWorking();
+        this.update();
+    }
+
+    public boolean canUndo() {
+        return this.state.canUndo();
+    }
+
+    public boolean canRedo() {
+        return this.state.canRedo();
     }
 
     public boolean undo() {
