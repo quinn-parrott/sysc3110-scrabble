@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -6,7 +7,7 @@ import java.util.Random;
  * The bag of tiles that are currently not being used (not in player hands or on board)
  * @author Colin Mandeville, 101140289
  */
-public class TileBag implements Cloneable {
+public class TileBag implements Serializable {
 
     private ArrayList<WildcardableTile> tilesLeft;
 
@@ -63,14 +64,4 @@ public class TileBag implements Cloneable {
         return this.tilesLeft.size();
     }
 
-    @Override
-    public TileBag clone() {
-        try {
-            TileBag clone = (TileBag) super.clone();
-            clone.tilesLeft = (ArrayList<WildcardableTile>) this.tilesLeft.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

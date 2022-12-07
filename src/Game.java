@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -12,7 +13,7 @@ public class Game {
     private WordList wordList;
 
 
-    private static class GameMutableState implements Cloneable {
+    private static class GameMutableState implements Serializable {
         public ArrayList<Player> players;
         public ArrayList<TilePlacement> turns;
         public TileBag gameBag;

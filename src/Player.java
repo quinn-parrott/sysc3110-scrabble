@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -5,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Tao Lufula, 101164153
  */
-public class Player implements Cloneable {
+public class Player implements Serializable {
 
     private String name;
     private int points;
@@ -135,16 +136,5 @@ public class Player implements Cloneable {
             }
         }
         return possibleWords;
-    }
-
-    @Override
-    public Player clone() {
-        try {
-            Player clone = (Player) super.clone();
-            clone.tileHand = (ArrayList<WildcardableTile>) this.tileHand.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }

@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -5,7 +6,7 @@ import java.util.*;
  *
  * @author Colin Mandeville, 101140289
  */
-public class TilePlacement implements Cloneable {
+public class TilePlacement implements Serializable {
     // This class represents a single player turn
 
     private ArrayList<Positioned<Tile>> tiles;
@@ -189,17 +190,6 @@ public class TilePlacement implements Cloneable {
         }
 
         return Optional.empty();
-    }
-
-    @Override
-    public TilePlacement clone() {
-        try {
-            TilePlacement clone = (TilePlacement) super.clone();
-            clone.tiles = (ArrayList<Positioned<Tile>>) this.tiles.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }
 
