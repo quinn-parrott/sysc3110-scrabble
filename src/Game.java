@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -11,10 +12,44 @@ public class Game {
     private ArrayList<GameView> views;
     private WordList wordList;
 
-    private final List<Player> players;
-    private final List<TilePlacement> turns;
-    private TileBag gameBag;
-    private HashMap<Integer, Character> gamePremiumSquares;
+
+    private static class GameMutableState implements Serializable {
+        public ArrayList<Player> players;
+        public ArrayList<TilePlacement> turns;
+        public TileBag gameBag;
+        public HashMap<Integer, Character> gamePremiumSquares;
+
+        public GameMutableState(
+            ArrayList<Player> players,
+            ArrayList<TilePlacement> turns,
+            TileBag gameBag,
+            HashMap<Integer, Character> gamePremiumSquares
+        ) {
+            this.players = players;
+            this.turns = turns;
+            this.gameBag = gameBag;
+            this.gamePremiumSquares = gamePremiumSquares;
+        }
+
+        public GameMutableState clone() {
+            // Beware ye who seek to enter below:
+            // beyond lay cloning evils so vile that the faint of heart may perish.
+            try {
+                // The only reliable way to make a _true_ deep copy in java is to serialize
+                // then deserialize the objects.
+                var stream = new ByteArrayOutputStream();
+                var output = new ObjectOutputStream(stream);
+                output.writeObject(this);
+
+                var input = new ObjectInputStream(new ByteArrayInputStream(stream.toByteArray()));
+                return (GameMutableState) input.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private Transactionable<GameMutableState> state;
 
     /**
      * Constructor for the Game class
@@ -23,18 +58,25 @@ public class Game {
      * @author Quinn Parrott, 101169535
      */
     public Game(List<Player> players, WordList wordList) {
-        this.players = players;
-        this.turns = new ArrayList<>();
         this.wordList = wordList;
         this.views = new ArrayList<>();
-        this.gameBag = new TileBag();
-        this.gamePremiumSquares = PremiumSquares.getPremiumSquares();
+
+        var playersTemp = new ArrayList<>(players);
+        var tileBag = new TileBag();
+
         int PLAYER_HAND_SIZE = 7;
-        for (Player player : this.players) {
+        for (Player player : playersTemp) {
             for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
-                player.getTileHand().add(gameBag.drawTile().get());
+                player.getTileHand().add(tileBag.drawTile().get());
             }
         }
+
+        this.state = new Transactionable<>(new GameMutableState(
+            playersTemp,
+            new ArrayList<>(),
+            tileBag,
+            PremiumSquares.getPremiumSquares()
+        ));
     }
 
     /**
@@ -161,8 +203,8 @@ public class Game {
             int wordMultiplier = 1;
             int wordscore = 0;
             for (int i = 0; i < word.length(); i++) {
-                if (gamePremiumSquares.containsKey(update.playedWords().get(word).get(i))) {
-                    var chr = gamePremiumSquares.get(update.playedWords().get(word).get(i));
+                if (this.state.state(GameMutableState::clone).gamePremiumSquares.containsKey(update.playedWords().get(word).get(i))) {
+                    var chr = this.state.state(GameMutableState::clone).gamePremiumSquares.get(update.playedWords().get(word).get(i));
                     switch (chr){
 
                         case '$':
@@ -178,7 +220,7 @@ public class Game {
 
                     }
 
-                    gamePremiumSquares.remove(update.playedWords().get(word).get(i));
+                    this.state.state(GameMutableState::clone).gamePremiumSquares.remove(update.playedWords().get(word).get(i));
 
                 }else{
                     tileScore += (tileDetails.get(word.charAt(i)).tile().pointValue());
@@ -194,7 +236,7 @@ public class Game {
         int PLAYER_HAND_SIZE = 7;
         int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
         for (int i = 0; i < numTilesToAdd; i++) {
-            Optional<WildcardableTile> t = gameBag.drawTile();
+            Optional<WildcardableTile> t = this.state.state(GameMutableState::clone).gameBag.drawTile();
             if (t.isPresent()) {
                 if (t.get().isWildcard() && this.getPlayer().isAI()) {
                     t = Optional.of(new WildcardableTile('E', 0));
@@ -203,7 +245,7 @@ public class Game {
             }
         }
 
-        this.turns.add(placement);
+        this.state.state(GameMutableState::clone).turns.add(placement);
         this.update();
     }
 
@@ -212,17 +254,23 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     public void pass() {
-        this.turns.add(new TilePlacement(new ArrayList<>()));
+        this.state.state(GameMutableState::clone).turns.add(new TilePlacement(new ArrayList<>()));
         this.update();
+    }
+
+    public void commit() {
+        this.state.commitWorking(GameMutableState::clone); // Commit the state change
+    }
+
+    public void runAi() {
+        while (this.getPlayer().isAI()) {
+            (new AiPlayer(this)).AiTurn();
+        }
     }
 
     private void update() {
         for (GameView view : this.views) {
             view.update();
-        }
-        if (this.getPlayer().isAI()) {
-            (new AiPlayer(this)).AiTurn();
-            this.update();
         }
     }
 
@@ -233,7 +281,7 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     private boolean playerHasNeededTiles(List<Positioned<Tile>> tiles) {
-        Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+        Player activePlayer = this.getPlayer();
 
         var letters = new ArrayList<>();
 
@@ -266,7 +314,7 @@ public class Game {
      * @author Colin Mandeville, 101140289
      */
     private void removeTilesFromHand(String letters) {
-        Player activePlayer = this.players.get(this.turns.size() % this.players.size());
+        Player activePlayer = this.getPlayer();
 
         for (char c : letters.toCharArray()) {
 
@@ -297,26 +345,26 @@ public class Game {
     public void printBoardState() {
         getBoard().printBoard();
         System.out.println("Scores (Player : Points)");
-        for (Player player : this.players) {
+        for (Player player : getPlayers()) {
             System.out.println(player.getName() + " : " + player.getPoints());
         }
     }
 
     public int getNumTurns() {
-        return this.turns.size();
+        return this.state.state(GameMutableState::clone).turns.size();
     }
 
     public Player getPlayer() {
-        return this.players.get(this.turns.size() % this.players.size());
+        return getPlayers().get(getNumTurns() % getPlayers().size());
     }
 
     public List<Player> getPlayers() {
-        return this.players;
+        return this.state.state(GameMutableState::clone).players;
     }
 
     public Board getBoard() {
         var board = new Board();
-        for (var placement : this.turns) {
+        for (var placement : this.state.state(GameMutableState::clone).turns) {
             try {
                 board.placeTiles(placement);
             } catch (PlacementException e) {
@@ -326,5 +374,29 @@ public class Game {
         return board;
     }
 
+    public void popCommitToWorking() {
+        this.state.popCommitToWorking();
+        this.update();
+    }
+
+    public boolean canUndo() {
+        return this.state.canUndo();
+    }
+
+    public boolean canRedo() {
+        return this.state.canRedo();
+    }
+
+    public boolean undo() {
+        var result = this.state.undo();
+        this.update();
+        return result;
+    }
+
+    public boolean redo() {
+        var result = this.state.redo();
+        this.update();
+        return result;
+    }
 
 }

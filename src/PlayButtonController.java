@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class PlayButtonController implements ActionListener {
@@ -18,15 +19,17 @@ public class PlayButtonController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (this.boardModel.getPlacedTiles().size() != 0) {
             Optional<TilePlacement> tp = TilePlacement.FromTiles(
-                    this.boardModel.getPlacedTiles()
+                    new ArrayList<>(this.boardModel.getPlacedTiles()
                             .stream()
                             .map(t -> new Positioned<>(new Tile(t.value().chr(), t.value().pointValue()), t.pos()))
-                            .toList()
+                            .toList())
             );
 
             if (tp.isPresent()) {
                 try {
                     this.gameModel.place(tp.get());
+                    this.gameModel.runAi();
+                    this.gameModel.commit();
                     this.boardModel.getPlacedTiles().removeIf(_all -> true);
                     this.boardModel.setBoard(this.gameModel.getBoard());
                     this.view.update();

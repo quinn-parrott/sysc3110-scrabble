@@ -18,6 +18,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
+    private final JButton undoButton;
+    private final JButton redoButton;
     private List<Positioned<WildcardableStoreTile>> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
@@ -41,6 +43,10 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         playerTurnLabel = new JLabel();
         playButton = new JButton();
         passTurn = new JButton();
+        undoButton = new JButton("Undo");
+        undoButton.setEnabled(false);
+        redoButton = new JButton("Redo");
+        redoButton.setEnabled(false);
 
         // A layout manager for these components is still pending
 
@@ -115,17 +121,23 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setPreferredSize(new Dimension(140,50));
 
         playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
-
         passTurn.addActionListener(new PassButtonController(this, this.game, this.boardViewModel));
 
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BorderLayout());
+        var undoRedoController = new UndoRedoButtonController(this, this.game, this.boardViewModel);
+        undoButton.addActionListener(source -> undoRedoController.undo(undoButton));
+        redoButton.addActionListener(source -> undoRedoController.redo(redoButton));
 
-        buttonsPanel.add(playButton, BorderLayout.EAST);
-        buttonsPanel.add(passTurn, BorderLayout.WEST);
+        JPanel buttonsPanel = new JPanel(new GridLayout(2, 2));
+        buttonsPanel.add(undoButton);
+        buttonsPanel.add(redoButton);
+        buttonsPanel.add(playButton);
+        buttonsPanel.add(passTurn);
 
+        JPanel controlsPanel = new JPanel();
+        controlsPanel.setLayout(new BorderLayout());
         playerTurnLabel.setPreferredSize(new Dimension(150,50));
-        buttonsPanel.add(playerTurnLabel, BorderLayout.NORTH);
+        controlsPanel.add(playerTurnLabel, BorderLayout.NORTH);
+        controlsPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
         return buttonsPanel;
     }
@@ -137,6 +149,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardView.update();
+        this.undoButton.setEnabled(game.canUndo());
+        this.redoButton.setEnabled(game.canRedo());
     }
 
     /**

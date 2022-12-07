@@ -8,7 +8,7 @@ import java.util.Optional;
  *
  * @author Colin Mandeville, 101140289
  */
-public class Board {
+public class Board implements Cloneable {
     private static final int COLUMN_NUMBER = 15;
     private static final int ROW_NUMBER = 15;
 
@@ -250,19 +250,21 @@ public class Board {
      * @author Quinn Parrott, 101169535
      */
     public Board clone() {
-        // TODO: Can this be done in a way that's compile time
-        //  checked and generally assumes less about the implementation?
-        var newBoard = new Board();
+        try {
+            Board clone = (Board) super.clone();
 
-        int i = 0;
-        for (var tile : this.board) {
-            if (tile.isPresent()) {
-                newBoard.setTile(tile.get(), i);
+            int i = 0;
+            for (var tile : this.board) {
+                if (tile.isPresent()) {
+                    clone.setTile(tile.get(), i);
+                }
+                i += 1;
             }
-            i += 1;
-        }
 
-        return newBoard;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

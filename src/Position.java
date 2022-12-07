@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -5,7 +6,7 @@ import java.util.stream.IntStream;
 /**
  * @author Colin Mandeville, 101140289
  */
-public class Position {
+public class Position implements Serializable {
     // This will represent the placement on the board x is received as letter input, y as a number
     private final int x;
     private final int y;

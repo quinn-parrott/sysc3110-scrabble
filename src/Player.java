@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -5,7 +6,7 @@ import java.util.ArrayList;
  *
  * @author Tao Lufula, 101164153
  */
-public class Player {
+public class Player implements Serializable {
 
     private String name;
     private int points;
