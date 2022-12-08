@@ -1,4 +1,7 @@
+import org.xml.sax.SAXException;
+
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,7 +153,15 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         loadBoard.addActionListener(e -> {
             String filename = JOptionPane.showInputDialog("Enter a file name to load from");
-            this.game.loadGame(filename);
+            try {
+                this.game.loadGame(filename);
+            } catch (ParserConfigurationException ex) {
+                throw new RuntimeException(ex);
+            } catch (SAXException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         JPanel buttonsPanel = new JPanel();

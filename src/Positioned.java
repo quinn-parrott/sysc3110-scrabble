@@ -11,7 +11,7 @@ public record Positioned<T>(T value, Position pos) implements Serializable {
         StringBuilder tabs = new StringBuilder();
         tabs.append("    ".repeat(numTabs));
         sb.append(tabs).append("<Positioned>\n");
-        sb.append(tabs).append("    ").append("<value value=\"").append(value).append("</value>\n");
+        sb.append(tabs).append("    ").append("<Value value=\"").append(value).append("\"></value>\n");
         sb.append(pos.toXML(numTabs + 1));
         sb.append(tabs).append("</Positioned>\n");
 

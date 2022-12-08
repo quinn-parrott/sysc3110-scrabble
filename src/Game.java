@@ -1,3 +1,10 @@
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.*;
 
@@ -376,7 +383,7 @@ public class Game {
         } catch (Exception ignored) {}
         try {
             assert f != null;
-            f.write(this.toXML().toString().getBytes());
+            f.write(this.toXML().getBytes());
             f.close();
         } catch (Exception ignored) {}
     }
@@ -405,8 +412,99 @@ public class Game {
         return sb.toString();
     }
 
-    public void loadGame(String filename) {
+    public void loadGame(String filename) throws ParserConfigurationException, SAXException, IOException {
+        File f = new File(filename);
+        if (f.exists()) {
+            SAXParser s = SAXParserFactory.newInstance().newSAXParser();
+            DefaultHandler dh = new DefaultHandler() {
+                private Game game;
+                private boolean isGame = false;
+                public void startElement(String url, String localName, String qName, Attributes a) {
+                    switch (qName) {
+                        case "Game" -> isGame = true;
+                        case "Player" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "WildcardableTile" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "TilePlacement" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Positioned" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Value" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Position" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "TileBag" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "PremiumSquares" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Premium" -> {
+                            if (isGame) {
+                            }
+                        }
+                    }
+                }
 
+                public void endElement(String url, String localName, String qName, Attributes a) {
+                    switch (qName) {
+                        case "Game" -> isGame = false;
+                        case "Player" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "WildcardableTile" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "TilePlacement" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Positioned" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Value" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Position" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "TileBag" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "PremiumSquares" -> {
+                            if (isGame) {
+                            }
+                        }
+                        case "Premium" -> {
+                            if (isGame) {
+                            }
+                        }
+                    }
+                }
+            };
+            s.parse(f, dh);
+        }
     }
 
     public Board getBoard() {
