@@ -406,7 +406,6 @@ public class Game {
         }
         sb.append("    </PremiumSquares>\n").append("</Game>");
 
-
         return sb.toString();
     }
 
@@ -518,7 +517,9 @@ public class Game {
                             access = accessLimit.NONE;
                             game = new Game(p, new WordList());
                             game.state.state(GameMutableState::clone).gameBag = tb;
-                            game.state.state(GameMutableState::clone).turns = gameTurns;
+                            for (TilePlacement tp : gameTurns) {
+                                game.state.state(GameMutableState::clone).turns.add(tp);
+                            }
                             game.state.state(GameMutableState::clone).gamePremiumSquares = new HashMap<>();
                             for (Integer key : premiumSquares.keySet()) {
                                 game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
