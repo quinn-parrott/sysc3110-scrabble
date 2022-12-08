@@ -20,7 +20,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private static final Color colorSelected = new Color(200, 200, 200);
 
     private final Container pane;
-    private final Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
+    private Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
     private final JLabel playerTurnLabel;
     private final JButton playButton;
     private final JButton passTurn;
@@ -154,18 +154,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         loadBoard.addActionListener(e -> {
             String filename = JOptionPane.showInputDialog("Enter a file name to load from");
             try {
-                this.game.loadGame(filename);
-            } catch (ParserConfigurationException ex) {
-                throw new RuntimeException(ex);
-            } catch (SAXException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
+                Game.loadGame(filename, this);
+            } catch (ParserConfigurationException | SAXException | IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
-
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout());
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 2));
         buttonsPanel.add(undoButton);
@@ -305,5 +298,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
         return boardView;
+    }
+
+    public void setModel(Game game) {
+        this.game = game;
     }
 }

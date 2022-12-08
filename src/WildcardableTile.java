@@ -17,7 +17,12 @@ public record WildcardableTile(char chr, int pointValue) implements Serializable
         for (int i = 0; i < numTabs; i++) {
             sb.append("    ");
         }
-        sb.append("<WildcardableTile chr=\"").append(chr).append("\" pointValue=\"").append(pointValue).append("\"></WildcardableTile>\n");
-        return sb.toString();
+        if(!isWildcard()) {
+            sb.append("<WildcardableTile chr=\"").append(chr).append("\" pointValue=\"").append(pointValue).append("\"/>\n");
+            return sb.toString();
+        } else {
+            sb.append("<WildcardableTile chr=\"&amp;\" pointValue=\"").append(pointValue).append("\"/>\n");
+            return sb.toString();
+        }
     }
 }

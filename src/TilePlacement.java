@@ -161,6 +161,14 @@ public class TilePlacement implements Serializable {
         return this.tiles;
     }
 
+    public static Optional<TilePlacement> FromWildTiles(ArrayList<Positioned<WildcardableTile>> tiles) {
+        ArrayList<Positioned<Tile>> regularTiles = new ArrayList<>();
+        for (Positioned<WildcardableTile> tile : tiles) {
+            regularTiles.add(new Positioned<>(new Tile(tile.value().chr(), tile.value().pointValue()), tile.pos()));
+        }
+        return FromTiles(regularTiles);
+    }
+
     public static Optional<TilePlacement> FromTiles(ArrayList<Positioned<Tile>> tiles) {
         // Sorting tiles make sure the letters are in order when the word is built
         var placedTiles =

@@ -17,8 +17,6 @@ public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {};
     private ArrayList<GameView> views;
     private WordList wordList;
-
-
     private static class GameMutableState implements Serializable {
         public ArrayList<Player> players;
         public ArrayList<TilePlacement> turns;
@@ -280,6 +278,14 @@ public class Game {
         }
     }
 
+    public void setTileBag(TileBag tb) {
+        this.state.state(GameMutableState::clone).gameBag = tb;
+    }
+
+    public void setTurns(ArrayList<TilePlacement> turns) {
+        this.state.state(GameMutableState::clone).turns = turns;
+    }
+
     /**
      * Checks if the active Player has the required tiles to make their move.
      * @param tiles tiles being used to create the word
@@ -395,112 +401,177 @@ public class Game {
     private String toXML() {
         int numTabs = 0;
         StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<Game>\n");
-        for (Player p : players) {
+
+
+        for (Player p : this.getPlayers()) {
             sb.append(p.toXML(numTabs + 1));
         }
-        for (TilePlacement tp : turns) {
+
+
+        for (TilePlacement tp : this.state.state(GameMutableState::clone).turns) {
             sb.append(tp.toXML(numTabs + 1));
         }
-        sb.append("    ").append("<TileBag>\n").append(gameBag.toXML(numTabs + 1));
+
+
+        sb.append("    ").append("<TileBag>\n").append(this.state.state(GameMutableState::clone).gameBag.toXML(numTabs + 1));
+
         sb.append("    </TileBag>\n").append("    <PremiumSquares>\n");
-        for (int key : gamePremiumSquares.keySet()) {
+        for (int key : this.state.state(GameMutableState::clone).gamePremiumSquares.keySet()) {
             sb.append("        ").append("<Premium index=\"").append(key).append("\" char=\"");
-            sb.append(gamePremiumSquares.get(key)).append("\"></Premium>\n");
+            sb.append(this.state.state(GameMutableState::clone).gamePremiumSquares.get(key)).append("\"/>\n");
         }
         sb.append("    </PremiumSquares>\n").append("</Game>");
+
+
         return sb.toString();
     }
 
-    public void loadGame(String filename) throws ParserConfigurationException, SAXException, IOException {
+    public static void loadGame(String filename, GameView view) throws ParserConfigurationException, SAXException, IOException {
         File f = new File(filename);
         if (f.exists()) {
             SAXParser s = SAXParserFactory.newInstance().newSAXParser();
             DefaultHandler dh = new DefaultHandler() {
                 private Game game;
-                private boolean isGame = false;
+                private ArrayList<Player> p;
+                private TileBag tb;
+                private ArrayList<TilePlacement> gameTurns;
+                private ArrayList<Positioned<WildcardableTile>> turn;
+                private HashMap<Integer, Character> premiumSquares;
+                private accessLimit access = accessLimit.NONE;
+                enum accessLimit {
+                    NONE,
+                    GAME,
+                    PLAYER,
+                    BAG,
+                    TURN,
+                    PREMIUM
+                }
+
+                @Override
                 public void startElement(String url, String localName, String qName, Attributes a) {
                     switch (qName) {
-                        case "Game" -> isGame = true;
+                        case "Game" -> {
+                            access = accessLimit.GAME;
+                            p = new ArrayList<>();
+                            gameTurns = new ArrayList<>();
+                            tb = new TileBag();
+                        }
                         case "Player" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "WildcardableTile" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "TilePlacement" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Positioned" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Value" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Position" -> {
-                            if (isGame) {
+                            if (access == accessLimit.GAME) {
+                                access = accessLimit.PLAYER;
+                                p.add(new Player(a.getValue(a.getIndex("name")), a.getValue(a.getIndex("isAI")).equalsIgnoreCase("true")));
+                                p.get(p.size() - 1).addPoints(Integer.parseInt(a.getValue(a.getIndex("points"))));
                             }
                         }
                         case "TileBag" -> {
-                            if (isGame) {
+                            if (access == accessLimit.GAME) {
+                                access = accessLimit.BAG;
+                                while(!tb.isEmpty()) {
+                                    tb.drawTile();
+                                }
+                            }
+                        }
+                        case "WildcardableTile" -> {
+                            if (access == accessLimit.PLAYER || access == accessLimit.BAG) {
+                                WildcardableTile t = new WildcardableTile(a.getValue(a.getIndex("chr")).charAt(0), Integer.parseInt(a.getValue(a.getIndex("pointValue"))));
+                                if (access == accessLimit.PLAYER && p.get(p.size() - 1).getTileHand().size() < Player.getTileHandSize()) {
+                                    p.get(p.size() - 1).addTile(t);
+                                } else {
+                                    tb.addTileToBag(t);
+                                }
+                            }
+                        }
+                        case "TilePlacement" -> {
+                            if (access == accessLimit.GAME) {
+                                access = accessLimit.TURN;
+                                turn = new ArrayList<>();
+                            }
+                        }
+                        case "Positioned" -> {
+                            if (access == accessLimit.TURN) {
+                                String value = a.getValue(a.getIndex("value"));
+                                char tileChar = value.split("chr=")[1].charAt(0);
+                                int pointValue = Integer.parseInt(value.split("pointValue=")[1].charAt(1) == ']' ?
+                                        String.valueOf(value.split("pointValue=")[1].charAt(0)) :
+                                        value.split("pointValue=")[1].substring(0, 1));
+                                if (tileChar >= 65 && tileChar <= 90 && pointValue >= 0 && pointValue <= 10) {
+                                    WildcardableTile tile = new WildcardableTile(tileChar, pointValue);
+                                    turn.add(new Positioned<>(tile,
+                                            Position.FromInts(Integer.parseInt(a.getValue(a.getIndex("x"))),
+                                                    Integer.parseInt(a.getValue(a.getIndex("y")))).get()));
+                                }
                             }
                         }
                         case "PremiumSquares" -> {
-                            if (isGame) {
+                            if (access == accessLimit.GAME) {
+                                access = accessLimit.PREMIUM;
+                                premiumSquares = new HashMap<>();
                             }
                         }
                         case "Premium" -> {
-                            if (isGame) {
+                            if (access == accessLimit.PREMIUM) {
+                                int i = Integer.parseInt(a.getValue(a.getIndex("index")));
+                                char c = a.getValue(a.getIndex("char")).charAt(0);
+                                boolean validC = false;
+                                for (char x : PremiumSquares.reservedSymbols) {
+                                    if (c == x) {
+                                        validC = true;
+                                    }
+                                }
+                                if (i >= 0 && i < Board.getROW_NUMBER() * Board.getCOLUMN_NUMBER() && validC) {
+                                    premiumSquares.put(i, c);
+                                }
+                            }
+                        }
+                        default -> {}
+                    }
+                }
+
+                @Override
+                public void endElement(String url, String localName, String qName) {
+                    switch (qName) {
+                        case "Game" -> access = accessLimit.NONE;
+                        case "Player" -> {
+                            if (access == accessLimit.PLAYER) {
+                                access = accessLimit.GAME;
+                            }
+                        }
+                        case "TileBag" -> {
+                            if (access == accessLimit.BAG) {
+                                access = accessLimit.GAME;
+                            }
+                        }
+                        case "TilePlacement" -> {
+                            if (access == accessLimit.TURN) {
+                                access = accessLimit.GAME;
+                                Optional<TilePlacement> placement = TilePlacement.FromWildTiles(turn);
+                                if (placement.isPresent()) {
+                                    gameTurns.add(placement.get());
+                                } else {
+                                    gameTurns.add(new TilePlacement(new ArrayList<>()));
+                                }
+                            }
+                        }
+                        case "PremiumSquares" -> {
+                            if (access == accessLimit.PREMIUM) {
+                                access = accessLimit.GAME;
                             }
                         }
                     }
                 }
 
-                public void endElement(String url, String localName, String qName, Attributes a) {
-                    switch (qName) {
-                        case "Game" -> isGame = false;
-                        case "Player" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "WildcardableTile" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "TilePlacement" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Positioned" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Value" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Position" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "TileBag" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "PremiumSquares" -> {
-                            if (isGame) {
-                            }
-                        }
-                        case "Premium" -> {
-                            if (isGame) {
-                            }
-                        }
+                @Override
+                public void endDocument() throws SAXException {
+                    game = new Game(p, new WordList());
+                    game.setTileBag(tb);
+                    for (Integer key : premiumSquares.keySet()) {
+                        game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
                     }
+                    view.setModel(game);
+                    game.update();
+                    super.endDocument();
                 }
             };
             s.parse(f, dh);
@@ -554,7 +625,7 @@ public class Game {
         l.add(p);
         l.add(p2);
         Game g = new Game(l, new WordList());
-        List<Positioned<Tile>> turn = new ArrayList<>();
+        ArrayList<Positioned<Tile>> turn = new ArrayList<>();
         turn.add(new Positioned<>(new Tile(p.getTileHand().get(2).chr(), p.getTileHand().get(2).pointValue()), Position.FromIndex(Board.getCenterTilePos()).get()));
         turn.add(new Positioned<>(new Tile(p.getTileHand().get(1).chr(), p.getTileHand().get(1).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 1).get()));
         turn.add(new Positioned<>(new Tile(p.getTileHand().get(0).chr(), p.getTileHand().get(0).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 2).get()));
