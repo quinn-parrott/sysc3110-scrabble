@@ -274,7 +274,7 @@ public class Game {
         }
     }
 
-    private void update() {
+    public void update() {
         for (GameView view : this.views) {
             view.update();
         }
@@ -341,18 +341,6 @@ public class Game {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Prints the current board and scoreboard
-     * @author Colin Mandeville, 101140289
-     */
-    public void printBoardState() {
-        getBoard().printBoard();
-        System.out.println("Scores (Player : Points)");
-        for (Player player : getPlayers()) {
-            System.out.println(player.getName() + " : " + player.getPoints());
         }
     }
 
@@ -536,7 +524,6 @@ public class Game {
                                 game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
                             }
                             view.setModel(game);
-                            game.update();
                         }
                         case "Player" -> {
                             if (access == accessLimit.PLAYER) {
@@ -606,23 +593,5 @@ public class Game {
         var result = this.state.redo();
         this.update();
         return result;
-    }
-
-    public static void main(String[] args) throws PlacementException {
-        Player p = new Player("Colin", false);
-        p.addTile(new WildcardableTile('W', 4));
-        p.addTile(new WildcardableTile('E', 1));
-        p.addTile(new WildcardableTile('F', 4));
-        Player p2 = new Player("Quinn", false);
-        List<Player> l = new ArrayList<>();
-        l.add(p);
-        l.add(p2);
-        Game g = new Game(l, new WordList());
-        ArrayList<Positioned<Tile>> turn = new ArrayList<>();
-        turn.add(new Positioned<>(new Tile(p.getTileHand().get(2).chr(), p.getTileHand().get(2).pointValue()), Position.FromIndex(Board.getCenterTilePos()).get()));
-        turn.add(new Positioned<>(new Tile(p.getTileHand().get(1).chr(), p.getTileHand().get(1).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 1).get()));
-        turn.add(new Positioned<>(new Tile(p.getTileHand().get(0).chr(), p.getTileHand().get(0).pointValue()), Position.FromIndex(Board.getCenterTilePos() + 2).get()));
-        g.place(TilePlacement.FromTiles(turn).get());
-        System.out.println(g.toXML());
     }
 }
