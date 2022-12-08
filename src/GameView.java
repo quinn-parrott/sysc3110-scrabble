@@ -167,8 +167,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         buttonsPanel.add(passTurn);
         buttonsPanel.add(saveBoard);
         buttonsPanel.add(loadBoard);
-        buttonsPanel.add(playButton);
-        buttonsPanel.add(passTurn);
 
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new BorderLayout());
