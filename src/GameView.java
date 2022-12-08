@@ -97,7 +97,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         game.addGameView(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1400, 1000);
+        this.setSize(1600, 1000);
         this.setVisible(true);
     }
 
@@ -302,5 +302,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
     public void setModel(Game game) {
         this.game = game;
+        game.addGameView(this);
     }
 }

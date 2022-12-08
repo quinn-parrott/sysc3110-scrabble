@@ -70,7 +70,9 @@ public class Game {
 
         int PLAYER_HAND_SIZE = 7;
         for (Player player : playersTemp) {
-            for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
+            int currentPlayerHandSize= player.getTileHand().size();
+            int numTilesToAdd = PLAYER_HAND_SIZE - currentPlayerHandSize;
+            for (int i = 0; i < numTilesToAdd; i++) {
                 player.getTileHand().add(tileBag.drawTile().get());
             }
         }
@@ -276,14 +278,6 @@ public class Game {
         for (GameView view : this.views) {
             view.update();
         }
-    }
-
-    public void setTileBag(TileBag tb) {
-        this.state.state(GameMutableState::clone).gameBag = tb;
-    }
-
-    public void setTurns(ArrayList<TilePlacement> turns) {
-        this.state.state(GameMutableState::clone).turns = turns;
     }
 
     /**
@@ -532,7 +526,18 @@ public class Game {
                 @Override
                 public void endElement(String url, String localName, String qName) {
                     switch (qName) {
-                        case "Game" -> access = accessLimit.NONE;
+                        case "Game" -> {
+                            access = accessLimit.NONE;
+                            game = new Game(p, new WordList());
+                            game.state.state(GameMutableState::clone).gameBag = tb;
+                            game.state.state(GameMutableState::clone).turns = gameTurns;
+                            game.state.state(GameMutableState::clone).gamePremiumSquares = new HashMap<>();
+                            for (Integer key : premiumSquares.keySet()) {
+                                game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
+                            }
+                            view.setModel(game);
+                            game.update();
+                        }
                         case "Player" -> {
                             if (access == accessLimit.PLAYER) {
                                 access = accessLimit.GAME;
@@ -560,18 +565,6 @@ public class Game {
                             }
                         }
                     }
-                }
-
-                @Override
-                public void endDocument() throws SAXException {
-                    game = new Game(p, new WordList());
-                    game.setTileBag(tb);
-                    for (Integer key : premiumSquares.keySet()) {
-                        game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
-                    }
-                    view.setModel(game);
-                    game.update();
-                    super.endDocument();
                 }
             };
             s.parse(f, dh);
