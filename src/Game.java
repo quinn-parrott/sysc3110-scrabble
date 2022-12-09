@@ -15,8 +15,6 @@ import java.util.*;
  */
 public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {}
-
-    private Game game = this;
     private ArrayList<GameView> views;
     private WordList wordList;
 

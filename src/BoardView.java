@@ -46,13 +46,12 @@ public class BoardView extends JPanel {
             this.add(button);
         }
 
-        update(this.model.getBoard());
+        update();
     }
 
-    public void update(Board b) {
+    public void update() {
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
-            this.model.setBoard(b);
 
             var placedTile = model.getPlacedTiles().stream().filter(t -> t.pos().equals(pos)).findFirst();
             var boardTile = model.getBoard().getTile(pos);
