@@ -153,7 +153,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         loadBoard.addActionListener(e -> {
             String filename = JOptionPane.showInputDialog("Enter a file name to load from");
             try {
-                game.loadGame(filename, this);
+                game.loadGame(filename);
                 this.boardViewModel.getPlacedTiles().removeIf(_ignore -> true);
             } catch (ParserConfigurationException | SAXException | IOException ex) {
                 throw new RuntimeException(ex);

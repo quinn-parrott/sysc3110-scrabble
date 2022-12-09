@@ -419,7 +419,7 @@ public class Game {
         return sb.toString();
     }
 
-    public void loadGame(String filename, GameView view) throws ParserConfigurationException, SAXException, IOException {
+    public void loadGame(String filename) throws ParserConfigurationException, SAXException, IOException {
         File f = new File(filename);
         if (f.exists()) {
             SAXParser s = SAXParserFactory.newInstance().newSAXParser();
