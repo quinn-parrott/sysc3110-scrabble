@@ -153,7 +153,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         loadBoard.addActionListener(e -> {
             String filename = JOptionPane.showInputDialog("Enter a file name to load from");
             try {
-                Game.loadGame(filename, this);
+                game.loadGame(filename);
+                this.boardViewModel.getPlacedTiles().removeIf(_ignore -> true);
             } catch (ParserConfigurationException | SAXException | IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -182,6 +183,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setSelected(model.getSelected());
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
+        this.boardViewModel.setBoard(game.getBoard());
         this.boardView.update();
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());
@@ -295,45 +297,5 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
         return boardView;
-    }
-
-    public void setModel(Game loadedGame) {
-        this.game = loadedGame;
-        this.game.addGameView(this);
-
-        pane.removeAll();
-
-        this.placedTiles.clear();
-        for (Positioned<Tile> t : this.game.getBoard().getTiles()) {
-            this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(t.value().chr(), false, t.value().pointValue()), t.pos()));
-        }
-
-        this.boardComponent = this.createBoard();
-        this.boardComponent.setPreferredSize(new Dimension(500, 600));
-
-        boardAndTileHandPanel = new JPanel();
-        boardAndTileHandPanel.setLayout(new BorderLayout());
-
-        JPanel tileHandPanel = new JPanel();
-        this.tileTrayModel = this.createTileHand(this.game.getPlayer());
-        this.tileTrayView = new TileTrayView(this.tileTrayModel);
-        tileHandPanel.add(this.tileTrayView, new GridBagConstraints());
-        tileHandPanel.setPreferredSize(new Dimension(1100,50));
-
-        boardAndTileHandPanel.add(this.boardComponent, BorderLayout.NORTH);
-        boardAndTileHandPanel.add(tileHandPanel, BorderLayout.SOUTH);
-
-        JPanel scoreBoardAndButtonPanel = new JPanel();
-        scoreBoardAndButtonPanel.setLayout(new BorderLayout());
-        this.scoreboard = new ScoreboardView(game);
-        scoreBoardAndButtonPanel.add(this.scoreboard.getView(), BorderLayout.NORTH);
-        scoreBoardAndButtonPanel.add(this.createLegend(), BorderLayout.CENTER);
-        scoreBoardAndButtonPanel.add(this.createPlayButtons(), BorderLayout.SOUTH);
-
-        pane.add(boardAndTileHandPanel, BorderLayout.WEST);
-        pane.add(scoreBoardAndButtonPanel, BorderLayout.EAST);
-
-        this.game.update();
-        SwingUtilities.updateComponentTreeUI(this);
     }
 }

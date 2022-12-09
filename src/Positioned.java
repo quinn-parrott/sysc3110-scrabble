@@ -10,7 +10,7 @@ public record Positioned<T>(T value, Position pos) implements Serializable {
         StringBuilder sb = new StringBuilder();
         StringBuilder tabs = new StringBuilder();
         tabs.append("    ".repeat(numTabs));
-        sb.append(tabs).append("<Positioned value=\"").append(value).append("\" ").append(pos.toXMLString()).append("/>\n");
+        sb.append(tabs).append("<Positioned value=\"").append(value).append("\" ").append(pos.toXMLAttributes()).append("/>\n");
         return sb.toString();
     }
 }
