@@ -14,9 +14,13 @@ import java.util.*;
  * @author Quinn Parrott, 101169535
  */
 public class Game {
-    public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {};
+    public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {}
+
+
     private ArrayList<GameView> views;
     private WordList wordList;
+
+
     private static class GameMutableState implements Serializable {
         public ArrayList<Player> players;
         public ArrayList<TilePlacement> turns;
@@ -450,6 +454,7 @@ public class Game {
                                 p = new ArrayList<>();
                                 gameTurns = new ArrayList<>();
                                 tb = new TileBag();
+                                premiumSquares = new HashMap<>();
                             }
                         }
                         case "Player" -> {
@@ -501,7 +506,6 @@ public class Game {
                         case "PremiumSquares" -> {
                             if (access == accessLimit.TRANSACTION) {
                                 access = accessLimit.PREMIUM;
-                                premiumSquares = new HashMap<>();
                             }
                         }
                         case "Premium" -> {
@@ -531,9 +535,6 @@ public class Game {
                             access = accessLimit.NONE;
                             Game game = new Game(transactions.get(0).players, new WordList());
                             game.state.internalState = transactions;
-                            for (Integer key : premiumSquares.keySet()) {
-                                game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
-                            }
                             view.setModel(game);
                         }
                         case "Transaction" -> {
@@ -543,6 +544,7 @@ public class Game {
                                 p = null;
                                 gameTurns = null;
                                 tb = null;
+                                premiumSquares = null;
                             }
                         }
                         case "Player" -> {
@@ -588,11 +590,6 @@ public class Game {
             }
         }
         return board;
-    }
-
-    public void popCommitToWorking() {
-        this.state.popCommitToWorking();
-        this.update();
     }
 
     public boolean canUndo() {
