@@ -218,7 +218,7 @@ public class Position implements Serializable {
         return String.format("%c%d", 'A' + this.getX(), this.getY() + 1);
     }
 
-    public String toXMLString() {
+    public String toXMLAttributes() {
         return "x=\"" + x + "\" y=\"" + y + "\"";
     }
 }

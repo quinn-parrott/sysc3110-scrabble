@@ -153,7 +153,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         loadBoard.addActionListener(e -> {
             String filename = JOptionPane.showInputDialog("Enter a file name to load from");
             try {
-                Game.loadGame(filename, this);
+                game.loadGame(filename, this);
             } catch (ParserConfigurationException | SAXException | IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -177,6 +177,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     }
 
     public void update() {
+        SwingUtilities.updateComponentTreeUI(this);
         this.scoreboard.update();
         var model = this.createTileHand(this.game.getPlayer());
         this.tileTrayModel.setSelected(model.getSelected());

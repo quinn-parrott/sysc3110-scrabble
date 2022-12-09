@@ -16,7 +16,7 @@ import java.util.*;
 public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {}
 
-
+    private Game game = this;
     private ArrayList<GameView> views;
     private WordList wordList;
 
@@ -419,7 +419,7 @@ public class Game {
         return sb.toString();
     }
 
-    public static void loadGame(String filename, GameView view) throws ParserConfigurationException, SAXException, IOException {
+    public void loadGame(String filename, GameView view) throws ParserConfigurationException, SAXException, IOException {
         File f = new File(filename);
         if (f.exists()) {
             SAXParser s = SAXParserFactory.newInstance().newSAXParser();
@@ -533,10 +533,15 @@ public class Game {
                     switch (qName) {
                         case "Game" -> {
                             access = accessLimit.NONE;
-                            Game game = new Game(transactions.get(0).players, new WordList());
-                            game.state.internalState = transactions;
-                            game.state.head = Optional.of(game.state.internalState.peek());
-                            view.setModel(game);
+                            while (Game.this.state.internalState.size() > 0) {
+                                Game.this.state.internalState.pop();
+                            }
+                            for (GameMutableState gm : transactions) {
+                                Game.this.state.internalState.push(gm);
+                            }
+                            Game.this.state.head = Optional.empty();
+                            Game.this.state.i = Game.this.state.internalState.size() - 1;
+                            view.setModel(Game.this);
                         }
                         case "Transaction" -> {
                             if (access == accessLimit.TRANSACTION) {
@@ -561,7 +566,11 @@ public class Game {
                         case "TilePlacement" -> {
                             if (access == accessLimit.TURN) {
                                 access = accessLimit.TRANSACTION;
-                                Optional<TilePlacement> placement = TilePlacement.FromWildTiles(turn);
+                                ArrayList<Positioned<Tile>> regularTiles = new ArrayList<>();
+                                for (Positioned<WildcardableTile> tile : turn) {
+                                    regularTiles.add(new Positioned<>(new Tile(tile.value().chr(), tile.value().pointValue()), tile.pos()));
+                                }
+                                Optional<TilePlacement> placement = TilePlacement.FromTiles(regularTiles);
                                 if (placement.isPresent()) {
                                     gameTurns.add(placement.get());
                                 } else {
