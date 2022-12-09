@@ -137,6 +137,8 @@ public class PremiumSquares {
             for (int indexPos : customPremiumPositions.get("twoXWordScore")) {
                 premiumSquares.put(indexPos, '@');
             }
+            //Add centre Square
+            premiumSquares.put((Position.FromInts(7,7).get()).getIndex(),'@');
         }
         // 3x Words
         if (customPremiumPositions.containsKey("threeXWordScore")) {

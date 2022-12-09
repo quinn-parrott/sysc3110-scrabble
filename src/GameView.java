@@ -64,12 +64,13 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
 
         selectBoardType();
+
         if (isCustomBoard) {
             customBoardSetUp();
+            game = new Game(playersList.get(), new WordList(), customPremiumPositions);
+        }else{
+            game = new Game(playersList.get(), new WordList());
         }
-
-        game = new Game(playersList.get(), new WordList());
-
 
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard();
@@ -190,7 +191,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardViewModel.setBoard(game.getBoard());
-        this.boardView.update();
+        this.boardView.update(isCustomBoard, customPremiumPositions);
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());
     }
@@ -252,7 +253,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                     j++;
                 }
 
-                this.boardView.update();
+                this.boardView.update(isCustomBoard, customPremiumPositions);
                 break;
             }
         }
@@ -293,12 +294,12 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
 
         this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(letter, tile.isWildcard(), tile.pointValue()), pos));
-        this.boardView.update();
+        this.boardView.update(isCustomBoard, customPremiumPositions);
     }
 
     private Component createBoard() {
         this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
-        var boardView = new BoardView(this.boardViewModel);
+        var boardView = new BoardView(this.boardViewModel, isCustomBoard, customPremiumPositions);
         boardView.addBoardTileAdder(this);
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
