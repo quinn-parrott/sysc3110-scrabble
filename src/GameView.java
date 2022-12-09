@@ -20,8 +20,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final Container pane;
     private Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
     private final JLabel playerTurnLabel;
-    private final JButton playButton;
-    private final JButton passTurn;
+    private JButton playButton;
+    private JButton passTurn;
     private final JButton undoButton;
     private final JButton redoButton;
     private final JButton saveBoard;
@@ -48,8 +48,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         pane.setLayout(new BorderLayout());
 
         playerTurnLabel = new JLabel();
-        playButton = new JButton();
-        passTurn = new JButton();
         undoButton = new JButton("Undo");
         undoButton.setEnabled(false);
         redoButton = new JButton("Redo");
@@ -121,6 +119,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      * @author Tao Lufula, 101164153
      */
     private Component createPlayButtons() {
+        playButton = new JButton();
+        passTurn = new JButton();
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
         this.switchPlayButtonText("PLAY");
         playButton.setPreferredSize(new Dimension(140,50));
