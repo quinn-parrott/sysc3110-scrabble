@@ -11,6 +11,7 @@ import java.util.Optional;
 /**
  * Game View
  * GUI of the game. This class will handle all the JFrame Components for the scrabble game
+ *
  */
 public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemover {
     private static final Color colorUnselected = new Color(240, 240, 240);
@@ -19,8 +20,14 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private final Container pane;
     private Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
     private final JLabel playerTurnLabel;
+    private final JButton playButton;
+    private final JButton passTurn;
+    private final JButton undoButton;
+    private final JButton redoButton;
+    private final JButton saveBoard;
+    private final JButton loadBoard;
     private JPanel boardAndTileHandPanel;
-    private final List<Positioned<WildcardableStoreTile>> placedTiles;
+    private List<Positioned<WildcardableStoreTile>> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
     private BoardViewModel boardViewModel;
@@ -41,6 +48,14 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         pane.setLayout(new BorderLayout());
 
         playerTurnLabel = new JLabel();
+        playButton = new JButton();
+        passTurn = new JButton();
+        undoButton = new JButton("Undo");
+        undoButton.setEnabled(false);
+        redoButton = new JButton("Redo");
+        redoButton.setEnabled(false);
+        saveBoard = new JButton();
+        loadBoard = new JButton();
 
         // A layout manager for these components is still pending
 
@@ -107,24 +122,18 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      */
     private Component createPlayButtons() {
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
-        JButton playButton = new JButton("PLAY");
+        this.switchPlayButtonText("PLAY");
         playButton.setPreferredSize(new Dimension(140,50));
 
         //Pass players turn when they press this button
-        JButton passTurn = new JButton("PASS");
+        passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(140,50));
 
-        JButton saveBoard = new JButton("SAVE BOARD");
+        saveBoard.setText("SAVE BOARD");
         saveBoard.setPreferredSize(new Dimension(140,50));
 
-        JButton loadBoard = new JButton("LOAD BOARD");
+        loadBoard.setText("LOAD BOARD");
         loadBoard.setPreferredSize(new Dimension(140,50));
-
-        JButton undoButton = new JButton("UNDO");
-        undoButton.setPreferredSize(new Dimension(140,50));
-
-        JButton redoButton = new JButton("REDO");
-        redoButton.setPreferredSize(new Dimension(140,50));
 
         playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
         passTurn.addActionListener(new PassButtonController(this, this.game, this.boardViewModel));
@@ -174,7 +183,21 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardView.update();
+        this.undoButton.setEnabled(game.canUndo());
+        this.redoButton.setEnabled(game.canRedo());
     }
+
+    /**
+     * Changes the play button text depending on the game circumstance
+     * @param text
+     * @author Tao Lufula, 101164153
+     */
+    public void switchPlayButtonText(String text){
+        // PLAY
+        // RESET
+        playButton.setText(text);
+    }
+
 
     private TileTrayModel createTileHand(Player player) {
         var tiles = player.getTileHand();
@@ -280,6 +303,11 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
 
         pane.removeAll();
 
+        this.placedTiles.clear();
+        for (Positioned<Tile> t : this.game.getBoard().getTiles()) {
+            this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(t.value().chr(), false, t.value().pointValue()), t.pos()));
+        }
+
         this.boardComponent = this.createBoard();
         this.boardComponent.setPreferredSize(new Dimension(500, 600));
 
@@ -305,6 +333,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         pane.add(boardAndTileHandPanel, BorderLayout.WEST);
         pane.add(scoreBoardAndButtonPanel, BorderLayout.EAST);
 
+        this.game.update();
         SwingUtilities.updateComponentTreeUI(this);
     }
 }
