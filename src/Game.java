@@ -303,7 +303,7 @@ public class Game {
         }
     }
 
-    public void update() {
+    private void update() {
         for (GameView view : this.views) {
             view.update();
         }
@@ -541,7 +541,7 @@ public class Game {
                             }
                             Game.this.state.head = Optional.empty();
                             Game.this.state.i = Game.this.state.internalState.size() - 1;
-                            view.setModel(Game.this);
+                            Game.this.update();
                         }
                         case "Transaction" -> {
                             if (access == accessLimit.TRANSACTION) {
