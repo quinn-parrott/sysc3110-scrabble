@@ -183,7 +183,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setSelected(model.getSelected());
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
-        this.boardView.update();
+        this.boardView.update(game.getBoard());
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());
     }
@@ -245,7 +245,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                     j++;
                 }
 
-                this.boardView.update();
+                this.boardView.update(game.getBoard());
                 break;
             }
         }
@@ -286,7 +286,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
 
         this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(letter, tile.isWildcard(), tile.pointValue()), pos));
-        this.boardView.update();
+        this.boardView.update(game.getBoard());
     }
 
     private Component createBoard() {
