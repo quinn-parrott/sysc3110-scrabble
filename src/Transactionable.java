@@ -8,7 +8,7 @@ public class Transactionable<T> {
     }
 
     protected int i = 0;
-    protected final Stack<T> internalState;
+    protected Stack<T> internalState;
     protected Optional<T> head;
 
     public Transactionable(T state) {
