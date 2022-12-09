@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.*;
 import java.util.HashMap;
 
@@ -12,6 +11,7 @@ import java.util.HashMap;
 public class PremiumSquares {
 
     private static final HashMap<Integer, Character> premiumSquares = new HashMap<>();
+    public static final char[] reservedSymbols = {'$', '%', '@', '#'};
 
     public static HashMap<Integer, Character> getPremiumSquares() {
 
@@ -44,7 +44,7 @@ public class PremiumSquares {
         twoXLetterScore.add(Position.FromInts(11,14).get());
 
         for(Position p: twoXLetterScore) {
-            premiumSquares.put(p.getIndex(), '$');
+            premiumSquares.put(p.getIndex(), reservedSymbols[0]);
         }
 
         // 3x Letters
@@ -64,7 +64,7 @@ public class PremiumSquares {
         threeXLetterScore.add(Position.FromInts(13,9).get());
 
         for(Position p: threeXLetterScore){
-            premiumSquares.put(p.getIndex(), '%');
+            premiumSquares.put(p.getIndex(), reservedSymbols[1]);
         }
 
         // 2x Words
@@ -89,7 +89,7 @@ public class PremiumSquares {
         twoXWordScore.add(Position.FromInts(1,13).get());
 
         for(Position p: twoXWordScore){
-            premiumSquares.put(p.getIndex(), '@');
+            premiumSquares.put(p.getIndex(), reservedSymbols[2]);
         }
 
         // 3x Words
@@ -105,7 +105,7 @@ public class PremiumSquares {
         threeXWordScore.add(Position.FromInts(14,14).get());
 
         for(Position p: threeXWordScore){
-            premiumSquares.put(p.getIndex(), '#');
+            premiumSquares.put(p.getIndex(), reservedSymbols[3]);
         }
 
         return premiumSquares;

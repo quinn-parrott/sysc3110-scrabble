@@ -1,5 +1,9 @@
+import org.xml.sax.SAXException;
+
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +18,15 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private static final Color colorSelected = new Color(200, 200, 200);
 
     private final Container pane;
-    private final Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
+    private Game game;     // model if we'll be using MVC . Some more changes to be made in the Game class
     private final JLabel playerTurnLabel;
-    private final JButton playButton;
-    private final JButton passTurn;
+    private JButton playButton;
+    private JButton passTurn;
     private final JButton undoButton;
     private final JButton redoButton;
+    private final JButton saveBoard;
+    private final JButton loadBoard;
+    private JPanel boardAndTileHandPanel;
     private List<Positioned<WildcardableStoreTile>> placedTiles;
     private Component boardComponent;
     private BoardView boardView;
@@ -41,12 +48,12 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         pane.setLayout(new BorderLayout());
 
         playerTurnLabel = new JLabel();
-        playButton = new JButton();
-        passTurn = new JButton();
         undoButton = new JButton("Undo");
         undoButton.setEnabled(false);
         redoButton = new JButton("Redo");
         redoButton.setEnabled(false);
+        saveBoard = new JButton();
+        loadBoard = new JButton();
 
         // A layout manager for these components is still pending
 
@@ -62,7 +69,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.boardComponent = this.createBoard();
         this.boardComponent.setPreferredSize(new Dimension(500, 600));
 
-        JPanel boardAndTileHandPanel = new JPanel();
+        boardAndTileHandPanel = new JPanel();
         boardAndTileHandPanel.setLayout(new BorderLayout());
 
         JPanel tileHandPanel = new JPanel();
@@ -87,7 +94,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         game.addGameView(this);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1400, 1000);
+        this.setSize(1600, 1000);
         this.setVisible(true);
     }
 
@@ -112,6 +119,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      * @author Tao Lufula, 101164153
      */
     private Component createPlayButtons() {
+        playButton = new JButton();
+        passTurn = new JButton();
         //Reset or play word button. This button validates the words being placed on the board or will also clear the players letters placed on the board
         this.switchPlayButtonText("PLAY");
         playButton.setPreferredSize(new Dimension(140,50));
@@ -120,18 +129,44 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         passTurn.setText("PASS");
         passTurn.setPreferredSize(new Dimension(140,50));
 
+        saveBoard.setText("SAVE BOARD");
+        saveBoard.setPreferredSize(new Dimension(140,50));
+
+        loadBoard.setText("LOAD BOARD");
+        loadBoard.setPreferredSize(new Dimension(140,50));
+
         playButton.addActionListener(new PlayButtonController(this, this.game, this.boardViewModel));
         passTurn.addActionListener(new PassButtonController(this, this.game, this.boardViewModel));
 
         var undoRedoController = new UndoRedoButtonController(this, this.game, this.boardViewModel);
         undoButton.addActionListener(source -> undoRedoController.undo(undoButton));
         redoButton.addActionListener(source -> undoRedoController.redo(redoButton));
+        saveBoard.addActionListener(e -> {
+            String filename = JOptionPane.showInputDialog("Enter a file name to save to");
+            try {
+                this.game.saveGame(filename);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        loadBoard.addActionListener(e -> {
+            String filename = JOptionPane.showInputDialog("Enter a file name to load from");
+            try {
+                game.loadGame(filename);
+                this.boardViewModel.getPlacedTiles().removeIf(_ignore -> true);
+            } catch (ParserConfigurationException | SAXException | IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 2));
         buttonsPanel.add(undoButton);
         buttonsPanel.add(redoButton);
         buttonsPanel.add(playButton);
         buttonsPanel.add(passTurn);
+        buttonsPanel.add(saveBoard);
+        buttonsPanel.add(loadBoard);
 
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new BorderLayout());
@@ -148,6 +183,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setSelected(model.getSelected());
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
+        this.boardViewModel.setBoard(game.getBoard());
         this.boardView.update();
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());

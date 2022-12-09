@@ -1,5 +1,5 @@
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Class representing a player's state
@@ -136,5 +136,17 @@ public class Player implements Serializable {
             }
         }
         return possibleWords;
+    }
+
+    public String toXML(int numTabs) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder tabs = new StringBuilder();
+        tabs.append("    ".repeat(numTabs));
+        sb.append(tabs).append("<Player name=\"").append(name).append("\" points=\"").append(points).append("\" isAI=\"").append(isAI).append("\">\n");
+        for (WildcardableTile t : tileHand) {
+            sb.append(t.toXML(numTabs + 1));
+        }
+        sb.append(tabs).append("</Player>\n");
+        return sb.toString();
     }
 }

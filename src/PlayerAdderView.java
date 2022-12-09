@@ -29,7 +29,7 @@ public class PlayerAdderView {
             var playerNumber = Optional.ofNullable(
                     JOptionPane.showInputDialog(
                             this.parent,
-                            "Ente number of players (1-4):",
+                            "Enter number of players (1-4):",
                             "Players' Setup" + "                    " + "SCRABBLE",
                             JOptionPane.PLAIN_MESSAGE
                     )
