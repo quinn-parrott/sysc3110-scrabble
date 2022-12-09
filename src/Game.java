@@ -535,6 +535,7 @@ public class Game {
                             access = accessLimit.NONE;
                             Game game = new Game(transactions.get(0).players, new WordList());
                             game.state.internalState = transactions;
+                            game.state.head = Optional.of(game.state.internalState.peek());
                             view.setModel(game);
                         }
                         case "Transaction" -> {
