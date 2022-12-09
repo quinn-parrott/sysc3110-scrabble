@@ -68,6 +68,12 @@ public class Game {
             }
             sb.append(tabs).append("    ").append("<TileBag>\n").append(this.gameBag.toXML(numTabs + 1));
             sb.append(tabs).append("    ").append("</TileBag>\n");
+            sb.append(tabs).append("    ").append("<PremiumSquares>\n");
+            for (int key : this.gamePremiumSquares.keySet()) {
+                sb.append(tabs).append("        ").append("<Premium index=\"").append(key).append("\" char=\"");
+                sb.append(this.gamePremiumSquares.get(key)).append("\"/>\n");
+            }
+            sb.append(tabs).append("    ").append("</PremiumSquares>\n");
             return sb.toString();
         }
     }
@@ -400,12 +406,6 @@ public class Game {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<Game>\n");
-        sb.append("    ").append("<PremiumSquares>\n");
-        for (int key : this.state.state(GameMutableState::clone).gamePremiumSquares.keySet()) {
-            sb.append("        ").append("<Premium index=\"").append(key).append("\" char=\"");
-            sb.append(this.state.state(GameMutableState::clone).gamePremiumSquares.get(key)).append("\"/>\n");
-        }
-        sb.append("    ").append("</PremiumSquares>\n");
         for (GameMutableState gm : this.state.internalState) {
             sb.append("    ").append("<Transaction>\n");
             sb.append(gm.toXML(numTabs + 1));
@@ -443,28 +443,6 @@ public class Game {
                         case "Game" -> {
                             access = accessLimit.GAME;
                             transactions = new Stack<>();
-                        }
-                        case "PremiumSquares" -> {
-                            if (access == accessLimit.GAME) {
-                                access = accessLimit.PREMIUM;
-                                premiumSquares = new HashMap<>();
-                            }
-                        }
-                        case "Premium" -> {
-                            if (access == accessLimit.PREMIUM) {
-                                int i = Integer.parseInt(a.getValue(a.getIndex("index")));
-                                char c = a.getValue(a.getIndex("char")).charAt(0);
-                                boolean validC = false;
-                                for (char x : PremiumSquares.reservedSymbols) {
-                                    if (c == x) {
-                                        validC = true;
-                                        break;
-                                    }
-                                }
-                                if (i >= 0 && i < Board.getROW_NUMBER() * Board.getCOLUMN_NUMBER() && validC) {
-                                    premiumSquares.put(i, c);
-                                }
-                            }
                         }
                         case "Transaction" -> {
                             if (access == accessLimit.GAME) {
@@ -520,6 +498,28 @@ public class Game {
                                 }
                             }
                         }
+                        case "PremiumSquares" -> {
+                            if (access == accessLimit.TRANSACTION) {
+                                access = accessLimit.PREMIUM;
+                                premiumSquares = new HashMap<>();
+                            }
+                        }
+                        case "Premium" -> {
+                            if (access == accessLimit.PREMIUM) {
+                                int i = Integer.parseInt(a.getValue(a.getIndex("index")));
+                                char c = a.getValue(a.getIndex("char")).charAt(0);
+                                boolean validC = false;
+                                for (char x : PremiumSquares.reservedSymbols) {
+                                    if (c == x) {
+                                        validC = true;
+                                        break;
+                                    }
+                                }
+                                if (i >= 0 && i < Board.getROW_NUMBER() * Board.getCOLUMN_NUMBER() && validC) {
+                                    premiumSquares.put(i, c);
+                                }
+                            }
+                        }
                         default -> {}
                     }
                 }
@@ -535,11 +535,6 @@ public class Game {
                                 game.state.state(GameMutableState::clone).gamePremiumSquares.put(key, premiumSquares.get(key));
                             }
                             view.setModel(game);
-                        }
-                        case "PremiumSquares" -> {
-                            if (access == accessLimit.PREMIUM) {
-                                access = accessLimit.GAME;
-                            }
                         }
                         case "Transaction" -> {
                             if (access == accessLimit.TRANSACTION) {
@@ -569,6 +564,11 @@ public class Game {
                                 } else {
                                     gameTurns.add(new TilePlacement(new ArrayList<>()));
                                 }
+                            }
+                        }
+                        case "PremiumSquares" -> {
+                            if (access == accessLimit.PREMIUM) {
+                                access = accessLimit.TRANSACTION;
                             }
                         }
                     }
