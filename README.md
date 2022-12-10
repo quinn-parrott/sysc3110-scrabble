@@ -1,4 +1,4 @@
-Game of Scrabble, Milestone 1.0, 10/25/2022
+Game of Scrabble, Milestone 4.0, 12/09/2022
 SYSC3110 Group 13
 Colin Mandeville, Jawad Nasrallah, Quinn Parrott, Tao Lufula
 
@@ -43,31 +43,25 @@ Code: The program is implemented in Java.
 
 
 
-Changes from Milestone 2
+Changes from Milestone 3
 --------------------------------------------------------------------------------------------------------
-This version of Scrabble (Milestone 2) differs from Milestone 1 in terms of gameplay and allowing AI opponents. 
-The user is prompted to allow a number of AI Players, such that the total number of Human and AI Players is 
-greater than or equal to 2, but less than or equal to 4. In addition to this, there are WildCard Tiles included 
-(Represented in the hand as &) which can be made into any letter but is worth 0 points, and there are premium 
-tiles which modify scores earned from placing words overlapping with them. Premium tiles are denoted as follows:
+This version of Scrabble introduces 3 new features:
 
-    $ = 2x Letter Score
-    % = 3x Letter Score
-    @ = 2x Word Score
-    # = 3x Word Score
+    1. Undo/Redo Move
+        There are 2 new buttons on the main game page which will allow the user to undo the previous move, 
+        and redo any undone moves
+    
+    2. Custom Boards
+        When setting up the initial game, the user is able to design a custom board by selecting locations 
+        for each of the four types of premium squares
+        
+    3. Save/Load Boards
+        There are 2 buttons added to the main game page, one which saves the current game state to XML, 
+        and the other which prompts the user for a file name from which it will attempt to load a game state.
 
 
 
 Project roadmap: 
 --------------------------------------------------------------------------------------------------------
 
-Week of Nov 23 - Nov 24: Create a project goal for final Milestone. Distribute among team.
-
-
-Week of Nov 25 - Nov 28: Individual application development along with meeting to track progress.
-
-
-Week of Nov 29 -  Dec 2: Begin finalizing code. Final reviews.
-
-
-Week of Dec 3  -  Dec 5: Prepare to submit final, completed version of Scrabble.
+Project has completed development
