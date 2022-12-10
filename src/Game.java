@@ -634,7 +634,7 @@ public class Game {
     }
 
     public Board getBoard() {
-        var board = new Board(isCustomBoard);
+        var board = new Board();
         for (var placement : this.state.state(GameMutableState::clone).turns) {
             try {
                 board.placeTiles(placement);
