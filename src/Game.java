@@ -18,23 +18,35 @@ public class Game {
     private ArrayList<GameView> views;
     private WordList wordList;
 
-
     private static class GameMutableState implements Serializable {
         public ArrayList<Player> players;
         public ArrayList<TilePlacement> turns;
         public TileBag gameBag;
         public HashMap<Integer, Character> gamePremiumSquares;
 
+        public boolean isCustomBoard;
+
         public GameMutableState(
-            ArrayList<Player> players,
-            ArrayList<TilePlacement> turns,
-            TileBag gameBag,
-            HashMap<Integer, Character> gamePremiumSquares
+                ArrayList<Player> players,
+                ArrayList<TilePlacement> turns,
+                TileBag gameBag,
+                HashMap<Integer, Character> gamePremiumSquares
+        ) {
+            this(players, turns, gameBag, gamePremiumSquares, false);
+        }
+
+        public GameMutableState(
+                ArrayList<Player> players,
+                ArrayList<TilePlacement> turns,
+                TileBag gameBag,
+                HashMap<Integer, Character> gamePremiumSquares,
+                boolean isCustomBoard
         ) {
             this.players = players;
             this.turns = turns;
             this.gameBag = gameBag;
             this.gamePremiumSquares = gamePremiumSquares;
+            this.isCustomBoard = isCustomBoard;
         }
 
         public GameMutableState clone() {
@@ -80,6 +92,10 @@ public class Game {
         }
     }
 
+    public boolean isCustomBoard() {
+        return this.state.state(GameMutableState::clone).isCustomBoard;
+    }
+
     private Transactionable<GameMutableState> state;
 
     /**
@@ -122,7 +138,7 @@ public class Game {
      * @author Quinn Parrott, 101169535, Tao Lufula, 101164153
      * @author Tao Lufula, 101164153
      */
-    public Game(List<Player> players, WordList wordList, HashMap<String, HashSet<Integer>> customPremiumPositions) {
+    public Game(List<Player> players, WordList wordList, HashMap<String, HashSet<Integer>> customPremiumPositions, boolean isCustomBoard) {
         this.wordList = wordList;
         this.views = new ArrayList<>();
 
@@ -140,7 +156,8 @@ public class Game {
                 playersTemp,
                 new ArrayList<>(),
                 tileBag,
-                PremiumSquares.getCustomPremiumSquares(customPremiumPositions)
+                PremiumSquares.getCustomPremiumSquares(customPremiumPositions),
+                isCustomBoard
         ));
     }
 
@@ -340,6 +357,10 @@ public class Game {
         }
     }
 
+    public HashMap<Integer, Character> getPremiumSquares() {
+        return state.state(GameMutableState::clone).gamePremiumSquares;
+    }
+
     /**
      * Checks if the active Player has the required tiles to make their move.
      * @param tiles tiles being used to create the word
@@ -440,7 +461,7 @@ public class Game {
         int numTabs = 0;
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        sb.append("<Game>\n");
+        sb.append("<Game isCustomBoard=\"").append(this.state.state(GameMutableState::clone).isCustomBoard).append("\">\n");
         for (GameMutableState gm : this.state.internalState) {
             sb.append("    ").append("<Transaction>\n");
             sb.append(gm.toXML(numTabs + 1));
@@ -462,6 +483,7 @@ public class Game {
                 private ArrayList<Positioned<WildcardableTile>> turn;
                 private HashMap<Integer, Character> premiumSquares;
                 private accessLimit access = accessLimit.NONE;
+                private boolean isCustom;
                 enum accessLimit {
                     NONE,
                     GAME,
@@ -477,6 +499,7 @@ public class Game {
                     switch (qName) {
                         case "Game" -> {
                             access = accessLimit.GAME;
+                            isCustom = a.getValue(a.getIndex("isCustomBoard")).equals("true");
                             transactions = new Stack<>();
                         }
                         case "Transaction" -> {
@@ -577,7 +600,7 @@ public class Game {
                         case "Transaction" -> {
                             if (access == accessLimit.TRANSACTION) {
                                 access = accessLimit.GAME;
-                                transactions.push(new GameMutableState(p, gameTurns, tb, premiumSquares));
+                                transactions.push(new GameMutableState(p, gameTurns, tb, premiumSquares, isCustom));
                                 p = null;
                                 gameTurns = null;
                                 tb = null;

@@ -11,7 +11,6 @@ import java.util.Optional;
 public class Board implements Cloneable {
     private static final int COLUMN_NUMBER = 15;
     private static final int ROW_NUMBER = 15;
-
     private final ArrayList<Optional<Tile>> board; // TODO: Rename to something more descriptive
 
     /**
