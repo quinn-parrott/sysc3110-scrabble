@@ -11,6 +11,7 @@ import java.util.Optional;
 public class Board implements Cloneable {
     private static final int COLUMN_NUMBER = 15;
     private static final int ROW_NUMBER = 15;
+    private boolean isCustomBoard;
 
     private final ArrayList<Optional<Tile>> board; // TODO: Rename to something more descriptive
 
@@ -20,10 +21,19 @@ public class Board implements Cloneable {
      * @author Colin Mandeville, 101140289
      */
     public Board() {
+        this(false);
+    }
+
+    public Board(boolean isCustomBoard) {
         this.board = new ArrayList<>();
+        this.isCustomBoard = isCustomBoard;
         for (int i = 0; i < COLUMN_NUMBER * ROW_NUMBER; i++) {
             this.board.add(Optional.empty());
         }
+    }
+
+    public boolean isCustomBoard() {
+        return isCustomBoard;
     }
 
     /**

@@ -200,17 +200,13 @@ public class Position implements Serializable {
         }
     }
 
-    public char getBackgroundChar(HashMap<String, HashSet<Integer>> customPremiumPositions) {
-        this.premiumSquares = PremiumSquares.getCustomPremiumSquares(customPremiumPositions);
+    public char getBackgroundChar(HashMap<Integer, Character> customPremiumPositions) {
+        premiumSquares = customPremiumPositions;
         int i =  getIndex();
         if(Board.getCenterTilePos() == i){
             return '*';
         }else{
-            if(premiumSquares.containsKey(i)){
-                return premiumSquares.get(i);
-            }else{
-                return '_';
-            }
+            return premiumSquares.getOrDefault(i, '_');
         }
     }
 

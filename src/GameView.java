@@ -33,7 +33,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private TileTrayModel tileTrayModel;
     private TileTrayView tileTrayView;
     private ScoreboardView scoreboard;
-    private boolean isCustomBoard;
     private HashMap<String, HashSet<Integer>> customPremiumPositions;
 
 
@@ -55,7 +54,6 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         redoButton.setEnabled(false);
         saveBoard = new JButton();
         loadBoard = new JButton();
-        isCustomBoard = false;
         customPremiumPositions = new HashMap<>();
 
         Optional<List<Player>> playersList = (new PlayerAdderView(this)).getPlayers();
@@ -63,11 +61,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             System.exit(0);
         }
 
-        selectBoardType();
-
-        if (isCustomBoard) {
+        if (selectBoardType()) {
             customBoardSetUp();
-            game = new Game(playersList.get(), new WordList(), customPremiumPositions);
+            game = new Game(playersList.get(), new WordList(), customPremiumPositions, true);
         }else{
             game = new Game(playersList.get(), new WordList());
         }
@@ -191,7 +187,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardViewModel.setBoard(game.getBoard());
-        this.boardView.update(isCustomBoard, customPremiumPositions);
+        this.boardView.update(game.isCustomBoard(), game.getPremiumSquares());
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());
     }
@@ -253,7 +249,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                     j++;
                 }
 
-                this.boardView.update(isCustomBoard, customPremiumPositions);
+                this.boardView.update(game.isCustomBoard(), game.getPremiumSquares());
                 break;
             }
         }
@@ -294,12 +290,12 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
 
         this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(letter, tile.isWildcard(), tile.pointValue()), pos));
-        this.boardView.update(isCustomBoard, customPremiumPositions);
+        this.boardView.update(game.isCustomBoard(), game.getPremiumSquares());
     }
 
     private Component createBoard() {
         this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
-        var boardView = new BoardView(this.boardViewModel, isCustomBoard, customPremiumPositions);
+        var boardView = new BoardView(this.boardViewModel, game.isCustomBoard(), customPremiumPositions);
         boardView.addBoardTileAdder(this);
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
@@ -445,14 +441,12 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
      * @author Tao Lufula, 101164153
      * @author Jawad Nasrallah, 101201038
      */
-    private void selectBoardType() {
+    private boolean selectBoardType() {
         String[] boardOptions = {"Standard  Board", "Custom  Board"};
 
         int x = JOptionPane.showOptionDialog(null, "Select the type of board you want to play!" + "\n\nHint: With Custom Board, you will be able to specify the amount and location of Premium Squares on the board." + "\n ",
                 "Board Type Selection", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, boardOptions,
                 boardOptions[0]);
-        if (x == 1) {
-            isCustomBoard = true;
-        }
+        return x == 1;
     }
 }

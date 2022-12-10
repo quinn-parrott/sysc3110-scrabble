@@ -48,10 +48,10 @@ public class BoardView extends JPanel {
             this.add(button);
         }
 
-        update(isCustomBoard, customPremiumPositions);
+        update(isCustomBoard, PremiumSquares.getCustomPremiumSquares(customPremiumPositions));
     }
 
-    public void update(boolean isCustomBoard, HashMap<String, HashSet<Integer>> customPremiumPositions) {
+    public void update(boolean isCustomBoard, HashMap<Integer, Character> customPremiumPositions) {
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
 

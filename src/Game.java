@@ -17,6 +17,7 @@ public class Game {
     public record GameUpdateState(Board board, ArrayList<String> newWords, HashMap<String, ArrayList<Integer>> playedWords) {}
     private ArrayList<GameView> views;
     private WordList wordList;
+    private boolean isCustomBoard;
 
 
     private static class GameMutableState implements Serializable {
@@ -80,6 +81,10 @@ public class Game {
         }
     }
 
+    public boolean isCustomBoard() {
+        return isCustomBoard;
+    }
+
     private Transactionable<GameMutableState> state;
 
     /**
@@ -91,6 +96,7 @@ public class Game {
     public Game(List<Player> players, WordList wordList) {
         this.wordList = wordList;
         this.views = new ArrayList<>();
+        this.isCustomBoard = false;
 
         var playersTemp = new ArrayList<>(players);
         var tileBag = new TileBag();
@@ -122,9 +128,10 @@ public class Game {
      * @author Quinn Parrott, 101169535, Tao Lufula, 101164153
      * @author Tao Lufula, 101164153
      */
-    public Game(List<Player> players, WordList wordList, HashMap<String, HashSet<Integer>> customPremiumPositions) {
+    public Game(List<Player> players, WordList wordList, HashMap<String, HashSet<Integer>> customPremiumPositions, boolean isCustomBoard) {
         this.wordList = wordList;
         this.views = new ArrayList<>();
+        this.isCustomBoard = isCustomBoard;
 
         var playersTemp = new ArrayList<>(players);
         var tileBag = new TileBag();
@@ -340,6 +347,10 @@ public class Game {
         }
     }
 
+    public HashMap<Integer, Character> getPremiumSquares() {
+        return state.state(GameMutableState::clone).gamePremiumSquares;
+    }
+
     /**
      * Checks if the active Player has the required tiles to make their move.
      * @param tiles tiles being used to create the word
@@ -440,7 +451,7 @@ public class Game {
         int numTabs = 0;
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        sb.append("<Game>\n");
+        sb.append("<Game isCustomBoard=\"").append(isCustomBoard).append("\">\n");
         for (GameMutableState gm : this.state.internalState) {
             sb.append("    ").append("<Transaction>\n");
             sb.append(gm.toXML(numTabs + 1));
@@ -477,6 +488,7 @@ public class Game {
                     switch (qName) {
                         case "Game" -> {
                             access = accessLimit.GAME;
+                            Game.this.isCustomBoard = a.getValue(a.getIndex("isCustomBoard")).equals("true");
                             transactions = new Stack<>();
                         }
                         case "Transaction" -> {
@@ -622,7 +634,7 @@ public class Game {
     }
 
     public Board getBoard() {
-        var board = new Board();
+        var board = new Board(isCustomBoard);
         for (var placement : this.state.state(GameMutableState::clone).turns) {
             try {
                 board.placeTiles(placement);
