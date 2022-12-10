@@ -319,12 +319,14 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         HashSet<Integer> twoXWordScoreSet = new HashSet<>();
         HashSet<Integer> threeXWordScoreSet = new HashSet<>();
 
+        var board = new Board();
+
         var isValidInputs = false;
         while (!isValidInputs) {
             var twoXLetterScoreSquares = String.valueOf(
                     JOptionPane.showInputDialog(
                             this,
-                            "Enter the positions for 2 X LetterScore Squares on the Board " + "\n\n(0 - 224) separated by commas eg: 0,49,156,200,..." + "\n\nHINT: 0 - top left square, 224 - bottom right square. \n\nEach square can only be assigned once!",
+                            "Enter the positions for 2 X LetterScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
                             "Custom Board Setup" + "                     " + "SCRABBLE",
                             JOptionPane.PLAIN_MESSAGE
                     )
@@ -332,7 +334,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             isValidInputs = validateInputs(twoXLetterScoreSquares);
             if(isValidInputs) {
                 for (String s : twoXLetterScoreSquares.split(",")) {
-                    twoXLetterScoreSet.add(Integer.parseInt(s));
+                    var pos = Position.FromString(s);
+                    twoXLetterScoreSet.add(pos.get().getIndex());
                 }
                 customPremiumPositions.put("twoXLetterScore", twoXLetterScoreSet);
             }
@@ -343,7 +346,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             var threeXLetterScoreSquares = String.valueOf(
                     JOptionPane.showInputDialog(
                             this,
-                            "Enter the positions for 3 X LetterScore Squares on the Board " + "\n\n(0 - 224) separated by commas eg: 0,49,156,200,..." + "\n\nHINT: 0 - top left square, 224 - bottom right square. \n\nEach square can only be assigned once!",
+                            "Enter the positions for 3 X LetterScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
                             "Custom Board Setup" + "                     " + "SCRABBLE",
                             JOptionPane.PLAIN_MESSAGE
                     )
@@ -351,8 +354,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             isValidInputs = validateInputs(threeXLetterScoreSquares);
             if(isValidInputs) {
                 for (String s : threeXLetterScoreSquares.split(",")) {
-                    if (!twoXLetterScoreSet.contains(Integer.parseInt(s))) {
-                        threeXLetterScoreSet.add(Integer.parseInt(s));
+                    var pos = Position.FromString(s);
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex())) {
+                        threeXLetterScoreSet.add(pos.get().getIndex());
                     }
                 }
                 customPremiumPositions.put("threeXLetterScore", threeXLetterScoreSet);
@@ -364,7 +368,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             var twoWordLetterScoreSquares = String.valueOf(
                     JOptionPane.showInputDialog(
                             this,
-                            "Enter the positions for 2 X WordScore Squares on the Board " + "\n\n(0 - 224) separated by commas eg: 0,49,156,200,..." + "\n\nHINT: 0 - top left square, 224 - bottom right square. \n\nEach square can only be assigned once!",
+                            "Enter the positions for 2 X WordScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
                             "Custom Board Setup" + "                     " + "SCRABBLE",
                             JOptionPane.PLAIN_MESSAGE
                     )
@@ -372,8 +376,9 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             isValidInputs = validateInputs(twoWordLetterScoreSquares);
             if(isValidInputs) {
                 for (String s : twoWordLetterScoreSquares.split(",")) {
-                    if (!twoXLetterScoreSet.contains(Integer.parseInt(s)) && !threeXLetterScoreSet.contains(Integer.parseInt(s))) {
-                        twoXWordScoreSet.add(Integer.parseInt(s));
+                    var pos = Position.FromString(s);
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex()) && !threeXLetterScoreSet.contains(pos.get().getIndex())) {
+                        twoXWordScoreSet.add(pos.get().getIndex());
                     }
                 }
                 customPremiumPositions.put("twoXWordScore", twoXWordScoreSet);
@@ -385,7 +390,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             var threeWordLetterScoreSquares = String.valueOf(
                     JOptionPane.showInputDialog(
                             this,
-                            "Enter the positions for 3 X WordScore Squares on the Board " + "\n\n(0 - 224) separated by commas eg: 0,49,156,200,..." + "\n\nHINT: 0 - top left square, 224 - bottom right square. \n\nEach square can only be assigned once!",
+                            "Enter the positions for 3 X WordScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
                             "Custom Board Setup" + "                     " + "SCRABBLE",
                             JOptionPane.PLAIN_MESSAGE
                     )
@@ -393,8 +398,10 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
             isValidInputs = validateInputs(threeWordLetterScoreSquares);
             if(isValidInputs) {
                 for (String s : threeWordLetterScoreSquares.split(",")) {
-                    if (!twoXLetterScoreSet.contains(Integer.parseInt(s)) && !threeXLetterScoreSet.contains(Integer.parseInt(s)) && !twoXWordScoreSet.contains(Integer.parseInt(s))) {
-                        threeXWordScoreSet.add(Integer.parseInt(s));
+                    var pos = Position.FromString(s);
+
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex()) && !threeXLetterScoreSet.contains(pos.get().getIndex()) && !twoXWordScoreSet.contains(pos.get().getIndex())) {
+                        threeXWordScoreSet.add(pos.get().getIndex());
                     }
                 }
                 customPremiumPositions.put("threeXWordScore", threeXWordScoreSet);
@@ -416,16 +423,15 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
         else {
             try {
-                int x = 0;
                 for (String s : wordAndLetterScoreSquares.split(",")) {
-                    x = Integer.parseInt(s);
-                    if (x < 0 || x > 224) {
-                        JOptionPane.showMessageDialog(this, "Invalid entry! Each entry should be between 0 and 224");
+                    var pos = Position.FromString(s);
+                    if (pos.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Invalid entry! Each entry should be in the format xy;" + "\nx - letter: A - O" + "\ny - number: 1 - 15");
                         return false;
                     }
                 }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid entry! Enter only integer values between 0 and 224 separated by commas");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex);
                 return false;
             }
             isValidInputs = true;
