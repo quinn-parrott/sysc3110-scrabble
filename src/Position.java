@@ -200,6 +200,20 @@ public class Position implements Serializable {
         }
     }
 
+    public char getBackgroundChar(HashMap<String, HashSet<Integer>> customPremiumPositions) {
+        this.premiumSquares = PremiumSquares.getCustomPremiumSquares(customPremiumPositions);
+        int i =  getIndex();
+        if(Board.getCenterTilePos() == i){
+            return '*';
+        }else{
+            if(premiumSquares.containsKey(i)){
+                return premiumSquares.get(i);
+            }else{
+                return '_';
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

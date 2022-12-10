@@ -129,32 +129,40 @@ public class Board implements Cloneable {
      * @author Colin Mandeville, 101140289
      */
     public void printBoard() {
-        System.out.println(render());
+        System.out.println(render(true));
     }
 
     /**
      * Visual representation of the board
      * @author Colin Mandeville, 101140289
      */
-    public String render() {
+    public String render(Boolean showPremiumSquares) {
         StringBuilder builder = new StringBuilder();
 
         // Print each row of the board and the Vertical Legend
         for (int i = 0; i < ROW_NUMBER; i++) {
-            builder.append(String.format("%2s ", i + 1));
+            builder.append(String.format("%2s  ", i + 1));
 
             // Print each tile in row i
             for (int j = 0; j < COLUMN_NUMBER; j++) {
                 var pos = Position.FromInts(j, i).get();
                 var index = pos.getIndex();
-                builder.append(this.board.get(index).map(Tile::chr).orElse(pos.getBackgroundChar())).append("  ");
+                if(showPremiumSquares) {
+                    builder.append(this.board.get(index).map(Tile::chr).orElse(pos.getBackgroundChar())).append("  ");
+                }else {
+                    builder.append(this.board.get(index).map(Tile::chr).orElse('_')).append("   ");
+                }
             }
 
             builder.append('\n');
         }
 
         // Print the Horizontal Legend
-        builder.append("   ");
+        if(showPremiumSquares){
+            builder.append("   \t");
+        }else{
+            builder.append("      \t");
+        }
         for (int i = 0; i < COLUMN_NUMBER; i++) {
             int j = i + 'A';
             char c = (char) j;

@@ -4,9 +4,8 @@ import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Game View
@@ -34,6 +33,8 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
     private TileTrayModel tileTrayModel;
     private TileTrayView tileTrayView;
     private ScoreboardView scoreboard;
+    private boolean isCustomBoard;
+    private HashMap<String, HashSet<Integer>> customPremiumPositions;
 
 
     /**
@@ -54,16 +55,22 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         redoButton.setEnabled(false);
         saveBoard = new JButton();
         loadBoard = new JButton();
-
-        // A layout manager for these components is still pending
+        isCustomBoard = false;
+        customPremiumPositions = new HashMap<>();
 
         Optional<List<Player>> playersList = (new PlayerAdderView(this)).getPlayers();
         if (playersList.isEmpty()) {
             System.exit(0);
         }
 
-        game = new Game(playersList.get(), new WordList());
+        selectBoardType();
 
+        if (isCustomBoard) {
+            customBoardSetUp();
+            game = new Game(playersList.get(), new WordList(), customPremiumPositions);
+        }else{
+            game = new Game(playersList.get(), new WordList());
+        }
 
         this.placedTiles = new ArrayList<>();
         this.boardComponent = this.createBoard();
@@ -184,7 +191,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         this.tileTrayModel.setEntries(model.getEntries());
         this.tileTrayView.update();
         this.boardViewModel.setBoard(game.getBoard());
-        this.boardView.update();
+        this.boardView.update(isCustomBoard, customPremiumPositions);
         this.undoButton.setEnabled(game.canUndo());
         this.redoButton.setEnabled(game.canRedo());
     }
@@ -246,7 +253,7 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
                     j++;
                 }
 
-                this.boardView.update();
+                this.boardView.update(isCustomBoard, customPremiumPositions);
                 break;
             }
         }
@@ -287,15 +294,165 @@ public class GameView extends JFrame implements IBoardTileAdder, IBoardTileRemov
         }
 
         this.placedTiles.add(new Positioned<>(new WildcardableStoreTile(letter, tile.isWildcard(), tile.pointValue()), pos));
-        this.boardView.update();
+        this.boardView.update(isCustomBoard, customPremiumPositions);
     }
 
     private Component createBoard() {
         this.boardViewModel = new BoardViewModel(this.game.getBoard(), this.placedTiles);
-        var boardView = new BoardView(this.boardViewModel);
+        var boardView = new BoardView(this.boardViewModel, isCustomBoard, customPremiumPositions);
         boardView.addBoardTileAdder(this);
         boardView.addBoardTileRemover(this);
         this.boardView = boardView;
         return boardView;
+    }
+
+
+    /**
+     * Method to get all the premium squares and positions from the user(Standard, Custom)
+     *
+     * @author Tao Lufula, 101164153
+     * @author Jawad Nasrallah, 101201038
+     */
+    private void customBoardSetUp() {
+        HashSet<Integer> twoXLetterScoreSet = new HashSet<>();
+        HashSet<Integer> threeXLetterScoreSet = new HashSet<>();
+        HashSet<Integer> twoXWordScoreSet = new HashSet<>();
+        HashSet<Integer> threeXWordScoreSet = new HashSet<>();
+
+        var board = new Board();
+
+        var isValidInputs = false;
+        while (!isValidInputs) {
+            var twoXLetterScoreSquares = String.valueOf(
+                    JOptionPane.showInputDialog(
+                            this,
+                            "Enter the positions for 2 X LetterScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
+                            "Custom Board Setup" + "                     " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            isValidInputs = validateInputs(twoXLetterScoreSquares);
+            if(isValidInputs) {
+                for (String s : twoXLetterScoreSquares.split(",")) {
+                    var pos = Position.FromString(s);
+                    twoXLetterScoreSet.add(pos.get().getIndex());
+                }
+                customPremiumPositions.put("twoXLetterScore", twoXLetterScoreSet);
+            }
+        }
+
+        isValidInputs = false;
+        while (!isValidInputs) {
+            var threeXLetterScoreSquares = String.valueOf(
+                    JOptionPane.showInputDialog(
+                            this,
+                            "Enter the positions for 3 X LetterScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
+                            "Custom Board Setup" + "                     " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            isValidInputs = validateInputs(threeXLetterScoreSquares);
+            if(isValidInputs) {
+                for (String s : threeXLetterScoreSquares.split(",")) {
+                    var pos = Position.FromString(s);
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex())) {
+                        threeXLetterScoreSet.add(pos.get().getIndex());
+                    }
+                }
+                customPremiumPositions.put("threeXLetterScore", threeXLetterScoreSet);
+            }
+        }
+
+        isValidInputs = false;
+        while (!isValidInputs) {
+            var twoWordLetterScoreSquares = String.valueOf(
+                    JOptionPane.showInputDialog(
+                            this,
+                            "Enter the positions for 2 X WordScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
+                            "Custom Board Setup" + "                     " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            isValidInputs = validateInputs(twoWordLetterScoreSquares);
+            if(isValidInputs) {
+                for (String s : twoWordLetterScoreSquares.split(",")) {
+                    var pos = Position.FromString(s);
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex()) && !threeXLetterScoreSet.contains(pos.get().getIndex())) {
+                        twoXWordScoreSet.add(pos.get().getIndex());
+                    }
+                }
+                customPremiumPositions.put("twoXWordScore", twoXWordScoreSet);
+            }
+        }
+
+        isValidInputs = false;
+        while (!isValidInputs) {
+            var threeWordLetterScoreSquares = String.valueOf(
+                    JOptionPane.showInputDialog(
+                            this,
+                            "Enter the positions for 3 X WordScore Squares on the Board " + "\n\nEach entry should be in the format xy;" + "\n\nx - letter:  A - O" + "\n\ny - number:  1 - 15" + "\n\nExample: a1,b5,h8,d9,o15,... " + "\n\nEach position can only be assigned once! \n\nHINT:Refer to the sample Board Below" + "\n\n" + board.render(false) + "\n ",
+                            "Custom Board Setup" + "                     " + "SCRABBLE",
+                            JOptionPane.PLAIN_MESSAGE
+                    )
+            );
+            isValidInputs = validateInputs(threeWordLetterScoreSquares);
+            if(isValidInputs) {
+                for (String s : threeWordLetterScoreSquares.split(",")) {
+                    var pos = Position.FromString(s);
+
+                    if (!twoXLetterScoreSet.contains(pos.get().getIndex()) && !threeXLetterScoreSet.contains(pos.get().getIndex()) && !twoXWordScoreSet.contains(pos.get().getIndex())) {
+                        threeXWordScoreSet.add(pos.get().getIndex());
+                    }
+                }
+                customPremiumPositions.put("threeXWordScore", threeXWordScoreSet);
+            }
+        }
+    }
+
+
+    /**
+     *
+     * @param wordAndLetterScoreSquares
+     * @return true if userInputs are valid and false if not
+     * @author Jawad Nasrallah, 101201038
+     */
+    private boolean validateInputs(String wordAndLetterScoreSquares) {
+        var isValidInputs = false;
+        if (wordAndLetterScoreSquares.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Invalid entry! Field cannot be empty");
+        }
+        else {
+            try {
+                for (String s : wordAndLetterScoreSquares.split(",")) {
+                    var pos = Position.FromString(s);
+                    if (pos.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Invalid entry! Each entry should be in the format xy;" + "\nx - letter: A - O" + "\ny - number: 1 - 15");
+                        return false;
+                    }
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex);
+                return false;
+            }
+            isValidInputs = true;
+        }
+        return isValidInputs;
+    }
+
+    /**
+     * Method to prompt users to select BoardType (Standard, Custom)
+     *
+     * @author Tao Lufula, 101164153
+     * @author Jawad Nasrallah, 101201038
+     */
+    private void selectBoardType() {
+        String[] boardOptions = {"Standard  Board", "Custom  Board"};
+
+        int x = JOptionPane.showOptionDialog(null, "Select the type of board you want to play!" + "\n\nHint: With Custom Board, you will be able to specify the amount and location of Premium Squares on the board." + "\n ",
+                "Board Type Selection", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, boardOptions,
+                boardOptions[0]);
+        if (x == 1) {
+            isCustomBoard = true;
+        }
     }
 }

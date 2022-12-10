@@ -112,6 +112,39 @@ public class Game {
         ));
     }
 
+
+    /**
+     * Constructor for the Game class with custom board
+     * @param players players playing the game
+     * @param wordList wordList of legal words for the game
+     * @param customPremiumPositions custom positions of premium squares
+     *
+     * @author Quinn Parrott, 101169535, Tao Lufula, 101164153
+     * @author Tao Lufula, 101164153
+     */
+    public Game(List<Player> players, WordList wordList, HashMap<String, HashSet<Integer>> customPremiumPositions) {
+        this.wordList = wordList;
+        this.views = new ArrayList<>();
+
+        var playersTemp = new ArrayList<>(players);
+        var tileBag = new TileBag();
+
+        int PLAYER_HAND_SIZE = 7;
+        for (Player player : playersTemp) {
+            for (int i = 0; i < PLAYER_HAND_SIZE; i++) {
+                player.getTileHand().add(tileBag.drawTile().get());
+            }
+        }
+
+        this.state = new Transactionable<>(new GameMutableState(
+                playersTemp,
+                new ArrayList<>(),
+                tileBag,
+                PremiumSquares.getCustomPremiumSquares(customPremiumPositions)
+        ));
+    }
+
+
     /**
      * Setting the view for model
      *

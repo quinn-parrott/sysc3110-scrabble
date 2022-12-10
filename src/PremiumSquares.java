@@ -112,4 +112,41 @@ public class PremiumSquares {
 
     }
 
+    /**
+     * Method to return CustomPremiumSquares
+     * @param customPremiumPositions
+     * @return premiumSquares
+     *
+     * @author Tao Lufula, 101164153
+     */
+    public static HashMap<Integer, Character> getCustomPremiumSquares(HashMap<String, HashSet<Integer>> customPremiumPositions) {
+        // 2x Letters
+        if (customPremiumPositions.containsKey("twoXLetterScore")) {
+            for (int indexPos : customPremiumPositions.get("twoXLetterScore")) {
+                premiumSquares.put(indexPos, '$');
+            }
+        }
+        // 3x Letters
+        if (customPremiumPositions.containsKey("threeXLetterScore")) {
+            for (int indexPos : customPremiumPositions.get("threeXLetterScore")) {
+                premiumSquares.put(indexPos, '%');
+            }
+        }
+        // 2x Words
+        if (customPremiumPositions.containsKey("twoXWordScore")) {
+            for (int indexPos : customPremiumPositions.get("twoXWordScore")) {
+                premiumSquares.put(indexPos, '@');
+            }
+            //Add centre Square
+            premiumSquares.put((Position.FromInts(7,7).get()).getIndex(),'@');
+        }
+        // 3x Words
+        if (customPremiumPositions.containsKey("threeXWordScore")) {
+            for (int indexPos : customPremiumPositions.get("threeXWordScore")) {
+                premiumSquares.put(indexPos, '#');
+            }
+        }
+        return premiumSquares;
+    }
+
 }

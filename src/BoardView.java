@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public class BoardView extends JPanel {
     private List<IBoardTileAdder> boardTileAdder;
     private List<IBoardTileRemover> boardTileRemover;
 
-    public BoardView(BoardViewModel model) {
+    public BoardView(BoardViewModel model, boolean isCustomBoard, HashMap<String, HashSet<Integer>> customPremiumPositions ) {
         // TODO: Make backed by a model/store state in another object
         super(new GridLayout(Board.getROW_NUMBER(), Board.getCOLUMN_NUMBER()));
         this.model = model;
@@ -46,10 +48,10 @@ public class BoardView extends JPanel {
             this.add(button);
         }
 
-        update();
+        update(isCustomBoard, customPremiumPositions);
     }
 
-    public void update() {
+    public void update(boolean isCustomBoard, HashMap<String, HashSet<Integer>> customPremiumPositions) {
         for (int i = 0; i < (Board.getCOLUMN_NUMBER() * Board.getROW_NUMBER()); i++) {
             var pos = Position.FromIndex(i).get();
 
@@ -58,8 +60,16 @@ public class BoardView extends JPanel {
 
             JButton button = this.buttons.get(i);
             this.callbackDispatch.set(i, CallbackType.None);
-            char letter = placedTile.map(tilePositioned -> tilePositioned.value().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar()));
+
+            char letter;
+            if(isCustomBoard){
+                letter = placedTile.map(tilePositioned -> tilePositioned.value().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar(customPremiumPositions)));
+
+            }else {
+                letter = placedTile.map(tilePositioned -> tilePositioned.value().chr()).orElse(boardTile.map(Tile::chr).orElse(pos.getBackgroundChar()));
+            }
             button.setText(String.format("%c", letter));
+
 
             if (placedTile.isPresent()) {
                 this.callbackDispatch.set(i, CallbackType.RemoveTile);
